@@ -1,0 +1,114 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en">
+
+    <head>
+		
+        <!-- meta data -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags must come first in the head; any other head content must come after these tags -->
+
+        <!--font-family-->
+		<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&amp;subset=devanagari,latin-ext" rel="stylesheet">
+        
+        <!-- title of site -->
+        <title>Fitness</title>
+
+        <!-- For favicon png -->
+		<link rel="shortcut icon" type="image/icon" href="{% static "assets/logo/favicon.png" %}"/>
+       
+        <!--font-awesome.min.css-->
+        <link rel="stylesheet" href="{% static "assets/css/font-awesome.min.css" %}">
+
+		<!--flat icon css-->
+		<link rel="stylesheet" href="{% static "assets/css/flaticon.css" %}">
+
+		<!--animate.css-->
+        <link rel="stylesheet" href="{% static "assets/css/animate.css" %}">
+
+        <!--owl.carousel.css-->
+        <link rel="stylesheet" href="{% static "assets/css/owl.carousel.min.css" %}">
+		<link rel="stylesheet" href="{% static "assets/css/owl.theme.default.min.css" %}">
+		
+        <!--bootstrap.min.css-->
+        <link rel="stylesheet" href="{% static "assets/css/bootstrap.min.css" %}">
+		
+		<!-- bootsnav -->
+		<link rel="stylesheet" href="{% static "assets/css/bootsnav.css" %}" >	
+        
+        <!--style.css-->
+        <link rel="stylesheet" href="{% static "assets/css/style.css" %}">
+        
+        <!--responsive.css-->
+        <link rel="stylesheet" href="{% static "assets/css/responsive.css" %}">
+		<style>
+			body {
+				background-image: url('https://unsplash.com/photos/NTyBbu66_SI');
+				background-color: #000;
+			}
+		</style>
+    
+    </head>
+	
+	<body>
+		<header class="top-area">
+			<div class="header-area">
+				<!-- Start Navigation -->
+			    <nav class="navbar navbar-default bootsnav navbar-fixed dark no-background">
+
+			        <div class="container">
+
+			            <!-- Start Header Navigation -->
+			            <div class="navbar-header">
+			                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+			                    <i class="fa fa-bars"></i>
+			                </button>
+			                <a class="navbar-brand" href="home">FITUP</a>
+			            </div><!--/.navbar-header-->
+			            <!-- End Header Navigation -->
+
+			            <!-- Collect the nav links, forms, and other content for toggling -->
+			            <div class="collapse navbar-collapse menu-ui-design" id="navbar-menu">
+			                <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
+			                <li class=" smooth-menu active"></li>
+			                   
+								{% if user.is_authenticated %} 
+                  				<li class="nav-item">
+                      				<a class="nav-link"> Welcome, {{ user.username }}</a>
+                  				</li>         
+                 				 {%endif%}
+								<li class="smooth-menu"><a href="#">Trainer</a></li>
+			                    <li class="smooth-menu"><a href="#">Nutritionist</a></li>
+			                    <li class="smooth-menu"><a href="#">Goal Setting</a></li>
+                                <li class="smooth-menu"><a href="{% url 'home' %}" class="nav-link">Logout</a></li>
+			                </ul><!--/.nav -->
+			            </div><!-- /.navbar-collapse -->
+			        </div><!--/.container-->
+			    </nav><!--/nav-->
+			    <!-- End Navigation -->
+			</div><!--/.header-area-->
+
+		    <div class="clearfix"></div>
+
+		</header><!-- /.top-area-->
+		<!-- top-area End -->
+	
+		<!--welcome-hero start -->
+		<section id="welcome-hero" class="welcome-hero">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<div class="header-text">
+							<h2><span></span><br> Stronger <br> Every <br>Day <span>.</span>   </h2>
+							<p>Fitness is the journey that transforms you from who you are to who you want to be</p>
+
+						</div><!--/.header-text-->
+					</div><!--/.col-->
+				</div><!-- /.row-->
+			</div><!-- /.container-->
+
+		</section>
+	</body>
+	</html>
