@@ -1,0 +1,311 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Registration</title>
+    <style>
+        body {
+            background: #f8f8f8;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #682773;
+            margin-bottom: 20px; 
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            margin-top: 30px;
+        }
+
+        .profile-details {
+            margin-top: 20px;
+        }
+
+        .profile-details label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-control:focus {
+            border-color: #BA68C8;
+            background: #fff;
+        }
+
+        .form-control:hover {
+            border-color: #BA68C8;
+            background: #f5f5f5;
+        }
+
+        .profile-button {
+            background: #BA68C8;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: background 0.3s ease;
+        }
+
+        .profile-button:hover {
+            background: #682773;
+        }
+
+        .profile-button:focus {
+            background: #682773;
+            box-shadow: none;
+        }
+
+        .profile-button:active {
+            background: #682773;
+            box-shadow: none;
+        }
+
+        .header {
+            padding: 0px 0;
+            text-align: left;
+        }
+    </style>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</head>
+<body>
+   
+    <div class="container">
+        <h1 style="text-align: center;">Trainer Registration</h1>
+        <form id="trainerRegForm" method="POST" action="" onsubmit="return validateForm()">
+            {% csrf_token %}
+        <div class="profile-details">
+            <label for="fullname">Full Name</label>
+            <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Full Name" oninput="validateFullname()">
+            <p id="fullnameError" class="error" style="color: red;"></p>
+
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter your Username" oninput="validateUsername()" >
+            <p id="usernameError" class="error"></p>
+
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your Email" oninput="validateEmail()">
+            <p id="emailError" class="error" style="color: red;"></p>
+
+            <label for="password">password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" oninput="validatePassword()" >
+            <p id="passwordError" class="error" style="color: red;"></p>
+
+            <label for="cpassword">Confirm Password</label>
+            <input type="password" class="form-control" id="cpassword" name="cpassword" placeholder="Confirm Password" oninput="validateConfirmPassword()">
+            <p id="cpasswordError" class="error" style="color: red;"></p>
+
+
+            <label for="specialization">Specialization</label>
+            <input type="text" class="form-control" id="specialization" name="specialization" placeholder="Enter your specialization" oninput="validateSpecialization()">
+            <p id="specializationError" class="error" style="color: red;"></p>
+
+            <label for="phoneno">Phone Number</label>
+            <input type="tel" class="form-control" id="phoneno" name="phoneno" placeholder="Enter your Phone Number" oninput="validatePhone()">
+            <p id="phoneError" class="error" style="color: red;"></p>
+
+            <label for="gender">Gender</label>
+            <select class="form-control" id="gender" name="gender" oninput="validateGender()">
+            <option value="select">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            </select>
+            <p id="genderError" class="error" style="color: red;"></p>
+        <button type="submit" class="profile-button" id="registerbtn">Register</button>
+        </form>
+    </div>
+    <script>
+        function validateForm() {  
+            console.log("validateForm function called");  
+            var isUsernameValid = validateUsername();
+            var isFullnameValid = validateFullname();
+            var isEmailValid = validateEmail();
+            var isSpecializationValid = validateSpecialization();
+            var isPhoneValid = validatePhone();
+            var isPasswordValid = validatePassword();
+            var isConfirmpasswordValid =validateConfirmPassword();
+            var isGenderValid = validateGender();
+            
+           
+        
+            // Check if all validation functions return true
+            if (isUsernameValid && isFullnameValid && isEmailValid && isSpecialization && isPhoneValid && isPasswordValid && isGenderValid) {
+                return true; // Allow form submission
+            } else {
+                return false; // Prevent form submission
+            }
+        }
+        function validateFullname() {
+            var fullname = document.getElementById("fullname").value.trim();
+            var fullnameError = document.getElementById("fullnameError");
+        
+            if (fullname === "") {
+                fullnameError.textContent = "Please enter your full name.";
+                return false;
+            } else {
+                fullnameError.textContent = "";
+                return true;
+            }
+        }
+    
+        function validateUsername() {
+            var username = document.getElementById("username").value.trim();
+            var usernameError = document.getElementById("usernameError");
+            var usernamePattern = /^[A-Za-z]{3,}[A-Za-z0-9_]*$/;
+        
+            if (username === "") {
+                usernameError.textContent = "Please enter your username.";
+                usernameError.style.color = "red";
+                return false;
+            } else if (!usernamePattern.test(username)) {
+                usernameError.textContent = "Username must start with at least 3 alphabets.";
+                usernameError.style.color = "red";
+                return false;
+            } else {
+                usernameError.textContent = "";
+                return true;
+            }
+        }
+        
+    
+        function validateEmail() {
+            var email = document.getElementById("email").value.trim();
+            var emailError = document.getElementById("emailError");
+            var emailPattern = /^[A-Za-z]/; // Check if email starts with a letter
+            var validEmailPattern = /\S+@\S+\.\S+/;
+        
+            if (email === "") {
+                emailError.textContent = "Please enter your Email.";
+                return false;
+            } else if (!emailPattern.test(email) || !validEmailPattern.test(email)) {
+                emailError.textContent = "Please enter a valid Email address.";
+                return false;
+            } else if (email.endsWith("@gmail.com")) {
+                // Check if there are at least 3 alphanumeric characters before "@"
+                var username = email.split("@")[0];
+                if (/^[A-Za-z0-9_]{3,}$/.test(username)) {
+                    emailError.textContent = "";
+                    return true;
+                } else {
+                    emailError.textContent = "Username should have at least 3 alphanumeric characters";
+                    return false;
+                }
+            } else {
+                emailError.textContent = "Please enter a valid email";
+                return false;
+            }
+        }
+        
+    
+         function validatePhone() {
+                var phoneno = document.getElementById("phoneno").value.trim();
+                var phoneError = document.getElementById("phoneError");
+                var phonePattern = /^[6789]\d{9}$/; 
+    
+                if (phoneno === "") {
+                    phoneError.textContent = "Please enter your Phone Number.";
+                    return false;
+                } else if (!phonePattern.test(phoneno)) {
+                    phoneError.textContent = "Invalid Phone Number.";
+                    return false;
+                } else {
+                    phoneError.textContent = "";
+                    return true;
+                }
+            }
+    
+    
+            function validateSpecialization() {
+                var specialization = document.getElementById("specialization").value;
+                var specializationError = document.getElementById("specializationError");
+                var specializationPattern = /^[A-Za-z\s]{1,15}$/;  // Allows only letters and spaces, up to 15 characters
+            
+                if (!specialization.match(specializationPattern)) {
+                    specializationError.innerText = "Specialization must be characters.";
+                    return false;
+                } else {
+                    specializationError.innerText = "";
+                    return true;
+                }
+            }
+            
+    
+        function validatePassword() {
+            var password = document.getElementById("password").value;
+            var passwordError = document.getElementById("passwordError");
+        
+            if (password === "") {
+                passwordError.textContent = "Please enter a Password.";
+                return false;
+            } else if (!/[A-Z]/.test(password)) {
+                passwordError.textContent = "Password must contain uppercase letter.";
+                return false;
+            } else if (!/[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(password)) {
+                passwordError.textContent = "Password must contain special character.";
+                return false;
+            } else if (password.length < 8) {
+                passwordError.textContent = "Password must be at least 8 characters.";
+                return false;
+            } else {
+                passwordError.textContent = "";
+                return true;
+            }
+        }
+    
+        function validateConfirmPassword() {
+            var password = document.getElementById("password").value;
+            var cpassword = document.getElementById("cpassword").value;
+            var cpasswordError = document.getElementById("cpasswordError");
+        
+            if (cpassword === "") {
+                cpasswordError.textContent = "Please confirm your password.";
+                return false;
+            } else if (password !== cpassword) {
+                cpasswordError.textContent = "Passwords do not match.";
+                return false;
+            } else {
+                cpasswordError.textContent = "";
+                return true;
+            }
+        }
+        
+        function validateGender() {
+            var gender = document.getElementById("gender").value;
+            var genderError = document.getElementById("genderError");
+        
+            if (gender === "") {
+                genderError.textContent = "Please select your gender.";
+                return false;
+            } else {
+                genderError.textContent = "";
+                return true;
+            }
+        }
+    </script>
+</body>
+</html>

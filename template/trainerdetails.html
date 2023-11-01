@@ -1,0 +1,60 @@
+{% extends "dashboardbase.html" %}
+{% block title %}Trainer Details{% endblock %}
+
+{% block content %}
+  <h1>Trainer Details</h1>
+  <style>
+    /* Add internal CSS styles here */
+    .table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .table th, .table td {
+        padding: 8px;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .table thead {
+        background-color: #333;
+        color: #fff;
+    }
+
+    .table th {
+        font-weight: bold;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .table tbody tr:hover {
+        background-color: #ddd;
+    }
+  </style>
+  
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Phone No</th>
+          <!-- Add more fields here if needed -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for trainer in trainers %}
+          <tr>
+            <td>{{ trainer.username }}</td>
+            <td>{{ trainer.email }}</td>
+            <td>{{ trainer.phoneno }}</td>
+            <!-- Add more fields here if needed -->
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

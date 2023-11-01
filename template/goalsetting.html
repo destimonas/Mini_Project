@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Tracker</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Add custom CSS styles here */
+        /* For example, you can customize the table appearance */
+
+        /* Internal CSS for the modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+   <!-- ... (previous HTML code) ... -->
+
+<!-- Button to trigger the modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#goal-modal">
+    Set Goal
+</button>
+
+<!-- Modal for goal entry -->
+<div class="modal fade" id="goal-modal" tabindex="-1" role="dialog" aria-labelledby="goal-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="goal-modal-label">Set Your Fitness Goal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Goal Setting Form inside the modal -->
+                <form method="post" action="{% url 'save_fitness_goal' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="goal-type">Select Goal Type:</label>
+                        <select class="form-control" id="goal-type" name="goal-type">
+                            <option value="weight-loss">Weight Loss</option>
+                            <option value="muscle-gain">Muscle Gain</option>
+                            <option value="endurance">Improved Endurance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="goal-description">Goal Description:</label>
+                        <textarea class="form-control" id="goal-description" name="goal-description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="goal-deadline">Goal Deadline:</label>
+                        <input type="date" class="form-control" id="goal-deadline" name="goal-deadline">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Set Goal</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Display the entered goals in a table -->
+
+<h2>Goal Entries</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date Added</th>
+            <th>Goal Type</th>
+            <th>Goal Description</th>
+            <th>Goal Deadline</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for goal in goals %}
+        <tr>
+            <td>{{ goal.date_added|date:"Y-m-d H:i:s" }}</td>
+            <td>{{ goal.goal_type }}</td>
+            <td>{{ goal.goal_description }}</td>
+            <td>{{ goal.goal_deadline|date:"Y-m-d" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- ... (rest of your HTML) ... -->
+
+
+<!-- ... (rest of your HTML) ... -->
+
+<!-- ... (JavaScript code remains the same) ... -->
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+     // JavaScript code to handle form submission and goal entries
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("goal-setting-form");
+    const goalEntries = document.getElementById("goal-entries");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Get form values
+        const goalType = document.getElementById("goal-type").value;
+        const goalDescription = document.getElementById("goal-description").value;
+        const goalDeadline = document.getElementById("goal-deadline").value;
+
+        // Create a new row for the goal entries
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td>${new Date().toLocaleString()}</td>
+            <td>${goalType}</td>
+            <td>${goalDescription}</td>
+            <td>${goalDeadline}</td>
+        `;
+
+        // Add the new row to the goal entries table
+        goalEntries.appendChild(newRow);
+
+        // Clear the form
+        document.getElementById("goal-description").value = "";
+
+        // You can also send the data to your server and save it in the database here.
+    });
+});
+
+    </script>
+</body>
+</html>

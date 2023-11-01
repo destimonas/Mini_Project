@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fitness Tracker</title>
+</head>
+<body>
+    <h1>Welcome to Fitness Tracker</h1>
+    
+    <h2>Educational Content</h2>
+    <div id="educational-content">
+        <!-- Content will be dynamically loaded here using JavaScript -->
+    </div>
+
+    <h2>Video Library</h2>
+    <div id="video-library">
+        <!-- Video content will be dynamically loaded here using JavaScript -->
+    </div>
+
+    <h2>Articles</h2>
+    <div id="articles">
+        <!-- Articles will be dynamically loaded here using JavaScript -->
+    </div>
+
+    <script>
+        // Example JavaScript code to fetch and display educational content
+        const educationalContent = document.getElementById("educational-content");
+        fetch('/api/educational-content') // Replace with your actual API endpoint
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(content => {
+                    const contentElement = document.createElement('div');
+                    contentElement.innerHTML = `<a href="${content.url}">${content.title}</a>`;
+                    educationalContent.appendChild(contentElement);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Similar code can be implemented for videos and articles
+    </script>
+</body>
+</html>
