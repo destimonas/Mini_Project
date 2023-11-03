@@ -8,7 +8,7 @@
     <title>Fitness</title>
     
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/icon" href="{% static "assets/logo/favicon.png" %}">
+    
     
     <!-- Font Styles -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&amp;subset=devanagari,latin-ext" rel="stylesheet">
@@ -25,49 +25,7 @@
     <link rel="stylesheet" href="{% static "assets/css/responsive.css" %}">
 
     <style>
-        body {
-            background-image: url('https://unsplash.com/photos/NTyBbu66_SI');
-            background-color: #000;
-        }
-        /* CSS for the dropdown */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropbtn {
-    background-color: #3498db;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-/* Show the dropdown content when the button is clicked */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
+       
     </style>
 </head>
 
@@ -87,25 +45,21 @@
                             <li class="smooth-menu active"></li>
                             {% if user.is_authenticated %} 
                                 <li class="nav-item">
-                                    <a class="nav-link"> Welcome, {{ user.username }}</a>
+                                    <a class="nav-link"> Welcome, {{ trainer.username }}</a>
                                 </li>         
                             {% endif %}
-                            <li class="smooth-menu"><a href='usertrainer'>Trainer</a></li>
-                            <li class="smooth-menu"><a href='usernutrition'>Nutritionist</a></li>
-                            <li class="dropdown"> <a href='goalsetting' class="dropbtn">Goal Setting</a>
-                                <div class="dropdown-content">
+                            <li class="smooth-menu"><a href='#'>Profile</a></li>
+                            <li class="smooth-menu"><a href='#'>Schedule</a></li>
+                            <li class="smooth-menu"> <a href='#' id="goal-setting-link">Goal Setting</a>
+                                <select id="goal-type-dropdown" class="hidden">
                                 <option value="weight-loss">Weight Loss</option>
                                 <option value="muscle-gain">Muscle Gain</option>
                                 <option value="yoga">Yoga</option>
+                                <!-- Add more options as needed -->
+                                </select>
                             </li>
                             
-                            <li class="dropdown">
-                                <a class="dropbtn">Profile</a>
-                                <div class="dropdown-content">
-                                    <a href="{% url 'userprofile' %}">Update Profile</a>
-                                    <a href="{% url 'change_password' %}">Update Password</a>
-                                </div>
-                            </li>
+                            <li class="smooth-menu"><a href=" {% url 'userprofile' %} ">Profile</a></li>
                             <li class="smooth-menu"><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>
                         </ul>
                     </div>
@@ -119,8 +73,8 @@
             <div class="row">
                 <div class="col-md-12 text-center">
                     <div class="header-text">
-                        <h2><span></span><br> Stronger <br> Every <br>Day <span>.</span>   </h2>
-                        <p>Fitness is the journey that transforms you from who you are to who you want to be</p>
+                        <h2><span></span><br> Motivate the mind  <br> and set your <br>body free <span>.</span>   </h2>
+                        <p>Fitness isn't a destination,it's a lifelong journey of self-love,self-care and self-discovery..</p>
                     </div>
                 </div>
             </div>

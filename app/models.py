@@ -80,6 +80,7 @@ class Trainer(models.Model):
     specialization = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
     gender = models.CharField(max_length=10)
+    approved=models.BooleanField(default=False)
     
     def __str__(self):
         return self.full_name
@@ -98,3 +99,13 @@ class Nutritionist(models.Model):
 
     def __str__(self):
         return self.full_name
+
+
+
+
+class Specialization(models.Model):
+    name = models.CharField(max_length=100,unique=True)
+    description = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name

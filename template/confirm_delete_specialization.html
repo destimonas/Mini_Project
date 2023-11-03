@@ -1,0 +1,13 @@
+{% extends "dashboardbase.html" %}
+{% block title %}Confirm Deletion{% endblock %}
+
+{% block content %}
+  <h1>Confirm Deletion</h1>
+  <p>Are you sure you want to delete "{{ specialization.name }}"?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'specialization_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

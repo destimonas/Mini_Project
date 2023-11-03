@@ -17,13 +17,23 @@ urlpatterns = [
     path('userprofile/', UserProfileCreateView.as_view(), name='userprofile'),
 
     path('trainerdetails/', views.trainerdetails, name='trainerdetails'),
+    
     path('nutritiondetails/', views.nutritiondetails, name='nutritiondetails'),
     path('deactivate_user/<int:user_id>/', views.deactivate_user, name='deactivate_user'),
     path('activate_user/<int:user_id>/', views.activate_user, name='activate_user'),
     path('goalsetting/', views.display_goals, name='goalsetting'),  # Display the goal-setting page
     path('save_fitness_goal/', views.save_fitness_goal, name='save_fitness_goal'),  # Save fitness goals
     path('trainerreg/', views.trainerreg, name='trainerreg'),
+    path('trainerhome/', views.trainer_home, name='trainer_home'),
 
+    path('nutritionist/', views.nutritionist, name='nutritionist'),
+
+    # path('specialization/', views.specialization, name='specialization'),
+    path('specialization/', views.specialization_list, name='specialization_list'),
+    path('specialization/create/', views.create_specialization, name='create_specialization'),
+
+    path('specialization/delete/<int:pk>/', views.delete_specialization, name='delete_specialization'),
+    path('change_password/', views.change_password, name='change_password'),
     
 
 
@@ -41,6 +51,11 @@ urlpatterns = [
     path('password_reset/done/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
     path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
     path('reset/done/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
+
+
+        
+    path('approve_trainer/<int:trainer_id>/', views.approve_trainer, name='approve_trainer'),
+    path('reject_trainer/<int:trainer_id>/', views.reject_trainer, name='reject_trainer'),
 
  
 ] 

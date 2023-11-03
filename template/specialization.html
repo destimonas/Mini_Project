@@ -1,0 +1,80 @@
+{% extends "dashboardbase.html" %}
+{% block title %}Specialization{% endblock %}
+
+{% block content %}
+  <h1>Specialization</h1>
+
+  <style>
+    /* Your button style */
+    .btn-primary {
+      background-color: #3498db;
+      border: 2px solid #3498db;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: #2980b9;
+      border-color: #2980b9;
+      color: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Form container initially hidden */
+    .form-container {
+      display: none;
+    }
+  </style>
+
+  <button id="showFormButton" class="btn btn-primary">Add Specialization</button>
+
+  <div class="form-container">
+    <form method="post" action="{% url 'create_specialization' %}">
+      {% csrf_token %}
+      <label for="specialization">Specialization:</label>
+      <input type="text" id="specialization" name="specialization">
+      <label for="description">description:</label>
+      <input type="text" id="description" name="description">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+  </div>
+
+  <h2>Entries</h2>
+<table class="table" border="1px">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th> Description</th>
+            <th> Update</th>
+            <th> Delete</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+      {% for specialization in specializations %}
+          <tr>
+              <td>{{ specialization.name }}</td>
+              <td>{{ specialization.description }}</td>
+              <td><a href="#">Update</a></td>
+              <td><a href="{% url 'delete_specialization' specialization.id %}">Delete</a></td>
+          </tr>
+      {% endfor %}
+  </tbody>
+</table>
+  <script>
+    // Get references to the button and form container
+    const showFormButton = document.getElementById("showFormButton");
+    const formContainer = document.querySelector(".form-container");
+
+    // Add a click event listener to the button
+    showFormButton.addEventListener("click", function () {
+      // Toggle the visibility of the form container
+      formContainer.style.display = formContainer.style.display === "none" ? "block" : "none";
+    });
+  </script>
+{% endblock %}

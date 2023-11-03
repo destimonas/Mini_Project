@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect,HttpResponse
-from .models import CustomUser, UserProfile1
+
+from .models import *
 from django.contrib.auth import authenticate ,login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
@@ -77,6 +78,9 @@ def register(request):
         
     return render(request, 'register.html', locals())
 
+def trainer_home(request):
+    # You can add additional logic here to customize the trainer's dashboard content
+    return render(request, 'trainerhome.html')
 
 
 def signin(request):
@@ -98,7 +102,7 @@ def signin(request):
                 if user.is_admin==True:
                     return redirect('/adminpanel')
                 elif user.is_trainer==True:
-                    return redirect('trainer')
+                    return redirect('/trainerhome')
                 elif user.is_nutritionist==True:
                     return redirect('nutritionist')
                 elif user.is_user==True:
@@ -147,17 +151,21 @@ def userdetails(request):
     }
     return render(request, 'userdetails.html', context)
 
-def nutritiondetails(request):
+from .models import Nutritionist
 
-    nutritions = CustomUser.objects.filter(is_nutritionist=True)
-    
+def nutritiondetails(request):
+    nutritions = Nutritionist.objects.all()  # Query the Nutritionist model
+
     context = {
         'nutritions': nutritions,
     }
     return render(request, 'nutritiondetails.html', context)
 
+
+from .models import Trainer  # Import the Trainer model
+
 def trainerdetails(request):
-    trainers = CustomUser.objects.filter(is_trainer=True)
+    trainers = Trainer.objects.all()  # Query the Trainer model
 
     context = {
         'trainers': trainers,
@@ -172,6 +180,10 @@ def usertrainer(request):
 def usernutrition (request):
     
     return render(request, 'usernutrition.html')
+
+def nutritionist (request):
+    
+    return render(request, 'nutritionist.html')
 
 
 from django.http import JsonResponse
@@ -275,15 +287,18 @@ def trainerreg(request):
             gender=gender
         )
         trainer.save()
+        details=CustomUser(username=username,
+            email=email,
+            password=password,
+            is_trainer=True)
+        details.save()
 
         messages.success(request, "Registered Successfully")
         
         # Redirect to a different URL after registration (change 'some_url_name' to your desired URL)
         return redirect('/signin')
-    
-    # Render the 'trainerreg.html' template for GET requests
-    return render(request, 'trainerreg.html')
-
+    specialization = Specialization.objects.all()
+    return render(request, 'trainerreg.html', {'specialization': specialization})
 from .models import Nutritionist
 
 def nutritionreg(request):
@@ -395,3 +410,106 @@ from .models import FitnessGoal
 def display_goals(request):
     goals = FitnessGoal.objects.all()
     return render(request, 'goalsetting.html', {'goals': goals})
+
+
+# def specialization(request):
+#     return render(request, "specialization.html")
+
+def specialization_list(request):
+    specializations = Specialization.objects.all()
+    return render(request, 'specialization.html', {'specializations': specializations})
+
+def create_specialization(request):
+    if request.method == 'POST':
+        name = request.POST.get('specialization')
+        description = request.POST.get('description')
+        
+        if name and description:
+            Specialization.objects.create(name=name, description=description)
+    
+    return redirect('specialization_list')
+
+from django.shortcuts import render, redirect, get_object_or_404
+# from .models import Specialization
+from django.shortcuts import render, redirect, get_object_or_404
+
+
+def delete_specialization(request, pk):
+    specialization_instance = get_object_or_404(Specialization, pk=pk)
+    
+    if request.method == 'POST':
+        specialization_instance.delete()
+        return redirect('specialization_list')
+    
+    return render(request, 'confirm_delete_specialization.html', {'specialization': specialization_instance})
+
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import render
+
+def change_password(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')  # Get the old password from the form
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        user = request.user  # Get the currently logged-in user
+
+        # Check if the entered old password matches the user's current password
+        if not user.check_password(old_password):
+            return JsonResponse({'error': 'Incorrect old password'}, status=400)
+
+        if new_password == confirm_password:
+            # Change the user's password and save it to the database
+            user.set_password(new_password)
+            user.save()
+
+            # Update the session to keep the user logged in
+            update_session_auth_hash(request, user)
+
+            return JsonResponse({'message': 'Password changed successfully'})
+        else:
+            return JsonResponse({'error': 'Passwords do not match'}, status=400)
+
+    return render(request, 'change_password.html')
+
+from django.http import HttpResponseRedirect
+# views.py
+
+
+
+def approve_trainer(request, trainer_id):
+    trainer = Trainer.objects.get(pk=trainer_id)
+
+    # Perform the approval logic (e.g., setting trainer.approved = True)
+    trainer.approved = True
+    trainer.save()
+
+    # Send an email to the registered email
+    subject = 'Approval Notification'
+    message = 'You have been approved as a trainer.'
+    from_email = 'destimonas2024a@mca.ajce.in'
+    recipient_list = [trainer.email]
+    send_mail(subject, message, from_email, recipient_list)
+
+    return HttpResponseRedirect(reverse('trainerdetails'))
+
+def reject_trainer(request, trainer_id):
+    trainer = Trainer.objects.get(pk=trainer_id)
+
+    # Perform the rejection logic (e.g., setting trainer.approved = False)
+    trainer.approved = False
+    trainer.save()
+
+    # Send an email to the registered email
+    subject = 'Rejection Notification'
+    message = 'You have been rejected as a trainer.'
+    from_email = 'destimonas2024a@mca.ajce.in'
+    recipient_list = [trainer.email]
+    send_mail(subject, message, from_email, recipient_list)
+
+    return HttpResponseRedirect(reverse('trainerdetails'))
+
+
+

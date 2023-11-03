@@ -1,3 +1,4 @@
+{% load socialaccount %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -84,6 +85,8 @@ height: 100%;
   
               <p class="small mb-5 pb-lg-2"><a class="text-muted" href="{% url 'password_reset' %}">Forgot password?</a></p>
               <p>Don't have an account? <a href="{% url 'register'%}" class="link-info">Register here</a></p>
+
+              <a href="{% provider_login_url 'google' %}" >Sign in with Google</a>
   
             </form>
   

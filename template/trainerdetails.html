@@ -3,6 +3,7 @@
 
 {% block content %}
   <h1>Trainer Details</h1>
+  
   <style>
     /* Add internal CSS styles here */
     .table {
@@ -34,24 +35,40 @@
         background-color: #ddd;
     }
   </style>
-  
+
   <div class="table-responsive">
     <table class="table table-striped table-bordered">
       <thead class="thead-dark">
         <tr>
+          <th>Fullname</th>
           <th>Username</th>
+          <th>Specialization</th>
           <th>Email</th>
           <th>Phone No</th>
-          <!-- Add more fields here if needed -->
+          <th>Action</th> <!-- Move the "Action" column to the last position -->
         </tr>
       </thead>
       <tbody>
         {% for trainer in trainers %}
           <tr>
+            <td>{{ trainer.full_name }}</td>
             <td>{{ trainer.username }}</td>
+            <td>{{ trainer.specialization }}</td>
             <td>{{ trainer.email }}</td>
-            <td>{{ trainer.phoneno }}</td>
-            <!-- Add more fields here if needed -->
+            <td>{{ trainer.phone_number }}</td>
+            <td>
+              {% if trainer.approved %}
+                <form action="{% url 'reject_trainer' trainer.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+              {% else %}
+                <form action="{% url 'approve_trainer' trainer.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-success">Approve</button>
+                </form>
+              {% endif %}
+            </td>
           </tr>
         {% endfor %}
       </tbody>
