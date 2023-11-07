@@ -1,8 +1,9 @@
-[{% extends "dashboardbase.html" %}
+{% extends "dashboardbase.html" %}
 {% block title %}Nutritionist Details{% endblock %}
 
 {% block content %}
   <h1>Nutritionist Details</h1>
+  
   <style>
     /* Add internal CSS styles here */
     .table {
@@ -44,7 +45,7 @@
           <th>Specialization</th>
           <th>Email</th>
           <th>Phone No</th>
-          <!-- Add more fields here if needed -->
+          <th>Action</th> <!-- Add an "Action" column -->
         </tr>
       </thead>
       <tbody>
@@ -55,7 +56,19 @@
             <td>{{ nutritionist.specialization }}</td>
             <td>{{ nutritionist.email }}</td>
             <td>{{ nutritionist.phone_number }}</td>
-           
+            <td>
+              {% if nutritionist.approved %}
+                <form action="{% url 'reject_nutritionist' nutritionist.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+              {% else %}
+                <form action="{% url 'approve_nutritionist' nutritionist.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-success">Approve</button>
+                </form>
+              {% endif %}
+            </td>
           </tr>
         {% endfor %}
       </tbody>

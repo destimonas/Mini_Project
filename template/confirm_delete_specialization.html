@@ -2,12 +2,44 @@
 {% block title %}Confirm Deletion{% endblock %}
 
 {% block content %}
-  <h1>Confirm Deletion</h1>
-  <p>Are you sure you want to delete "{{ specialization.name }}"?</p>
+  <h1 style="color: #333;">Confirm Deletion</h1>
+  <p style="margin: 20px 0; font-size: 18px;">Are you sure you want to delete "{{ specialization.name }}"?</p>
 
   <form method="post">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Confirm Delete</button>
-    <a href="{% url 'specialization_list' %}" class="btn btn-secondary">Cancel</a>
+    <a href="{% url 'specialization_list' %}" class="btn btn-secondary" style="margin-left: 10px;">Cancel</a>
   </form>
+
+  <style>
+    /* Add internal CSS styles here for additional styling */
+    body {
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+
+    .btn-danger {
+      background-color: #d9534f;
+      border-color: #d43f3a;
+      color: #fff;
+    }
+
+    .btn-danger:hover {
+      background-color: #c9302c;
+      border-color: #ac2925;
+    }
+
+    .btn-secondary {
+      background-color: #333;
+      border-color: #333;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background-color: #292b2c;
+      border-color: #292b2c;
+    }
+  </style>
 {% endblock %}

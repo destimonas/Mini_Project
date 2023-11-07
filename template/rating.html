@@ -1,0 +1,121 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Trainer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        /* Background color */
+        body {
+            background-color: #eee;
+        }
+        
+        /* Card style */
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Trainer image style */
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        
+        /* Button style */
+        .btn {
+            background-color: #6a0dad; /* Purple color */
+            color: #fff; /* White text color */
+        }
+        
+        /* Modal style */
+        .modal-content {
+            border: none;
+            border-radius: 10px;
+        }
+        
+        /* Modal input style */
+        .modal-body input, .modal-body textarea {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <section class="h-100" style="background-color: #eee;">
+        <div class="container h-100 py-5">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-10">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-normal mb-0 text-black">Rate Trainer</h3>
+                    </div>
+                    
+                        <div class="card rounded-3 mb-4">
+                            <div class="card-body p-4">
+                                <div class="row d-flex justify-content-between align-items-center">
+                                    <div class="col-md-2 col-lg-2 col-xl-2">
+                                        <img src="{% static 'img/avatar/avatar-face-02.png' %}" class="img-fluid rounded-3" alt="{{ trainer.user.username }}">
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-xl-6">
+                                        <p class="lead fw-normal mb-2">Trainer</p>
+                                        <p><span class="text-muted">Name: </span>{{ trainer.full_name }}</p>
+                                        <p><span class="text-muted">Phone Number: </span>{{ trainer.phone_number }}</p>
+                                        <p><span class="text-muted">Specialization: </span>{{ trainer.specialization }}</p>
+                                        <p><span class="text-muted">Gender: </span>{{ trainer.gender }}</p>
+                                        <p><span class="text-muted">Available Timings: </span>{{ trainer.available_timings }}</p>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-xl-2">
+                                        <!-- Button to open the rating and feedback modal -->
+                                        <button type="button" id="ratebtn" class="btn btn-warning btn-lg ms-2" data-bs-toggle="modal" data-bs-target="#rateModal{{ trainer.id }}">Rate & Feedback</button>
+
+                                        <!-- Rating and Feedback Modal -->
+                                        <div class="modal fade" id="rateModal{{ trainer.id }}" tabindex="-1" aria-labelledby="rateModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="rateModalLabel">Rate Trainer and Provide Feedback</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                
+
+                                                        <form method="post" >
+                                                            {% csrf_token %}
+                                                            <label for="rating">Rating (out of 5):</label>
+                                                            <input type="number" id="rating" name="rating" min="1" max="5" step="1">
+                                                            
+                                                            <label for "feedback">Feedback:</label>
+                                                            <textarea id="feedback" name="feedback" rows="4"></textarea>
+                                                            
+                                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                                        </form>
+                                                        
+                                                        
+                                                        
+                                                        
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Your JavaScript code here -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

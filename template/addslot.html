@@ -1,0 +1,178 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Time Slots</title>
+   
+    <style>
+        /* Add custom CSS styles for improved appearance */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .session {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add Slots</h1>
+    <button id="showSlotsFormButton" class="btn btn-primary">Add Slots</button>
+
+    <div class="slots-container" style="display: none;">
+        <h2>Add Slots</h2>
+        <form id="slotForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="session">Session:</label>
+                <select id="session" name="session">
+                    <option value="morning">Morning</option>
+                    <option value="afternoon">Afternoon</option>
+                    <option value="evening">Evening</option>
+                </select>
+            </div>
+            <div class="form-group" id="timeGroup" style="display: none;">
+                <label for="time">Time:</label>
+                <div id="timeOptions"></div>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-submit" onclick="addSlot()">Submit</button>
+            </div>
+        </form>
+
+        <h2>Trainer Availability</h2>
+        <!-- Display existing data -->
+<table class="table" border="1px">
+    <thead>
+        <tr>
+            <th>Session</th>
+            <th>Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for slot in slots %}
+            <tr>
+                <td>{{ slot.session }}</td>
+                <td>{{ slot.time }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    </div>
+
+    <script>
+        const showSlotsFormButton = document.getElementById("showSlotsFormButton");
+        const sessionDropdown = document.getElementById("session");
+        const timeGroup = document.getElementById("timeGroup");
+        const timeOptions = document.getElementById("timeOptions");
+        const slotsContainer = document.querySelector(".slots-container");
+
+        showSlotsFormButton.addEventListener("click", function () {
+            timeGroup.style.display = "none"; // Hide the time options initially
+            slotsContainer.style.display = slotsContainer.style.display === "none" ? "block" : "none";
+        });
+
+        sessionDropdown.addEventListener("change", function () {
+            const selectedSession = sessionDropdown.value;
+            timeOptions.innerHTML = ""; // Clear previous options
+
+            if (selectedSession === "morning") {
+                addTimeOption("6:00 am");
+                addTimeOption("8:00 am");
+                addTimeOption("10:00 am (Morning Session)");
+            } else if (selectedSession === "afternoon") {
+                addTimeOption("1:00 pm");
+                addTimeOption("3:00 pm (Afternoon Session)");
+            } else if (selectedSession === "evening") {
+                addTimeOption("4:00 pm");
+                addTimeOption("5:00 pm");
+                addTimeOption("6:00 pm (Evening Session)");
+            }
+
+            timeGroup.style.display = "block"; // Display the time options
+        });
+
+        function addTimeOption(value) {
+            const input = document.createElement("input");
+            input.type = "radio";
+            input.name = "time";
+            input.value = value;
+
+            const label = document.createElement("label");
+            label.appendChild(input);
+            label.appendChild(document.createTextNode(" " + value));
+
+            timeOptions.appendChild(label);
+        }
+
+        function addSlot() {
+            const session = sessionDropdown.value;
+            const timeInputs = document.querySelectorAll('input[name="time"]');
+            let selectedTime = '';
+
+            for (const input of timeInputs) {
+                if (input.checked) {
+                    selectedTime = input.value;
+                    break;
+                }
+            }
+
+            if (session && selectedTime) {
+                // Add the slot to the table
+                const table = document.querySelector(".table");
+                const tbody = table.querySelector("tbody");
+                const row = document.createElement("tr");
+                const sessionCell = document.createElement("td");
+                const timeCell = document.createElement("td");
+
+                sessionCell.textContent = session;
+                timeCell.textContent = selectedTime;
+
+                row.appendChild(sessionCell);
+                row.appendChild(timeCell);
+                tbody.appendChild(row);
+
+                // You can also send the data to the server (Django) for database entry here
+            }
+        }
+    </script>
+</body>
+</html>

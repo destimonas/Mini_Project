@@ -28,7 +28,7 @@ def userhome(request):
         response['Cache-Control'] = 'no-store, must-revalidate'
         return response
      else:
-         return redirect('home')
+         return redirect('home') 
 
 def register(request):
     
@@ -82,6 +82,18 @@ def trainer_home(request):
     # You can add additional logic here to customize the trainer's dashboard content
     return render(request, 'trainerhome.html')
 
+def trainerprofile(request):
+    # Your view logic here
+    return render(request, 'trainerprofile.html')
+
+
+def nutritionprofile(request):
+    # Your view logic here
+    return render(request, 'nutritionprofile.html')
+
+def save_user_profile(request):
+    # Your view logic here
+    return HttpResponse("Save User Profile View")
 
 def signin(request):
    
@@ -322,9 +334,17 @@ def nutritionreg(request):
             gender=gender
         )
         nutritionist.save()
+        details=CustomUser(username=username,
+            email=email,
+            password=password,
+            is_nutritionist=True)
+        details.save()
         
         messages.success(request, "Registered Successfully")
         return redirect('/signin')
+    
+    # specialization = Specialization.objects.all()
+    # return render(request, 'trainerreg.html', {'specialization': specialization})
 
     return render(request, "nutritionreg.html")
 
@@ -380,6 +400,21 @@ class UserProfileCreateView(LoginRequiredMixin, View):
         return redirect('userprofile')
 
 
+def update_specialization(request, pk):
+    specialization_instance = get_object_or_404(Specialization, pk=pk)
+    
+    if request.method == 'POST':
+        # Update the specialization with the new data
+        new_specialization = request.POST.get("specialization")
+        new_description = request.POST.get("description")
+        specialization_instance.name = new_specialization
+        specialization_instance.description = new_description
+        specialization_instance.save()
+        
+        return redirect('specialization_list')
+    
+    return render(request, 'update_specialization.html', {'specialization': specialization_instance})
+
 
 
 
@@ -424,9 +459,13 @@ def create_specialization(request):
         name = request.POST.get('specialization')
         description = request.POST.get('description')
         
-        if name and description:
+        # Check if a specialization with the same name already exists
+        if Specialization.objects.filter(name=name).exists():
+            messages.error(request, f'Specialization with name "{name}" already exists.')
+        else:
             Specialization.objects.create(name=name, description=description)
-    
+            return redirect('specialization_list')
+
     return redirect('specialization_list')
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -481,11 +520,9 @@ from django.http import HttpResponseRedirect
 
 def approve_trainer(request, trainer_id):
     trainer = Trainer.objects.get(pk=trainer_id)
-
     # Perform the approval logic (e.g., setting trainer.approved = True)
     trainer.approved = True
     trainer.save()
-
     # Send an email to the registered email
     subject = 'Approval Notification'
     message = 'You have been approved as a trainer.'
@@ -495,13 +532,26 @@ def approve_trainer(request, trainer_id):
 
     return HttpResponseRedirect(reverse('trainerdetails'))
 
+# View to approve a Nutritionist
+def approve_nutritionist(request, nutritionist_id):
+    nutritionist = Nutritionist.objects.get(pk=nutritionist_id)
+    nutritionist.approved = True
+    nutritionist.save()
+
+    # Send an email to the registered email
+    subject = 'Approval Notification'
+    message = 'You have been approved as a nutritionist.'
+    from_email = 'destimonas2024a@mca.ajce.in'
+    recipient_list = [nutritionist.email]
+    send_mail(subject, message, from_email, recipient_list)
+    
+    return HttpResponseRedirect(reverse('nutritiondetails'))
+
 def reject_trainer(request, trainer_id):
     trainer = Trainer.objects.get(pk=trainer_id)
-
     # Perform the rejection logic (e.g., setting trainer.approved = False)
     trainer.approved = False
     trainer.save()
-
     # Send an email to the registered email
     subject = 'Rejection Notification'
     message = 'You have been rejected as a trainer.'
@@ -512,4 +562,113 @@ def reject_trainer(request, trainer_id):
     return HttpResponseRedirect(reverse('trainerdetails'))
 
 
+# View to reject a Nutritionist
+def reject_nutritionist(request, nutritionist_id):
+    nutritionist = Nutritionist.objects.get(pk=nutritionist_id)
+    nutritionist.approved = False
+    nutritionist.save()
 
+    # Send an email to the registered email
+    subject = 'Rejection Notification'
+    message = 'You have been rejected as a nutritionist.'
+    from_email = 'destimonas2024a@mca.ajce.in'
+    recipient_list = [nutritionist.email]
+    send_mail(subject, message, from_email, recipient_list)
+    
+    return HttpResponseRedirect(reverse('nutritiondetails'))
+
+
+
+
+def usertrainer(request):
+    trainers = Trainer.objects.all() 
+   
+    return render(request, 'usertrainer.html', {'trainers': trainers})
+
+def consult_trainer(request):
+    if request.method == 'POST':
+        # Handle the consultation logic here
+        trainer_id = request.POST.get('trainer_id')
+        # You can add your consultation logic here
+        return HttpResponse('Consultation successful')
+    else:
+        # Handle GET request for consultation
+        return HttpResponse('Invalid request')
+
+def usernutrition(request):
+    
+    nutritionists = Nutritionist.objects.all()
+    return render(request, 'usernutrition.html', {'nutritionists': nutritionists})
+
+
+
+def weekly_class_schedule(request):
+    # Define your schedule data here or fetch it from a database.
+    # For simplicity, we'll use static data in this example.
+    schedule_data = [
+        {
+            'day': 'Sunday',
+            'event': 'Yoga Class',
+            'time': '10:00 AM - 11:30 AM',
+          
+        },
+        {
+            'day': 'Sunday',
+            'event': 'Zumba Class',
+            'time': '3:00 PM - 4:30 PM',
+       
+        },
+        {
+            'day': 'Monday',
+            'event': 'Pilates Class',
+            'time': '9:30 AM - 11:00 AM',
+         
+        },
+        {
+            'day': 'Monday',
+            'event': 'Spinning Class',
+            'time': '1:00 PM - 2:30 PM',
+        
+        },
+        {
+            'day': 'Monday',
+            'event': 'Aerobics Class',
+            'time': '6:00 PM - 7:30 PM',
+         
+        },
+        # Add more schedule data for other days and events as needed.
+    ]
+
+    return render(request, 'schedule.html', {'schedule_data': schedule_data})
+
+def rate_trainer(request, trainer_id):
+    if request.user.is_authenticated:
+        
+        if request.method == 'POST':
+            user = request.user  # Assuming you have authentication set up
+            trainer = Trainer.objects.get(id=trainer_id)
+            rating = request.POST['rating']
+            feedback = request.POST['feedback']
+            user_rating = UserRating(user=user, trainer=trainer, rating=rating, feedback=feedback)
+            user_rating.save()
+            return redirect('usertrainer')
+    trainers = Trainer.objects.all()
+    trainer = get_object_or_404(Trainer, pk=trainer_id)
+
+    context = {
+        'trainer': trainer,
+        'trainers': trainers,
+    }
+    return render(request, 'rating.html', context)
+
+
+
+def add_slot(request):
+    if request.method == "POST":
+        session = request.POST.get("session")
+        time = request.POST.get("time")
+        TimeSlot.objects.create(session=session, time=time)
+        return redirect("add_slot")  # Redirect back to the form after submission
+
+    slots = TimeSlot.objects.all()
+    return render(request, 'addslot.html', {"slots": slots})

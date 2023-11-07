@@ -46,7 +46,7 @@
                                 
                                 {% comment %} <li class="breadcrumb-item"><a href="#">User</a></li> {% endcomment %}
                                 <li class="breadcrumb-item active"
-                                    aria-current="page">User Profile </li>
+                                    aria-current="page">Trainer Profile </li>
                                   
                             </ol>
                         </nav>
@@ -62,7 +62,7 @@
                                     <img id="profileImage" class="rounded-circle img-fluid" style="width: 150px;" alt="avatar" style="cursor: pointer">
                                     <input type="file" id="profileImageInput" accept="image/*" style="display: none;">
                                 </label>
-                                <h5 class="my-3">{{ user.username }}</h5>
+                                <h5 class="my-3">{{ trainer.username }}</h5>
                                 {% if user.is_user %}
                                     <p class="text-muted mb-1">User</p>
                                 {% elif user.is_trainer %}
@@ -70,16 +70,15 @@
                                 {% elif user.is_nutritionist %}
                                     <p class="text-muted mb-1">Nutritionist</p>
                                 {% endif %}
-                                <p class="text-muted mb-1">Username: {{ user.username }}</p>
-                                <p class="text-muted mb-1">Email: {{ user.email }}</p>
-                                <p class="text-muted mb-1">Full Name: {{ user_profile.fullname }}</p>
-                                <p class="text-muted mb-1">Phone Number: {{ user_profile.phone }}</p>
+                                <p class="text-muted mb-1">Username: {{trainer.username }}</p>
+                                <p class="text-muted mb-1">Email: {{ trainer.email }}</p>
+                                <p class="text-muted mb-1">Full Name: {{ trainer.full_name }}</p>
+                                <p class="text-muted mb-1">Phone Number: {{ trainer.phone }}</p>
                                 <p class="text-muted mb-1">State: {{ user_profile.state }}</p>
                                 <p class="text-muted mb-1">District: {{ user_profile.district }}</p>
                                 <p class="text-muted mb-1">Gender: {{ user_profile.gender }}</p>
-                                <p class="text-muted mb-1">Age: {{ user_profile.age }}</p>
-                                <p class="text-muted mb-1">Height(cm): {{ user_profile.height }}</p>
-                                <p class="text-muted mb-1">Weight(kg): {{ user_profile.weight }}</p>
+                                <p class="text-muted mb-1">specialization: {{ trainer.specialization }}</p>
+                                
                     
                                 <!-- Add other user details here if needed -->
                             </div>
@@ -96,7 +95,8 @@
                         const profileImage = document.getElementById("profileImage");
                     
                         // Set the default avatar image URL
-                        const defaultAvatarURL = "D:\minipro\static\images\avathar.jpg"; // Replace with your actual default avatar URL
+                        const defaultAvatarURL = "{% static 'images/avatar.jpg' %}";
+
                     
                         // Set the default avatar image
                         profileImage.src = defaultAvatarURL;
@@ -123,7 +123,8 @@
                     <div class="col-lg-8">
                         <div class="card mb-4">
                             <section>
-                                <form method="POST" action="" id="form">
+                                <form method="POST" action="{% url 'save_user_profile' %}" id="form">
+
                                     {% csrf_token %}
                                     <div class="card-body">
 
@@ -143,7 +144,7 @@
                                                 <p class="mb-0" for="username">Username</p>
                                             </div>
                                             <div class="col-sm-9">
-                                                <input type="text" id="username" class="form-control form-control-lg" name="username" value= "{{ user.username }}" />
+                                                <input type="text" id="username" class="form-control form-control-lg" name="username" value= "{{ trainer.username }}" />
                                                 <span id="numspan" style="font-size: 12px;"></span>
                                             </div>
                                         </div>
@@ -154,7 +155,7 @@
                                                 <p class="mb-0" for="email">Email</p>
                                             </div>
                                             <div class="col-sm-9">
-                                                <input type="text" id="email" class="form-control form-control-lg" name="email" value= "{{ user.email }}" />
+                                                <input type="text" id="email" class="form-control form-control-lg" name="email" value= "{{ trainer.email }}" />
                                                 <span id="numspan" style="font-size: 12px;"></span>
                                             </div>
                                         </div>
@@ -168,7 +169,7 @@
                                                 <p class="mb-0" for="num">Phone Number</p>
                                             </div>
                                             <div class="col-sm-9">
-                                                <input type="text" id="phone" class="form-control form-control-lg" name="phone" value= "{{ user.phone }}" />
+                                                <input type="text" id="phone" class="form-control form-control-lg" name="phone" value= "{{ trainer.phone }}" />
                                                 <span id="numspan" style="font-size: 12px;"></span>
                                             </div>
                                         </div>
@@ -247,40 +248,11 @@
                                         </div>
                                         <hr>
 
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Age</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="number" id="age" class="form-control form-control-lg" name="age" value="{{ userprofile.age }}"/>
-                                                <span id="agespan" style="font-size: 12px;"></span>
-
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                     <hr>
-                                    <hr>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0" for="height">Height(cm)</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="number" id="height" class="form-control form-control-lg" name="height" value ="{{ userprofile.height }}" />
-                                                <span id="heighttspan" style="font-size: 12px;"></span>
-                                            </div>
-                                        </div>
-                                    <hr>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0" for="weight">Weight(kg)</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="number" id="weight" class="form-control form-control-lg" name="weight" value = "{{ userprofile.weight }}"/>
-                                                <span id="weighttspan" style="font-size: 12px;"></span>
-                                            </div>
-                                        </div>
-                                        <hr>
+                                  
+                                        
                                     <center><button type="submit" id="savebtn" class="btn btn-warning btn-lg ms-2">Save</button></center>
 
                                      <br><br><br>
@@ -440,34 +412,7 @@
                     ageSpan.textContent = '';
                 }
             }
-            function validateHeight() {
-                const heightInput = document.getElementById('height');
-                const heightSpan = document.getElementById('heightspan');
-                const heightValue = heightInput.value;
-
-                if (!heightValue.match(/^\d+(\.\d{1,2})?$/)) {
-                    heightSpan.textContent = 'Height must be a positive number with up to two decimal places.';
-                    return false;
-                } 
-                else {
-                    heightSpan.textContent = '';
-                    return true;
-                }
-            }
-
-           
             
-            function validateWeight() {
-                const weightInput = document.getElementById('weight');
-                const weightSpan = document.getElementById('weightspan');
-                const weightValue = weightField.value;
-                if (!weightValue.match(/^\d+(\.\d{1,2})?$/)) {
-                    alert('Weight must be a positive number with up to two decimal places.');
-                    weightField.focus();
-                    return false;
-                }
-                return true;
-            }
 
         });
     </script>

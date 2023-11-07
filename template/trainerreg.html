@@ -143,6 +143,16 @@
             <option value="other">Other</option>
             </select>
             <p id="genderError" class="error" style="color: red;"></p>
+
+            <label for="certificate">Certificate (PDF, JPG, PNG)</label>
+            <input type="file" class="form-control" id="certificate" name="certificate">
+            <p id="certificateError" class="error" style="color: red;"></p>
+
+            <label for="govt_id">Government ID (PDF, JPG, PNG)</label>
+            <input type="file" class="form-control" id="govt_id" name="govt_id">
+            <p id="govt_idError" class="error" style="color: red;"></p>
+        </div>
+
         <button type="submit" class="profile-button" id="registerbtn">Register</button>
         </form>
     </div>
@@ -152,16 +162,14 @@
             var isUsernameValid = validateUsername();
             var isFullnameValid = validateFullname();
             var isEmailValid = validateEmail();
-            var isSpecializationValid = validateSpecialization();
             var isPhoneValid = validatePhone();
             var isPasswordValid = validatePassword();
             var isConfirmpasswordValid =validateConfirmPassword();
             var isGenderValid = validateGender();
-            
-           
-        
-            // Check if all validation functions return true
-            if (isUsernameValid && isFullnameValid && isEmailValid && isSpecialization && isPhoneValid && isPasswordValid && isGenderValid) {
+            var isCertificateValid = validateCertificate();
+            var isGovtIdValid = validateGovtId();
+
+            if (isUsernameValid && isFullnameValid && isEmailValid && isPhoneValid && isPasswordValid && isGenderValid && isCertificateValid && isGovtIdValid) {
                 return true; // Allow form submission
             } else {
                 return false; // Prevent form submission
@@ -204,6 +212,7 @@
             var email = document.getElementById("email").value.trim();
             var emailError = document.getElementById("emailError");
             var emailPattern = /^[A-Za-z]/; // Check if email starts with a letter
+
             var validEmailPattern = /\S+@\S+\.\S+/;
         
             if (email === "") {
@@ -251,11 +260,15 @@
                 var specialization = document.getElementById("specialization").value;
                 var specializationError = document.getElementById("specializationError");
                 var specializationPattern = /^[A-Za-z\s]{1,15}$/;  // Allows only letters and spaces, up to 15 characters
-            if {
-                    specializationError.innerText = "";
+                if (specializationPattern.test(specialization)) {
+                    specializationError.textContent = "";
                     return true;
+                } else {
+                    specializationError.textContent = "Invalid specialization format.";
+                    return false;
                 }
             }
+            
             
     
         function validatePassword() {
@@ -309,6 +322,32 @@
                 return true;
             }
         }
+        function validateCertificate() {
+            var certificate = document.getElementById("certificate").value;
+            var certificateError = document.getElementById("certificateError");
+
+            if (certificate === "") {
+                certificateError.textContent = "Please upload your certificate.";
+                return false;
+            } else {
+                certificateError.textContent = "";
+                return true;
+            }
+        }
+
+        function validateGovtId() {
+            var govtId = document.getElementById("govt_id").value;
+            var govtIdError = document.getElementById("govt_idError");
+
+            if (govtId === "") {
+                govtIdError.textContent = "Please upload your government ID.";
+                return false;
+            } else {
+                govtIdError.textContent = "";
+                return true;
+            }
+        }
+   
     </script>
 </body>
 </html>

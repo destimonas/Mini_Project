@@ -6,341 +6,180 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
-<style>
-  <style>
-    /* Reset some default styles */
-    body, h1, h2, h3, p, ul, li {
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: #f5f5f5;
-        color: #333;
-    }
-
-    /* Navbar styles */
-    .navbar {
-        background-color: #333;
-        overflow: hidden;
-    }
-
-    .navbar-brand {
-        font-size: 24px;
-        color: #fff;
-        float: left;
-    }
-
-    .navbar-toggler {
-        background-color: #fff;
-        float: right;
-    }
-
-    .navbar-nav {
-        list-style: none;
-        display: flex;
-        align-items: center;
-    }
-
-    .nav-item {
-        margin-right: 20px;
-    }
-
-    .nav-link {
-        color: #fff !important;
-        text-decoration: none;
-        font-weight: bold;
-        transition: color 0.3s;
-    }
-
-    .nav-link:hover {
-        color: #17a2b8;
-    }
-
-    /* Hero section styles */
-    .hero-wrap {
-        position: relative;
-        overflow: hidden;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center center;
-    }
-
-    .slider-item {
-        position: relative;
-        height: 100vh;
-    }
-
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-    }
-
-    .slider-text {
-        text-align: center;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: #fff;
-    }
-
-    .slider-text h1 {
-        font-size: 36px;
-        font-weight: 700;
-        margin-bottom: 10px;
-    }
-
-    .slider-text p {
-        font-size: 16px;
-    }
-
-    .btn-primary {
-        background-color: #17a2b8;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        text-transform: uppercase;
-        font-weight: 600;
-        border-radius: 4px;
-        margin-right: 10px;
-    }
-
-    .btn-white {
-        background-color: #fff;
-        color: #333;
-        border: none;
-        padding: 10px 20px;
-        text-transform: uppercase;
-        font-weight: 600;
-        border-radius: 4px;
-    }
-
-    /* Service section styles */
-    .ftco-services {
-        padding: 50px 0;
-    }
-
-    .services-wrap {
-        border: 1px solid #ddd;
-        padding: 20px;
-        background-color: #fff;
-        text-align: center;
-        margin-top: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .services-wrap h3 {
-        font-size: 20px;
-        font-weight: 600;
-        margin-top: 15px;
-    }
-
-    .services-wrap p {
-        font-size: 14px;
-    }
-
-    .btn-outline-primary {
-        background-color: #fff;
-        color: #17a2b8;
-        border: 2px solid #17a2b8;
-    }
-
-    /* Background image section styles */
-    .img {
-        background-size: cover;
-        background-position: center;
-        height: 200px;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    /* Footer styles */
-    .footer {
-        background-color: #333;
-        color: #fff;
-        padding: 50px 0;
-        text-align: center;
-    }
-
-    .footer h2 {
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
-
-    .footer p {
-        font-size: 16px;
-    }
-
-    .btn-custom {
-        background-color: #17a2b8;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        text-transform: uppercase;
-        font-weight: 600;
-        border-radius: 4px;
-        margin-top: 10px;
-    }
-</style>
-
-
-</style>
+    <style>
+        /* Reset some default styles */
+        body, h1, h2, h3, p, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+    
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+    
+        /* Navbar styles */
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+    
+        .navbar-brand {
+            font-size: 24px;
+            color: #fff;
+            float: left;
+        }
+    
+        .navbar-toggler {
+            background-color: #fff;
+            float: center;
+        }
+    
+        .navbar-nav {
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+    
+        .nav-item {
+            margin-right: 20px;
+        }
+    
+        .nav-link {
+            color: #fff !important;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+    
+        .nav-link:hover {
+            color: #17a2b8;
+        }
+    
+        /* Hero section styles */
+        .hero-wrap {
+            position: relative;
+            overflow: hidden;
+            background-image: url('https://www.thebesttoronto.com/wp-content/uploads/2021/09/Best-Nutritionists-in-Toronto.jpg'); /* Updated background image URL */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            height: 100vh;
+        }
+    
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+    
+        .slider-text {
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+        }
+    
+        .slider-text h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+    
+        .slider-text p {
+            font-size: 16px;
+        }
+    
+        .btn-primary {
+            background-color: #17a2b8;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            font-weight: 600;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+    
+        .btn-white {
+            background-color: #fff;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            font-weight: 600;
+            border-radius: 4px;
+        }
+    
+        /* Add the rest of your styles here */
+    
+    </style>
+    
     
   </head>
   <body>
-		
-		<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container">
-	    	<a class="navbar-brand" href="index.html"><span>FITUP<i class="fa fa-leaf"></i></span></a>
-	     
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-	        <ul class="navbar-nav ml-auto">
-	        	<li class="nav-item active"><a href="home.html" class="nav-link">Home</a></li>
-	        	<li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-	        	<li class="nav-item"><a href="coach.html" class="nav-link">Coach</a></li>
-	        	
-	        	<li class="nav-item"><a href="services.html" class="nav-link">Services</a></li>
-	          <li class="nav-item"><a href="success-stories.html" class="nav-link">Stories</a></li>
-	          <li class="nav-item"><a href="{% url 'userprofile' %}" class="nav-link">Profile</a></li>
-	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-	        </ul>
-	      </div>
-	    </div>
-	  </nav>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+      <div class="container">
+        <a class="navbar-brand" href="index.html"><span>FITUP<i class="fa fa-leaf"></i></span></a>
+     
+        <div class="collapse navbar-collapse" id="ftco-nav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active"><a href="home.html" class="nav-link">Home</a></li>
+            <li class="nav-item"><a href="coach.html" class="nav-link">Coach</a></li>
+            <li class="nav-item"><a href="services.html" class="nav-link">Services</a></li>
+            <li class="nav-item"><a href="{% url 'nutritionprofile' %}" class="nav-link">Profile</a></li>
+            <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <!-- END nav -->
-
     <div class="hero-wrap js-fullheight">
-	    <div class="home-slider owl-carousel js-fullheight">
-	      <div class="slider-item js-fullheight" style="background-image:url(images/bg_1.jpg);">
-	      	<div class="overlay"></div>
-	        <div class="container">
-	          <div class="row no-gutters slider-text align-items-center">
-		          <div class="col-md-7 ftco-animate">
-		          	<div class="text w-100">
-		          		<h2>Welcome to Health Coach</h2>
-			            <h1 class="mb-4">Get in shape faster, live your happy life</h1>
-			            <p><a href="#" class="btn btn-primary">Learn more</a> <a href="#" class="btn btn-white">Contact us</a></p>
-		            </div>
-		          </div>
-		        </div>
-	        </div>
-	      </div>
-
-	      <div class="slider-item js-fullheight" style="background-image:url(images/bg_2.jpg);">
-	      	<div class="overlay"></div>
-	        <div class="container">
-	          <div class="row no-gutters slider-text align-items-center">
-		          <div class="col-md-7 ftco-animate">
-		          	<div class="text w-100">
-		          		<h2>A Fresh approach to healthy life</h2>
-			            <h1 class="mb-4 color-white">Unlock your potential with good nutrition</h1>
-			            <p><a href="#" class="btn btn-primary">Learn more</a> <a href="#" class="btn btn-white">Contact us</a></p>
-		            </div>
-		          </div>
-		        </div>
-	        </div>
-	      </div>
-
-	      <div class="slider-item js-fullheight" style="background-image:url(images/bg_3.jpg);">
-	      	<div class="overlay"></div>
-	        <div class="container">
-	          <div class="row no-gutters slider-text align-items-center justify-content-end">
-		          <div class="col-md-6 ftco-animate">
-		          	<div class="text w-100">
-		          		<h2>Welcome Health Coach</h2>
-			            <h1 class="mb-4">You can transform health through habit change</h1>
-			            <p><a href="#" class="btn btn-primary">Learn more</a> <a href="#" class="btn btn-white">Contact us</a></p>
-		            </div>
-		          </div>
-		        </div>
-	        </div>
-	      </div>
-	    </div>
-	  </div>
-		
-    <section class="ftco-section ftco-services">
-    	<div class="container">
-    		<div class="row">
-          <div class="col-md-4 d-flex services align-self-stretch px-4 ftco-animate">
-            <div class="d-block services-wrap text-center">
-              <div class="img" style="background-image: url(images/services-1.jpg);"></div>
-              <div class="media-body p-2 mt-3">
-                <h3 class="heading">Exercise Program</h3>
-                <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
-                <p><a href="#" class="btn btn-primary btn-outline-primary">Read more</a></p>
+      <div class="home-slider owl-carousel js-fullheight">
+        <!-- Your slider content goes here -->
+        <div class="slider-item js-fullheight" style="background-image:url('https://www.thebesttoronto.com/wp-content/uploads/2021/09/Best-Nutritionists-in-Toronto.jpg');">
+          <div class="overlay"></div>
+          <div class="container">
+            <div class="row no-gutters slider-text align-items-center">
+              <div class="col-md-7 ftco-animate">
+                <div class="text w-100">
+                  <h2>Welcome to Health Coach</h2>
+                  <h1 class="mb-4">Get in shape faster, live your happy life</h1>
+                  <p><a href="#" class="btn btn-primary">Learn more</a> <a href="#" class="btn btn-white">Contact us</a></p>
+                </div>
               </div>
-            </div>      
-          </div>
-          <div class="col-md-4 d-flex services align-self-stretch px-4 ftco-animate">
-            <div class="d-block services-wrap text-center">
-              <div class="img" style="background-image: url(images/services-2.jpg);"></div>
-              <div class="media-body p-2 mt-3">
-                <h3 class="heading">Nutrition Plans</h3>
-                <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
-                <p><a href="#" class="btn btn-primary btn-outline-primary">Read more</a></p>
-              </div>
-            </div>    
-          </div>
-          <div class="col-md-4 d-flex services align-self-stretch px-4 ftco-animate">
-            <div class="d-block services-wrap text-center">
-              <div class="img" style="background-image: url(images/services-3.jpg);"></div>
-              <div class="media-body p-2 mt-3">
-                <h3 class="heading">Diet Program</h3>
-                <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
-                <p><a href="#" class="btn btn-primary btn-outline-primary">Read more</a></p>
-              </div>
-            </div>      
+            </div>
           </div>
         </div>
-    	</div>
+        <!-- Add other slider items with images -->
+      </div>
+    </div>
+    <section class="ftco-section ftco-services">
+      <div class="container">
+        <div class="row">
+          <!-- Your service items go here -->
+        </div>
+      </div>
     </section>
-
     <section class="ftco-section ftco-no-pt ftco-no-pb bg-light">
-			<div class="container">
-				<div class="row no-gutters">
-					<div class="col-md-5 p-md-5 img img-2 mt-5 mt-md-0" style="background-image: url(images/coach-1.jpg);">
-					</div>
-					<div class="col-md-7 wrap-about py-4 py-md-5 ftco-animate">
-	        
-	       
-		</section>
-
-		<section class="ftco-section ftco-no-pt ftco-no-pb">
-			<div class="container-fluid px-md-0">
-				<div class="row no-gutters">
-					<div class="col-md-3 d-flex align-items-stretch">
-						<div class="consultation w-100 text-center px-4 px-md-5">
-							<h3 class="mb-4">Healthcare Services</h3>
-							<p>A small river named Duden flows by their place and supplies</p>
-							<a href="#" class="btn-custom">See Services</a>
-						</div>
-					</div>
-				
-					</div>
-					<div class="col-md-3 d-flex align-items-stretch">
-						<div class="consultation w-100 text-center px-4 px-md-5">
-							<h3 class="mb-4">Find A Health Expert</h3>
-							<p>A small river named Duden flows by their place and supplies</p>
-							<a href="#" class="btn-custom">Meet our health coach</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-
-    
-
-  
-
-
-    
+      <div class="container">
+        <div class="row no-gutters">
+          <!-- Your content for this section goes here -->
+        </div>
+      </div>
+    </section>
+    <section class="ftco-section ftco-no-pt ftco-no-pb">
+      <div class="container-fluid px-md-0">
+        <div class="row no-gutters">
+          <!-- More sections or content goes here -->
+        </div>
+      </div>
+    </section>
   </body>
 </html>

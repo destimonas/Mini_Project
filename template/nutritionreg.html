@@ -120,7 +120,12 @@
             <p id="cpasswordError" class="error" style="color: red;"></p>
 
             <label for="specialization">Specialization</label>
-            <input type="text" class="form-control" id="specialization" name="specialization" placeholder="Enter your specialization" oninput="validateSpecialization()">
+            <select class="form-control" id="specialization" name="specialization" oninput="validateSpecialization()">
+            <option value="">Select a specialization</option>
+            {% for specializations in specialization %}
+            <option value="{{ specializations.id }}">{{ specializations.name }}</option>
+            {% endfor %}
+            </select>
             <p id="specializationError" class="error" style="color: red;"></p>
 
             <label for="phoneno">Phone Number</label>
@@ -237,11 +242,7 @@
             var specialization = document.getElementById("specialization").value;
             var specializationError = document.getElementById("specializationError");
             var specializationPattern = /^[A-Za-z\s]{1,15}$/;  // Allows only letters and spaces, up to 15 characters
-        
-            if (!specialization.match(specializationPattern)) {
-                specializationError.innerText = "Specialization must be characters.";
-                return false;
-            } else {
+        if {
                 specializationError.innerText = "";
                 return true;
             }

@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Class Schedule</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .event-details {
+            text-align: left;
+        }
+
+        .join-button {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weekly Class Schedule</h1>
+    <table>
+        <tr>
+            <th>Day</th>
+            <th>Event</th>
+            <th>Time</th>
+            <th>Location</th>
+            <th>Instructor</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td rowspan="2">Sunday</td>
+            <td class="event-details">Yoga Class</td>
+            <td>10:00 AM - 11:30 AM</td>
+            <td>Studio A</td>
+            <td>John Doe</td>
+            <td class="join-button"><a href="#">Join Now</a></td>
+        </tr>
+        <tr>
+            <td class="event-details">Zumba Class</td>
+            <td>3:00 PM - 4:30 PM</td>
+            <td>Studio B</td>
+            <td>Jane Smith</td>
+            <td class="join-button"><a href="#">Join Now</a></td>
+        </tr>
+        <tr>
+            <td rowspan="3">Monday</td>
+            <td class="event-details">Pilates Class</td>
+            <td>9:30 AM - 11:00 AM</td>
+            <td>Studio C</td>
+            <td>Michael Brown</td>
+            <td class="join-button"><a href="#">Join Now</a></td>
+        </tr>
+        <tr>
+            <td class="event-details">Spinning Class</td>
+            <td>1:00 PM - 2:30 PM</td>
+            <td>Studio A</td>
+            <td>Sarah Wilson</td>
+            <td class="join-button"><a href="#">Join Now</a></td>
+        </tr>
+        <tr>
+            <td class="event-details">Aerobics Class</td>
+            <td>6:00 PM - 7:30 PM</td>
+            <td>Studio B</td>
+            <td>David Green</td>
+            <td class="join-button"><a href="#">Join Now</a></td>
+        </tr>
+        <!-- Repeat similar rows for other days and events -->
+    </table>
+</body>
+</html>

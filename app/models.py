@@ -81,10 +81,25 @@ class Trainer(models.Model):
     phone_number = models.CharField(max_length=15)
     gender = models.CharField(max_length=10)
     approved=models.BooleanField(default=False)
+
+    certificate = models.FileField(upload_to='certificates/', blank=True, null=True)  # FileField for certificate uploads
+    govt_id = models.FileField(upload_to='govt_ids/', blank=True, null=True)  # FileField for government ID uploads
     
     def __str__(self):
         return self.full_name
 
+
+
+class UserRating(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Assuming you have a User model
+    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField()
+    feedback = models.TextField()
+    date_rated = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f'{self.user.username} rated {self.trainer.name} - {self.rating} stars'
 
 
 
@@ -96,7 +111,8 @@ class Nutritionist(models.Model):
     specialization = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15, validators=[RegexValidator(r'^[6789]\d{9}$', 'Invalid phone number.')])
     gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')])
-
+    approved=models.BooleanField(default=False)
+    
     def __str__(self):
         return self.full_name
 
@@ -109,3 +125,20 @@ class Specialization(models.Model):
 
     def __str__(self):
         return self.name
+
+class TimeSlot(models.Model):
+    session_choices = [
+        ('morning', 'Morning'),
+        ('afternoon', 'Afternoon'),
+        ('evening', 'Evening'),
+    ]
+    
+    session = models.CharField(max_length=20, choices=session_choices)
+    time = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.get_session_display()} - {self.time}"
+
+
+
+

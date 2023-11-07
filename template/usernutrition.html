@@ -1,416 +1,121 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trainer</title>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <style>
+    <title>Nutritionist List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+     <style>
+        /* Background color */
         body {
-            margin-top: 20px;
-            background: #eee;
+            background-color: #eee;
         }
-
-        a {
-            color: #f96332;
-        }
-
-        .m-t-5 {
-            margin-top: 5px;
-        }
-
+        
+        /* Card style */
         .card {
-            background: #fff;
-            margin-bottom: 30px;
-            transition: .5s;
-            border: 0;
-            border-radius: .1875rem;
-            display: inline-block;
-            position: relative;
-            width: 100%;
-            box-shadow: none;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-
-        .card .body {
-            font-size: 14px;
-            color: #424242;
+        
+        /* Trainer image style */
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        
+        /* Button style */
+        .btn {
+            background-color: #6a0dad; /* Purple color */
+            color: #fff; /* White text color */
+        }
+        
+        /* Modal style */
+        .modal-content {
+            border: none;
+            border-radius: 10px;
+        }
+        
+        /* Modal input style */
+        .modal-body input, .modal-body textarea {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
             padding: 10px;
-            font-weight: 400;
-        }
-       
-
-        .profile-page .profile-header {
-            position: relative;
-        }
-
-        .profile-page .profile-header .profile-image img {
-            border-radius: 50%;
-            width: 140px;
-            border: 3px solid #fff;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-        }
-
-        .profile-page .profile-header .social-icon a {
-            margin: 0 5px;
-        }
-
-        .profile-page .profile-sub-header {
-            min-height: 60px;
-            width: 100%;
-        }
-
-        .profile-page .profile-sub-header ul.box-list {
-            display: inline-table;
-            table-layout: fixed;
-            width: 100%;
-            background: #eee;
-        }
-
-        .profile-page .profile-sub-header ul.box-list li {
-            border-right: 1px solid #e0e0e0;
-            display: table-cell;
-            list-style: none;
-        }
-
-        .profile-page .profile-sub-header ul.box-list li:last-child {
-            border-right: none;
-        }
-
-        .profile-page .profile-sub-header ul.box-list li a {
-            display: block;
-            padding: 15px 0;
-            color: #424242;
+            margin-bottom: 10px;
         }
     </style>
+
 </head>
 <body>
-<div class="container profile-page">
-    <div class="row">
-        <div class="col-xl-6 col-lg-7 col-md-12">
-            <div class="card profile-header">
-                <div class="body">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-12">
-                            <div class="profile-image float-md-right"> <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt=""> </div>
-                        </div>
-                        <div class="col-lg-8 col-md-8 col-12">
-                            <h4 class="m-t-0 m-b-0"><strong>Michael</strong> Deo</h4>
-                            <span class="job_post">Yoga Instructor</span>
-                            <p>795 Folsom Ave, Suite 600 San Francisco, CADGE 94107</p>
-                            <div>
-                                <button class="btn btn-primary btn-round">Consult</button>
-                                <button class="btn btn-primary btn-round btn-simple">Message</button>
-                            </div>
-                            <p class="social-icon m-t-5 m-b-0">
-                                <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
-                                <a title="Google-plus" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Behance" href="javascript:void(0);"><i class="fa fa-behance"></i></a>
-                                <a title="Instagram" href="javascript:void(0);"><i class="fa fa-instagram "></i></a>
-                            </p>
+    <section class="h-100" style="background-color: #eee;">
+        <div class="container h-100 py-5">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-10">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-normal mb-0 text-black">Nutritionist List</h3>
+                        <div>
+                            <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!" class="text-body">latest <i class="fas fa-angle-down mt-1"></i></a></p>
                         </div>
                     </div>
+                    {% for nutritionist in nutritionists %}
+                        <div class="card rounded-3 mb-4">
+                            <div class="card-body p-4">
+                                <div class="row d-flex justify-content-between align-items-center">
+                                    <div class="col-md-2 col-lg-2 col-xl-2">
+                                        <img src="{% static 'img/avatar/avatar-face-02.png' %}" class="img-fluid rounded-3" alt="{{ nutritionist.full_name }}">
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-xl-3">
+                                        <p class="lead fw-normal mb-2">Nutritionist</p>
+                                        <p><span class="text-muted">Name: </span>{{ nutritionist.full_name }}</p>
+                                        <p><span class="text-muted">Phone Number: </span>{{ nutritionist.phone_number }}</p>
+                                        <p><span class="text-muted">Specialization: </span>{{ nutritionist.specialization }}</p>
+                                        <p><span class="text-muted">Gender: </span>{{ nutritionist.gender }}</p>
+                                        <p><span class="text-muted">Available Timings: </span>{{ nutritionist.available_timings }}</p>
+                                    </div>
+                                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                        <button type="button" id="consultbtn" class="btn btn-warning btn-lg ms-2" data-bs-toggle="modal" data-bs-target="#consultModal{{ nutritionist.username }}">Consult</button>
+                                        <!-- Consultation Modal -->
+                                        <div class="modal fade" id="consultModal{{ nutritionist.username }}" tabindex="-1" aria-labelledby="consultModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="consultModalLabel">Consultation Details</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <!-- Add consultation details, payment options, and duration input fields here -->
+                                                        <!-- Example: Duration, Payment, etc. -->
+                                                        <input type="text" id="duration" placeholder="Duration (30 minutes)">
+                                                        <input type="text" id="payment" placeholder="Payment">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary">Confirm</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                        <!-- Add Message button and modal here -->
+                                    </div>
+                                    <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                        <a href="#!" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-
-
-        <div class="col-xl-6 col-lg-7 col-md-12">
-            <div class="card profile-header">
-                <div class="body">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-12">
-                            <div class="profile-image float-md-right"> <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt=""> </div>
-                        </div>
-                        <div class="col-lg-8 col-md-8 col-12">
-                            <h4 class="m-t-0 m-b-0"><strong>Michael</strong> Deo</h4>
-                            <span class="job_post">Yoga Instructor</span>
-                            <p>795 Folsom Ave, Suite 600 San Francisco, CADGE 94107</p>
-                            <div>
-                                <button class="btn btn-primary btn-round">Follow</button>
-                                <button class="btn btn-primary btn-round btn-simple">Message</button>
-                            </div>
-                            <p class="social-icon m-t-5 m-b-0">
-                                <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
-                                <a title="Google-plus" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Behance" href="javascript:void(0);"><i class="fa fa-behance"></i></a>
-                                <a title="Instagram" href="javascript:void(0);"><i class="fa fa-instagram "></i></a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-xl-6 col-lg-7 col-md-12">
-            <div class="card profile-header">
-                <div class="body">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-12">
-                            <div class="profile-image float-md-right"> <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt=""> </div>
-                        </div>
-                        <div class="col-lg-8 col-md-8 col-12">
-                            <h4 class="m-t-0 m-b-0"><strong>Michael</strong> Deo</h4>
-                            <span class="job_post">Ui UX Designer</span>
-                            <p>795 Folsom Ave, Suite 600 San Francisco, CADGE 94107</p>
-                            <div>
-                                <button class="btn btn-primary btn-round">Follow</button>
-                                <button class="btn btn-primary btn-round btn-simple">Message</button>
-                            </div>
-                            <p class="social-icon m-t-5 m-b-0">
-                                <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
-                                <a title="Google-plus" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Behance" href="javascript:void(0);"><i class="fa fa-behance"></i></a>
-                                <a title="Instagram" href="javascript:void(0);"><i class="fa fa-instagram "></i></a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-xl-6 col-lg-7 col-md-12">
-            <div class="card profile-header">
-                <div class="body">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-12">
-                            <div class="profile-image float-md-right"> <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt=""> </div>
-                        </div>
-                        <div class="col-lg-8 col-md-8 col-12">
-                            <h4 class="m-t-0 m-b-0"><strong>Michael</strong> Deo</h4>
-                            <span class="job_post">Ui UX Designer</span>
-                            <p>795 Folsom Ave, Suite 600 San Francisco, CADGE 94107</p>
-                            <div>
-                                <button class="btn btn-primary btn-round">Follow</button>
-                                <button class="btn btn-primary btn-round btn-simple">Message</button>
-                            </div>
-                            <p class="social-icon m-t-5 m-b-0">
-                                <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
-                                <a title="Google-plus" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Behance" href="javascript:void(0);"><i class="fa fa-behance"></i></a>
-                                <a title="Instagram" href="javascript:void(0);"><i class="fa fa-instagram "></i></a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</body>
-</html>
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trainer</title>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <style>
-        body {
-            margin-top: 20px;
-            background: #eee;
-        }
-
-        a {
-            color: #f96332;
-        }
-
-        .m-t-5 {
-            margin-top: 5px;
-        }
-
-        .card {
-            background: #fff;
-            margin-bottom: 30px;
-            transition: .5s;
-            border: 0;
-            border-radius: .1875rem;
-            display: inline-block;
-            position: relative;
-            width: 100%;
-            box-shadow: none;
-        }
-
-        .card .body {
-            font-size: 14px;
-            color: #424242;
-            padding: 10px;
-            font-weight: 400;
-        }
-       
-
-        .profile-page .profile-header {
-            position: relative;
-        }
-
-        .profile-page .profile-header .profile-image img {
-            border-radius: 50%;
-            width: 140px;
-            border: 3px solid #fff;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-        }
-
-        .profile-page .profile-header .social-icon a {
-            margin: 0 5px;
-        }
-
-        .profile-page .profile-sub-header {
-            min-height: 60px;
-            width: 100%;
-        }
-
-        .profile-page .profile-sub-header ul.box-list {
-            display: inline-table;
-            table-layout: fixed;
-            width: 100%;
-            background: #eee;
-        }
-
-        .profile-page .profile-sub-header ul.box-list li {
-            border-right: 1px solid #e0e0e0;
-            display: table-cell;
-            list-style: none;
-        }
-
-        .profile-page .profile-sub-header ul.box-list li:last-child {
-            border-right: none;
-        }
-
-        .profile-page .profile-sub-header ul.box-list li a {
-            display: block;
-            padding: 15px 0;
-            color: #424242;
-        }
-    </style>
-</head>
-<body>
-<div class="container profile-page">
-    <div class="row">
-        <div class="col-xl-6 col-lg-7 col-md-12">
-            <div class="card profile-header">
-                <div class="body">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-12">
-                            <div class="profile-image float-md-right"> <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt=""> </div>
-                        </div>
-                        <div class="col-lg-8 col-md-8 col-12">
-                            <h4 class="m-t-0 m-b-0"><strong>Michael</strong> Deo</h4>
-                            <span class="job_post">Yoga Instructor</span>
-                            <p>795 Folsom Ave, Suite 600 San Francisco, CADGE 94107</p>
-                            <div>
-                                <button class="btn btn-primary btn-round">Consult</button>
-                                <button class="btn btn-primary btn-round btn-simple">Message</button>
-                            </div>
-                            <p class="social-icon m-t-5 m-b-0">
-                                <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
-                                <a title="Google-plus" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Behance" href="javascript:void(0);"><i class="fa fa-behance"></i></a>
-                                <a title="Instagram" href="javascript:void(0);"><i class="fa fa-instagram "></i></a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-xl-6 col-lg-7 col-md-12">
-            <div class="card profile-header">
-                <div class="body">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-12">
-                            <div class="profile-image float-md-right"> <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt=""> </div>
-                        </div>
-                        <div class="col-lg-8 col-md-8 col-12">
-                            <h4 class="m-t-0 m-b-0"><strong>Michael</strong> Deo</h4>
-                            <span class="job_post">Yoga Instructor</span>
-                            <p>795 Folsom Ave, Suite 600 San Francisco, CADGE 94107</p>
-                            <div>
-                                <button class="btn btn-primary btn-round">Follow</button>
-                                <button class="btn btn-primary btn-round btn-simple">Message</button>
-                            </div>
-                            <p class="social-icon m-t-5 m-b-0">
-                                <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
-                                <a title="Google-plus" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Behance" href="javascript:void(0);"><i class="fa fa-behance"></i></a>
-                                <a title="Instagram" href="javascript:void(0);"><i class="fa fa-instagram "></i></a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-xl-6 col-lg-7 col-md-12">
-            <div class="card profile-header">
-                <div class="body">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-12">
-                            <div class="profile-image float-md-right"> <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt=""> </div>
-                        </div>
-                        <div class="col-lg-8 col-md-8 col-12">
-                            <h4 class="m-t-0 m-b-0"><strong>Michael</strong> Deo</h4>
-                            <span class="job_post">Ui UX Designer</span>
-                            <p>795 Folsom Ave, Suite 600 San Francisco, CADGE 94107</p>
-                            <div>
-                                <button class="btn btn-primary btn-round">Follow</button>
-                                <button class="btn btn-primary btn-round btn-simple">Message</button>
-                            </div>
-                            <p class="social-icon m-t-5 m-b-0">
-                                <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
-                                <a title="Google-plus" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Behance" href="javascript:void(0);"><i class="fa fa-behance"></i></a>
-                                <a title="Instagram" href="javascript:void(0);"><i class="fa fa-instagram "></i></a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-xl-6 col-lg-7 col-md-12">
-            <div class="card profile-header">
-                <div class="body">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-12">
-                            <div class="profile-image float-md-right"> <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt=""> </div>
-                        </div>
-                        <div class="col-lg-8 col-md-8 col-12">
-                            <h4 class="m-t-0 m-b-0"><strong>Michael</strong> Deo</h4>
-                            <span class="job_post">Ui UX Designer</span>
-                            <p>795 Folsom Ave, Suite 600 San Francisco, CADGE 94107</p>
-                            <div>
-                                <button class="btn btn-primary btn-round">Follow</button>
-                                <button class="btn btn-primary btn-round btn-simple">Message</button>
-                            </div>
-                            <p class="social-icon m-t-5 m-b-0">
-                                <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
-                                <a title="Google-plus" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Behance" href="javascript:void(0);"><i class="fa fa-behance"></i></a>
-                                <a title="Instagram" href="javascript:void(0);"><i class="fa fa-instagram "></i></a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    </section>
+    <!-- Your JavaScript code here -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -34,6 +34,16 @@
     .table tbody tr:hover {
         background-color: #ddd;
     }
+
+    .certificate-image {
+        max-width: 100px;  /* Set the maximum width for the certificate image */
+        max-height: 100px; /* Set the maximum height for the certificate image */
+    }
+
+    .govt-id-image {
+        max-width: 100px;  /* Set the maximum width for the government ID image */
+        max-height: 100px; /* Set the maximum height for the government ID image */
+    }
   </style>
 
   <div class="table-responsive">
@@ -45,6 +55,8 @@
           <th>Specialization</th>
           <th>Email</th>
           <th>Phone No</th>
+          <th>Certificate</th> <!-- Add Certificate column -->
+          <th>Government ID</th> <!-- Add Government ID column -->
           <th>Action</th> <!-- Move the "Action" column to the last position -->
         </tr>
       </thead>
@@ -56,6 +68,20 @@
             <td>{{ trainer.specialization }}</td>
             <td>{{ trainer.email }}</td>
             <td>{{ trainer.phone_number }}</td>
+            <td>
+              {% if trainer.certificate %}
+                <img src="{{ trainer.certificate.url }}" alt="Certificate" class="certificate-image">
+              {% else %}
+                No certificate uploaded
+              {% endif %}
+            </td>
+            <td>
+              {% if trainer.govt_id %}
+                <img src="{{ trainer.govt_id.url }}" alt="Government ID" class="govt-id-image">
+              {% else %}
+                No government ID uploaded
+              {% endif %}
+            </td>
             <td>
               {% if trainer.approved %}
                 <form action="{% url 'reject_trainer' trainer.id %}" method="post">

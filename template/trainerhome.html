@@ -7,26 +7,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fitness</title>
     
-    <!-- Favicon -->
-    
-    
-    <!-- Font Styles -->
+   
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&amp;subset=devanagari,latin-ext" rel="stylesheet">
     
     <!-- CSS Styles -->
-    <link rel="stylesheet" href="{% static "assets/css/font-awesome.min.css" %}">
-    <link rel="stylesheet" href="{% static "assets/css/flaticon.css" %}">
+   <link rel="stylesheet" href="{% static "assets/css/font-awesome.min.css" %}">
+ <link rel="stylesheet" href="{% static "assets/css/flaticon.css" %}">
     <link rel="stylesheet" href="{% static "assets/css/animate.css" %}">
     <link rel="stylesheet" href="{% static "assets/css/owl.carousel.min.css" %}">
     <link rel="stylesheet" href="{% static "assets/css/owl.theme.default.min.css" %}">
     <link rel="stylesheet" href="{% static "assets/css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "assets/css/bootsnav.css" %}">
     <link rel="stylesheet" href="{% static "assets/css/style.css" %}">
-    <link rel="stylesheet" href="{% static "assets/css/responsive.css" %}">
+    <link rel="stylesheet" href="{% static "assets/css/responsive.css" %}"> 
 
     <style>
-       
-    </style>
+    #welcome-hero {
+        background: url('https://cdn.create.vista.com/api/media/small/312325548/stock-photo-attentive-trainer-supervising-handsome-sportsman-doing-plank-exercise') no-repeat center center fixed;
+        background-size: cover;
+        color: white; /* Set the text color to make it visible on the background image */
+    }
+</style>
+
 </head>
 
 <body>
@@ -48,8 +50,10 @@
                                     <a class="nav-link"> Welcome, {{ trainer.username }}</a>
                                 </li>         
                             {% endif %}
-                            <li class="smooth-menu"><a href='#'>Profile</a></li>
-                            <li class="smooth-menu"><a href='#'>Schedule</a></li>
+                            <li class="smooth-menu"><a href='trainerprofile'>Profile</a></li>
+                            <li class="smooth-menu"><a href='schedule'>Schedule</a></li>
+                            <li class="smooth-menu"><a href='#'>My Clients</a></li>
+                            <li class="smooth-menu"><a href="{% url 'add_slot' %}">Add Slots</a></li>
                             <li class="smooth-menu"> <a href='#' id="goal-setting-link">Goal Setting</a>
                                 <select id="goal-type-dropdown" class="hidden">
                                 <option value="weight-loss">Weight Loss</option>
@@ -57,9 +61,7 @@
                                 <option value="yoga">Yoga</option>
                                 <!-- Add more options as needed -->
                                 </select>
-                            </li>
-                            
-                            <li class="smooth-menu"><a href=" {% url 'userprofile' %} ">Profile</a></li>
+                            </li> 
                             <li class="smooth-menu"><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>
                         </ul>
                     </div>
@@ -67,6 +69,8 @@
             </nav>
         </div>
     </header>
+
+    
 
     <section id="welcome-hero" class="welcome-hero">
         <div class="container">

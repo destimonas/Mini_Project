@@ -57,5 +57,32 @@ urlpatterns = [
     path('approve_trainer/<int:trainer_id>/', views.approve_trainer, name='approve_trainer'),
     path('reject_trainer/<int:trainer_id>/', views.reject_trainer, name='reject_trainer'),
 
+   
+    path('approve_nutritionist/<int:nutritionist_id>/', views.approve_nutritionist, name='approve_nutritionist'),
+
+    path('reject_nutritionist/<int:nutritionist_id>/', views.reject_nutritionist, name='reject_nutritionist'),
+
+    path('specialization/update/<int:pk>/', views.update_specialization, name='update_specialization'),
+
+  
+    
+    path('consult_trainer/', views.consult_trainer, name='consult_trainer'),
+    path('trainerhome/trainerprofile/', views.trainerprofile, name='trainerprofile'),
+    
+    path('trainerhome/schedule/', views.weekly_class_schedule, name='weekly_class_schedule'),
+
+    path('save_user_profile/', views.save_user_profile, name='save_user_profile'),
+
+    path('nutritionist/nutritionprofile/', views.nutritionprofile, name='nutritionprofile'),
+
+    path('rate_trainer/<int:trainer_id>/', views.rate_trainer, name='rate_trainer'),
+
+    path('addslot/', views.add_slot, name='add_slot'),
+
+    
+    
+
+
+
  
 ] 
