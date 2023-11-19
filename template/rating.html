@@ -54,8 +54,9 @@
         <div class="container h-100 py-5">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-10">
+                    
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 class="fw-normal mb-0 text-black">Rate Trainer</h3>
+                        <h3 class="fw-normal mb-0 text-black">Rate Trainer</h3><h4><a href="{% url 'usertrainer' %}">Back</a></h4>
                     </div>
                     
                         <div class="card rounded-3 mb-4">
@@ -92,6 +93,7 @@
                                                             <label for="rating">Rating (out of 5):</label>
                                                             <input type="number" id="rating" name="rating" min="1" max="5" step="1">
                                                             
+                                                            
                                                             <label for "feedback">Feedback:</label>
                                                             <textarea id="feedback" name="feedback" rows="4"></textarea>
                                                             
@@ -117,5 +119,33 @@
     <!-- Your JavaScript code here -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+        // Get the rating input element
+        var ratingInput = document.getElementById('rating');
+    
+        // Add an event listener to restrict the input
+        ratingInput.addEventListener('input', function () {
+            var rating = parseInt(ratingInput.value);
+            
+            // Check if the rating is greater than 5 and limit it to 5
+            if (rating > 5) {
+                ratingInput.value = '5';
+            }
+        });
+        var feedbackTextarea = document.getElementById('feedback');
+
+    // Add an event listener to validate the feedback
+    feedbackTextarea.addEventListener('input', function () {
+        var feedback = feedbackTextarea.value;
+        
+        // Check if the feedback is too short
+        if (feedback.length < 10) {
+            // You can display an error message or disable the submit button here
+            // For simplicity, we will just alert a message
+            alert('Feedback should be at least 10 characters long.');
+        }
+    });
+    </script>
+    
 </body>
 </html>

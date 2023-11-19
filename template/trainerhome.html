@@ -45,9 +45,9 @@
                     <div class="collapse navbar-collapse menu-ui-design" id="navbar-menu">
                         <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
                             <li class="smooth-menu active"></li>
-                            {% if user.is_authenticated %} 
+                            {% if trainer.is_authenticated %} 
                                 <li class="nav-item">
-                                    <a class="nav-link"> Welcome, {{ trainer.username }}</a>
+                                    <a class="nav-link"> Welcome {{ trainer.username }}</a>
                                 </li>         
                             {% endif %}
                             <li class="smooth-menu"><a href='trainerprofile'>Profile</a></li>

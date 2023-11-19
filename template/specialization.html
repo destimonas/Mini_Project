@@ -75,35 +75,35 @@
       text-align: left;
     }
     /* Style the "Update" and "Delete" links with more specific selectors */
-table a.update-link, table a.delete-link {
-  text-decoration: none;
-  background-color: #2ecc71;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  margin-right: 5px;
-  transition: background-color 0.3s, color 0.3s;
-}
+    table a.update-link, table a.delete-link {
+      text-decoration: none;
+      background-color: #2ecc71;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      margin-right: 5px;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-table a.update-link:hover, table a.delete-link:hover {
-  background-color: #27ae60;
-}
-
-    
+    table a.update-link:hover, table a.delete-link:hover {
+      background-color: #27ae60;
+    }
   </style>
 
   <button id="showFormButton" class="btn btn-primary">Add Specialization</button>
 
-  <div class="form-container">
-    <form method="post" action="{% url 'create_specialization' %}">
+ <div class="form-container">
+    <form method="post" action="{% if specialization.id %}{% url 'update_specialization' specialization.id %}{% else %}{% url 'create_specialization' %}{% endif %}" onsubmit="return validateUpdateForm()">
       {% csrf_token %}
       <div class="form-group">
         <label for="specialization">Specialization:</label>
         <input type="text" id="specialization" name="specialization">
+        <span id="specializationError" class="error"></span>
       </div>
       <div class="form-group">
         <label for="description">Description:</label>
         <input type="text" id="description" name="description">
+        <span id="descriptionError" class="error"></span>
       </div>
       <div class="form-group">
         <button type="submit" class="btn btn-submit">Submit</button>
@@ -111,31 +111,69 @@ table a.update-link:hover, table a.delete-link:hover {
     </form>
   </div>
 
-  <h2>Entries</h2>
-<table class="table" border="1px">
-  <thead>
-    <tr>
-        <th>SI No</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Update</th>
-        <th>Delete</th>
-    </tr>
-</thead>
-<tbody>
-  {% for specialization in specializations %}
-      <tr>
-          <td>{{ forloop.counter }}</td> <!-- Add this line to display the serial number -->
-          <td>{{ specialization.name }}</td>
-          <td>{{ specialization.description }}</td>
-          <td><a href="{% url 'update_specialization' specialization.id %}" style="text-decoration: none; background-color: #2ecc71; color: #fff; padding: 5px 10px; border-radius: 5px; margin-right: 5px;">Update</a></td>
-          <td><a href="{% url 'delete_specialization' specialization.id %}" style="text-decoration: none; background-color: #2ecc71; color: #fff; padding: 5px 10px; border-radius: 5px; margin-right: 5px;">Delete</a></td>
-      </tr>
-  {% endfor %}
-</tbody>
 
-</table>
-  <script>
+
+  <h2>Entries</h2>
+  <table class="table" border="1px">
+    <thead>
+      <tr>
+          <th>SI No</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Update</th>
+          <th>Delete</th>
+      </tr>
+  </thead>
+  <tbody>
+    {% for specialization in specializations %}
+        <tr>
+            <td>{{ forloop.counter }}</td> <!-- Add this line to display the serial number -->
+            <td>{{ specialization.name }}</td>
+            <td>{{ specialization.description }}</td>
+            <td><a href="{% url 'update_specialization' specialization.id %}" style="text-decoration: none; background-color: #2ecc71; color: #fff; padding: 5px 10px; border-radius: 5px; margin-right: 5px;">Update</a></td>
+            <td><a href="{% url 'delete_specialization' specialization.id %}" style="text-decoration: none; background-color: #2ecc71; color: #fff; padding: 5px 10px; border-radius: 5px; margin-right: 5px;">Delete</a></td>
+        </tr>
+    {% endfor %}
+  </tbody>
+  </table>
+
+   <script>
+    function validateUpdateForm() {
+      var specializationInput = document.getElementById('specialization');
+      var descriptionInput = document.getElementById('description');
+      var specializationError = document.getElementById('specializationError');
+      var descriptionError = document.getElementById('descriptionError');
+  
+      specializationError.textContent = "";
+      descriptionError.textContent = "";
+  
+      // Regular expression to allow only characters (no special characters or numbers)
+      var onlyCharactersRegex = /^[A-Za-z]+$/;
+  
+      if (specializationInput.value.trim() === "") {
+        specializationError.textContent = "Specialization cannot be empty";
+        specializationError.style.color = "red"; // Set error message color to red
+        return false;
+      } else if (!onlyCharactersRegex.test(specializationInput.value.trim())) {
+        specializationError.textContent = "Specialization should only contain characters";
+        specializationError.style.color = "red";
+        return false;
+      }
+  
+      if (descriptionInput.value.trim() === "") {
+        descriptionError.textContent = "Description cannot be empty";
+        descriptionError.style.color = "red"; // Set error message color to red
+        return false;
+      } else if (!onlyCharactersRegex.test(descriptionInput.value.trim())) {
+        descriptionError.textContent = "Description should only contain characters";
+        descriptionError.style.color = "red";
+        return false;
+      }
+  
+      return true; // Form is valid
+    }
+   
+
     // Get references to the button and form container
     const showFormButton = document.getElementById("showFormButton");
     const formContainer = document.querySelector(".form-container");
@@ -145,5 +183,33 @@ table a.update-link:hover, table a.delete-link:hover {
       // Toggle the visibility of the form container
       formContainer.style.display = formContainer.style.display === "none" ? "block" : "none";
     });
+    const updateLink = document.getElementById("updateLink");
+    updateLink.addEventListener("click", function (event) {
+      // Prevent the default behavior of the link
+      event.preventDefault();
+    
+      // Create a form dynamically for the update
+      const updateForm = document.getElementById("updateForm");
+      const specializationInput = updateForm.querySelector("#specialization");
+      const descriptionInput = updateForm.querySelector("#description");
+      const specializationError = document.getElementById("specializationError");
+      const descriptionError = document.getElementById("descriptionError");
+    
+      // Clear existing error messages
+      specializationError.textContent = "";
+      descriptionError.textContent = "";
+    
+      // Set the initial values for specialization and description if they pass validation
+      if (validateUpdateForm()) {
+        specializationInput.value = '{{ specialization.name }}';
+        descriptionInput.value = '{{ specialization.description }}';
+    
+        // Toggle the visibility of the form container
+        formContainer.style.display =
+          formContainer.style.display === "none" ? "block" : "none";
+      }
+    });
+    
+
   </script>
 {% endblock %}

@@ -6,16 +6,18 @@
     <h1 class="page-title">Update Specialization</h1>
 
     <div class="form-container">
-      <form method="post">
+      <form method="post" onsubmit="return validateUpdateForm()">
         {% csrf_token %}
         <div class="form-group">
           <label for="specialization">Specialization:</label>
           <input type="text" id="specialization" name="specialization" value="{{ specialization.name }}">
+          <span id="specializationError" class="error"></span>
         </div>
 
         <div class="form-group">
           <label for="description">Description:</label>
           <input type="text" id="description" name="description" value="{{ specialization.description }}">
+          <span id="descriptionError" class="error"></span>
         </div>
 
         <button type="submit" class="btn btn-primary">Update Specialization</button>
@@ -24,77 +26,115 @@
 
     <a href="{% url 'specialization_list' %}" class="btn btn-secondary">Cancel</a>
   </div>
-</div>
 
-<style>
-  /* Container styles */
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
+  <style>
+    /* Container styles */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-  /* Page title styles */
-  .page-title {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 20px;
-  }
+    /* Page title styles */
+    .page-title {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+    }
 
-  /* Form group styles */
-  .form-group {
-    margin-bottom: 15px;
-  }
+    /* Form group styles */
+    .form-group {
+      margin-bottom: 15px;
+    }
 
-  /* Label styles */
-  label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-  }
+    /* Label styles */
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
 
-  /* Input styles */
-  input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
+    /* Input styles */
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
 
-  /* Button styles */
-  .btn-primary {
-    background-color: #3498db;
-    border: 2px solid #3498db;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-  }
+    /* Button styles */
+    .btn-primary {
+      background-color: #3498db;
+      border: 2px solid #3498db;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-  .btn-primary:hover {
-    background-color: #2980b9;
-  }
+    .btn-primary:hover {
+      background-color: #2980b9;
+    }
 
-  /* Cancel button styles */
-  .btn-secondary {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-  }
+    /* Cancel button styles */
+    .btn-secondary {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-  .btn-secondary:hover {
-    background-color: #292b2c;
-  }
-</style>
+    .btn-secondary:hover {
+      background-color: #292b2c;
+    }
+
+    /* Error message styles */
+    .error {
+      color: red;
+      font-size: 14px;
+    }
+  </style>
+
+  <script>
+    function validateUpdateForm() {
+      var specializationInput = document.getElementById('specialization');
+      var descriptionInput = document.getElementById('description');
+      var specializationError = document.getElementById('specializationError');
+      var descriptionError = document.getElementById('descriptionError');
+
+      specializationError.textContent = "";
+      descriptionError.textContent = "";
+
+      // Regular expression to allow only characters (no special characters or numbers)
+      var onlyCharactersRegex = /^[A-Za-z\s]+$/;
+
+      if (specializationInput.value.trim() === "") {
+        specializationError.textContent = "Specialization cannot be empty";
+        return false;
+      } else if (!onlyCharactersRegex.test(specializationInput.value.trim())) {
+        specializationError.textContent = "Specialization should only contain characters";
+        return false;
+      }
+
+      if (descriptionInput.value.trim() === "") {
+        descriptionError.textContent = "Description cannot be empty";
+        return false;
+      } else if (!onlyCharactersRegex.test(descriptionInput.value.trim())) {
+        descriptionError.textContent = "Description should only contain characters";
+        return false;
+      }
+
+      return true;
+    }
+  </script>
 {% endblock %}

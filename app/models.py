@@ -76,17 +76,19 @@ class Trainer(models.Model):
     full_name = models.CharField(max_length=100)
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=100)
+    # password = models.CharField(max_length=100)
     specialization = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
     gender = models.CharField(max_length=10)
     approved=models.BooleanField(default=False)
+    time_slots = models.ManyToManyField('TimeSlot', related_name='trainers')
 
     certificate = models.FileField(upload_to='certificates/', blank=True, null=True)  # FileField for certificate uploads
     govt_id = models.FileField(upload_to='govt_ids/', blank=True, null=True)  # FileField for government ID uploads
     
     def __str__(self):
         return self.full_name
+
 
 
 
@@ -132,12 +134,18 @@ class TimeSlot(models.Model):
         ('afternoon', 'Afternoon'),
         ('evening', 'Evening'),
     ]
-    
     session = models.CharField(max_length=20, choices=session_choices)
     time = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.get_session_display()} - {self.time}"
+        return f"{self.session} - {self.time}"
+
+
+    
+    
+
+
+    
 
 
 

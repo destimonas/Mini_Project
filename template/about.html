@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html>
 
@@ -34,87 +35,6 @@
         crossorigin="anonymous">
 </head>
 
-<body class="sub_page about_page">
-  <div class="hero_area">
-    <!-- header section strats -->
-    <header class="header_section">
-      <div class="container">
-        <nav class="navbar navbar-expand-lg custom_nav-container">
-          <a class="navbar-brand" href='home'>
-            <img src="images/logo.png" alt="" />
-            <span>
-              Fitness
-            </span>
-          </a>
-          <div class="contact_nav" id="">
-            <ul class="navbar-nav ">
-              <li class="nav-item">
-                <a class="nav-link" href="{%static 'service.html'%}">
-                  <img src="images/location.png" alt="" />
-                  <span>Location</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{%static 'service.html'%}">
-                  <img src="images/call.png" alt="" />
-                  <span>Call : +91 9876543210</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{%static 'service.html'%}">
-                  <img src="images/envelope.png" alt="" />
-                  <span>fitup@gmail.com</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
-
-    </header>
-    <!-- end header section -->
-    <!-- slider section -->
-    <section class=" slider_section position-relative">
-      <div class="container">
-        <div class="custom_nav2">
-          <nav class="navbar navbar-expand-lg custom_nav-container ">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <div class="d-flex  flex-column flex-lg-row align-items-center">
-                <ul class="navbar-nav  ">
-                  <li class="nav-item ">
-                    <a class="nav-link" href='home'>Home <span class="sr-only">(current)</span></a>
-                  </li>
-                  <li class="nav-item active">
-                    <a class="nav-link" href="about.html">About </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="service.html">Services </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact Us</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="">Login</a>
-                  </li>
-                </ul>
-                <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                     {% csrf_token %}
-                  <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                </form>
-              </div>
-            </div>
-          </nav>
-        </div>
-      </div>
-    </section>
-    <!-- end slider section -->
-  </div>
-
 
   <!-- about section -->
 
@@ -131,7 +51,14 @@
         </div>
         <div class="detail-box">
           <p>
-            The body achieves what the mind believes
+             Welcome to FitUp, your go-to destination for a transformative fitness experience. 
+            At FitUp, we are passionate about fostering a community that embraces the power of a healthy lifestyle. 
+            Our mission is to guide and inspire individuals on their fitness journey, helping them reach their goals and unlock their full potential. 
+            What sets us apart is our commitment to providing expert guidance through a diverse range of workouts, from high-intensity training to yoga and strength exercises. 
+            Our team of experienced fitness professionals is dedicated to supporting you at every step. We believe in a holistic approach to wellness, emphasizing not only physical fitness but also mental and emotional well-being. 
+            Join our vibrant community, connect with like-minded individuals, and embark on a journey towards a healthier, happier you. 
+            FitUp is more than just a fitness platform; it's a supportive space where continuous improvement, accessibility, and community engagement come together to make health and wellness a lifestyle. 
+            Start your fitness adventure with us today!
           </p>
           <a href="">
             Read More

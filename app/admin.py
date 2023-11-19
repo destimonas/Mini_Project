@@ -9,4 +9,6 @@ admin.site.register(FitnessGoal)
 admin.site.register(Specialization)
 admin.site.register(Trainer)
 admin.site.register(UserRating)
+admin.site.register(TimeSlot)
+
 

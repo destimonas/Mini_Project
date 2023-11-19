@@ -46,7 +46,7 @@
                                 
                                 {% comment %} <li class="breadcrumb-item"><a href="#">User</a></li> {% endcomment %}
                                 <li class="breadcrumb-item active"
-                                    aria-current="page">Trainer Profile </li>
+                                    aria-current="page">Trainer Profile </li>        
                                   
                             </ol>
                         </nav>
@@ -70,7 +70,7 @@
                                 {% elif user.is_nutritionist %}
                                     <p class="text-muted mb-1">Nutritionist</p>
                                 {% endif %}
-                                <p class="text-muted mb-1">Username: {{trainer.username }}</p>
+                                <p class="text-muted mb-1">Username:{{ trainer.username }}</p>
                                 <p class="text-muted mb-1">Email: {{ trainer.email }}</p>
                                 <p class="text-muted mb-1">Full Name: {{ trainer.full_name }}</p>
                                 <p class="text-muted mb-1">Phone Number: {{ trainer.phone }}</p>
@@ -133,7 +133,7 @@
                                                 <p class="mb-0" for="fname">Full Name</p>
                                             </div>
                                             <div class="col-sm-9">
-                                                <input type="text" id="fname" class="form-control form-control-lg" name="fname" value= "{{ userprofile.fullname }}" />
+                                                <input type="text" id="fname" class="form-control form-control-lg" name="fname" value= "{{ userprofile.full_name }}" />
                                                 <span id="numspan" style="font-size: 12px;"></span>
                                             </div>
                                         </div>

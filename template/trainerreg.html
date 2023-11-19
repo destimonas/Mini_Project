@@ -96,7 +96,8 @@
    
     <div class="container">
         <h1 style="text-align: center;">Trainer Registration</h1>
-        <form id="trainerRegForm" method="POST" action="" onsubmit="return validateForm()">
+        
+        <form id="trainerRegForm" method="POST" action="" onsubmit="return validateForm()" enctype="multipart/form-data">
             {% csrf_token %}
         <div class="profile-details">
             <label for="fullname">Full Name</label>
@@ -263,9 +264,7 @@
                 if (specializationPattern.test(specialization)) {
                     specializationError.textContent = "";
                     return true;
-                } else {
-                    specializationError.textContent = "Invalid specialization format.";
-                    return false;
+                
                 }
             }
             

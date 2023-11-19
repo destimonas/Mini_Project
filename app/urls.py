@@ -10,6 +10,7 @@ urlpatterns = [
     path('signin/', views.signin, name="signin"),
     path('logout/',auth_views.LogoutView.as_view(),name="logout"),
     path('about/', views.about, name="about"),
+    path('service/', views.service, name="service"),
     path('userhome/', views.userhome, name="userhome"),
 
     path('adminpanel/', views.admin_dashboard, name='admin_dashboard'),
@@ -24,7 +25,7 @@ urlpatterns = [
     path('goalsetting/', views.display_goals, name='goalsetting'),  # Display the goal-setting page
     path('save_fitness_goal/', views.save_fitness_goal, name='save_fitness_goal'),  # Save fitness goals
     path('trainerreg/', views.trainerreg, name='trainerreg'),
-    path('trainerhome/', views.trainer_home, name='trainer_home'),
+    path('trainerhome/', views.trainerhome, name='trainerhome'),
 
     path('nutritionist/', views.nutritionist, name='nutritionist'),
 

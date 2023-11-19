@@ -78,13 +78,22 @@ def register(request):
         
     return render(request, 'register.html', locals())
 
-def trainer_home(request):
-    # You can add additional logic here to customize the trainer's dashboard content
-    return render(request, 'trainerhome.html')
+from django.shortcuts import render
+from .models import Trainer
+
+def trainerhome(request):
+    # Check if the user is authenticated and a trainer
+    if request.user.is_authenticated and request.user.is_trainer:
+        trainer = request.user  # Assuming request.user is the trainer
+        context = {'trainer': trainer}
+        return render(request, 'trainerhome.html', context)
+    else:
+        return redirect('signin')  # Redirect to login if not authenticated or not a trainer
 
 def trainerprofile(request):
-    # Your view logic here
+    
     return render(request, 'trainerprofile.html')
+
 
 
 def nutritionprofile(request):
@@ -114,6 +123,7 @@ def signin(request):
                 if user.is_admin==True:
                     return redirect('/adminpanel')
                 elif user.is_trainer==True:
+                    print('trainer')
                     return redirect('/trainerhome')
                 elif user.is_nutritionist==True:
                     return redirect('nutritionist')
@@ -139,8 +149,11 @@ def logout(request):  # Rename the function to 'logout_view'
 
 
 def about(request):
-    
-    return render(request, 'about')
+    return render(request, 'about.html')
+
+def service(request):
+    return render(request, 'service.html')
+
 
 def goal_setting_view(request):
     # Add your view logic here
@@ -277,7 +290,7 @@ def content(request):
 from django.shortcuts import render, redirect
 from .models import Trainer  # Import your Trainer model
 from django.contrib import messages
-
+from django.contrib.auth.hashers import make_password
 def trainerreg(request):
     if request.method == 'POST':
         full_name = request.POST['fullname']
@@ -287,22 +300,30 @@ def trainerreg(request):
         specialization = request.POST['specialization']
         phone_number = request.POST['phoneno']
         gender = request.POST['gender']
+        certificate1 = request.FILES['certificate']
+        govt_id = request.FILES['govt_id']
+
+        
 
         # Create a new Trainer object and save it to the database
         trainer = Trainer(
             full_name=full_name,
             username=username,
             email=email,
-            password=password,
+            
             specialization=specialization,
             phone_number=phone_number,
-            gender=gender
+            gender=gender,
+            certificate = certificate1,
+            govt_id = govt_id,
+
         )
+        trainer.password = make_password(password)
         trainer.save()
         details=CustomUser(username=username,
             email=email,
-            password=password,
             is_trainer=True)
+        details.set_password(password) 
         details.save()
 
         messages.success(request, "Registered Successfully")
@@ -311,6 +332,8 @@ def trainerreg(request):
         return redirect('/signin')
     specialization = Specialization.objects.all()
     return render(request, 'trainerreg.html', {'specialization': specialization})
+
+
 from .models import Nutritionist
 
 def nutritionreg(request):
@@ -661,14 +684,49 @@ def rate_trainer(request, trainer_id):
     }
     return render(request, 'rating.html', context)
 
-
+from .models import TimeSlot
 
 def add_slot(request):
     if request.method == "POST":
-        session = request.POST.get("session")
-        time = request.POST.get("time")
-        TimeSlot.objects.create(session=session, time=time)
-        return redirect("add_slot")  # Redirect back to the form after submission
+        session = request.POST.get('session')
+        time = request.POST.get('time')
+        
+        # Check if the time slot already exists
+        if TimeSlot.objects.filter(session=session, time=time).exists():
+            messages.error(request, 'This time slot already exists.')
+        else:
+            TimeSlot.objects.create(session=session, time=time)
+            messages.success(request, 'Slot added successfully.')  # Set success message
 
     slots = TimeSlot.objects.all()
     return render(request, 'addslot.html', {"slots": slots})
+
+from django.shortcuts import render
+from .models import TimeSlot
+
+def trainer_list(request):
+    # Fetch all available slots for the current trainer
+    trainer_slots = TimeSlot.objects.filter(trainer=request.user)
+
+    # Create a dictionary to store the counts for each session
+    session_counts = {
+        'morning': 0,
+        'afternoon': 0,
+        'evening': 0,
+    }
+
+    # Count the slots for each session
+    for slot in trainer_slots:
+        session_counts[slot.session] += 1
+
+    context = {
+        'session_counts': session_counts,
+        'slots': trainer_slots,  # Include all the slots in the context
+        # Other context data
+    }
+
+    return render(request, 'userhome.html', context)
+
+
+
+ 
