@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add Time Slots</title>
-
-    <style>
+<style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -144,7 +143,64 @@
             display: block;
             margin: 0 auto;
         }
+   
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-area {
+            background-color: #333; /* Set your desired background color */
+            color: #fff; /* Set your desired text color */
+            padding: 10px;
+            text-align: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            color: #fff; /* Set your desired text color */
+            font-size: 24px; /* Set your desired font size */
+            text-decoration: none;
+        }
+
+        .navbar-nav {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            margin-right: 20px; /* Adjust as needed */
+        }
+
+        .nav-link {
+            color: #fff; /* Set your desired text color */
+            text-decoration: none;
+            font-size: 18px; /* Set your desired font size */
+        }
+
+        .back-button {
+            background-color: #d92cf9;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+  
     </style>
+
 
     {% if messages %}
     <div class="messages">
@@ -159,10 +215,18 @@
 </head>
 
 <body>
-    <div class="header">
-        <h1>FITUP</h1>
-        <button id="backButton" class="back-button">Back</button>
+    <div class="header" style="background-color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="color: #d92cf9; margin-left: 10px;">FITUP</h1>
+        <div>
+            {% if trainer.is_authenticated %} 
+                <p class="mb-0"><span class="text-muted">Welcome, {{ trainer.username }}</span></p>
+            {% endif %}
+        </div>
+        <button id="backButton" class="btn btn-primary">Back</button>
     </div>
+    
+    
+    
 
     <div id="successMessage" class="messages" style="display: none; color: green;">
         Slot added successfully.
@@ -360,14 +424,14 @@
             if (selectedSession === "morning") {
                 addTimeOption("6:00 am");
                 addTimeOption("8:00 am");
-                addTimeOption("10:00 am (Morning Session)");
+                addTimeOption("10:00 am ");
             } else if (selectedSession === "afternoon") {
                 addTimeOption("1:00 pm");
-                addTimeOption("3:00 pm (Afternoon Session)");
+                addTimeOption("3:00 pm ");
             } else if (selectedSession === "evening") {
                 addTimeOption("4:00 pm");
                 addTimeOption("5:00 pm");
-                addTimeOption("6:00 pm (Evening Session)");
+                addTimeOption("6:00 pm ");
             }
     
             timeGroup.style.display = "block"; // Display the time options

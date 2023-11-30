@@ -71,17 +71,22 @@ class FitnessGoal(models.Model):
     def __str__(self):
         return self.goal_description
     
+class Specialization(models.Model):
+    name = models.CharField(max_length=100,unique=True)
+    description = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
 class Trainer(models.Model):
     full_name = models.CharField(max_length=100)
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
     # password = models.CharField(max_length=100)
-    specialization = models.CharField(max_length=100)
+    specialization = models.ForeignKey('Specialization', on_delete=models.CASCADE, blank=True, null=True)
     phone_number = models.CharField(max_length=15)
     gender = models.CharField(max_length=10)
     approved=models.BooleanField(default=False)
-    time_slots = models.ManyToManyField('TimeSlot', related_name='trainers')
+    # time_slots = models.ManyToManyField('TimeSlot', related_name='trainers')
 
     certificate = models.FileField(upload_to='certificates/', blank=True, null=True)  # FileField for certificate uploads
     govt_id = models.FileField(upload_to='govt_ids/', blank=True, null=True)  # FileField for government ID uploads
@@ -90,11 +95,26 @@ class Trainer(models.Model):
         return self.full_name
 
 
+class TimeSlot(models.Model):
+    session_choices = [
+        ('morning', 'Morning'),
+        ('afternoon', 'Afternoon'),
+        ('evening', 'Evening'),
+    ]
+    session = models.CharField(max_length=20, choices=session_choices)
+    time = models.CharField(max_length=50)
+    
+    # Add a ForeignKey field to establish a relationship with the Trainer model
+    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, related_name='time_slots')
+
+    def __str__(self):
+        return f"{self.session} - {self.time} ({self.trainer.full_name})"
 
 
 class UserRating(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Assuming you have a User model
-    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE)
+    trainer = models.ForeignKey('Trainer', on_delete=models.CASCADE, blank=True, null=True)
+
     rating = models.PositiveIntegerField()
     feedback = models.TextField()
     date_rated = models.DateTimeField(auto_now_add=True)
@@ -117,28 +137,23 @@ class Nutritionist(models.Model):
     
     def __str__(self):
         return self.full_name
-
-
-
-
-class Specialization(models.Model):
-    name = models.CharField(max_length=100,unique=True)
-    description = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-class TimeSlot(models.Model):
-    session_choices = [
-        ('morning', 'Morning'),
-        ('afternoon', 'Afternoon'),
-        ('evening', 'Evening'),
-    ]
-    session = models.CharField(max_length=20, choices=session_choices)
-    time = models.CharField(max_length=50)
+    
+class Payment(models.Model):
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    customer_name = models.CharField(max_length=255)
+    customer_email = models.EmailField()
+    customer_contact = models.CharField(max_length=15)
 
     def __str__(self):
-        return f"{self.session} - {self.time}"
+        return f"{self.customer_name} - {self.amount}"
+
+
+
+
+
+
+
+
 
 
     

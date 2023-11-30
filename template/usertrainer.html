@@ -47,7 +47,25 @@
             padding: 10px;
             margin-bottom: 10px;
         }
-        /* Button style */
+        #chat-box {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    
+        .message {
+            margin-bottom: 5px;
+        }
+    
+        .user {
+            color: #007bff;
+        }
+    
+        .trainer {
+            color: #28a745;
+        }
    
 
   
@@ -55,6 +73,19 @@
     </style>
 </head>
 <body>
+    <!-- Header Section -->
+    <header style="background-color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="color: #d92cf9; margin-left: 10px;">FitUp</h1>
+        <div>
+            {% if user.is_authenticated %} 
+                <p class="mb-0"><span class="text-muted">Welcome, {{ user.username }}</span></p>
+            {% endif %}
+        </div>
+        <div>
+            <p class="mb-0"><span class="text-muted"></span><a href="{% url 'userhome' %}" class="btn btn-primary">Back <i class="fas fa-angle-down ms-1"></i></a></p>
+        </div>
+    </header>
+    
     <section class="h-100" style="background-color: #eee;">
         <div class="container h-100 py-5">
             <div class="row d-flex justify-content-center align-items-center h-100">
@@ -62,10 +93,7 @@
                    
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 class="fw-normal mb-0 text-black">Trainer List </h3>
-                        <div>
-                            <p class="mb-0"><span class="text-muted"></span><a href="{% url 'userhome' %}" class="text-body">Back <i
-                                class="fas fa-angle-down mt-1"></i></a></p>
-                        </div>
+                       
                     </div>
                     {% for trainer in trainers %}
                         <div class="card rounded-3 mb-4">
@@ -158,30 +186,30 @@
 </div>
 
                                 </div>
-                                    
-                                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                        <button type="button" id="messagebtn" class="btn btn-warning btn-lg ms-2" data-bs-toggle="modal" data-bs-target="#messageModal{{ trainer.id }}">Message</button>
-                                        <!-- Message Modal -->
-                                        <div class="modal fade" id="messageModal{{ trainer.id }}" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="messageModalLabel">Message Trainer</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <!-- Add a chat interface here for messaging the trainer -->
-                                                        <!-- Example: Chat input, messages, etc. -->
-                                                        <textarea id="message" placeholder="Type your message..."></textarea>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-primary">Send</button>
-                                                    </div>
+                                <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                    <button type="button" id="messagebtn" class="btn btn-warning btn-lg ms-2" data-bs-toggle="modal" data-bs-target="#messageModal{{ trainer.id }}">Message</button>
+                                    <!-- Message Modal -->
+                                    <div class="modal fade" id="messageModal{{ trainer.id }}" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="messageModalLabel">Message Trainer</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div id="chat-box"></div>
+                                                    <textarea id="message" placeholder="Type your message..."></textarea>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary" onclick="sendMessage()">Send</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                    
+                               
                                 
                                     <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                         <a href="#!" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
@@ -223,58 +251,108 @@
         }
     
         
-        function selectPaymentOption(option, trainerId) {
-            if (option === 'netbanking' || option === 'wallet') {
-                $('#paymentOptionModal' + trainerId).modal('hide');
-                $('#razorpayPaymentModal' + trainerId).modal('show');
-            }
+       // Update Razorpay amount when payment option is selected
+    function selectPaymentOption(option, trainerId) {
+        if (option === 'netbanking' || option === 'wallet') {
+            $('#paymentOptionModal' + trainerId).modal('hide');
+            openRazorpayPaymentModal(trainerId);
         }
-        
-        
-        function openPaymentOptionModal(button) {
-            var trainerId = $(button).data('trainer-id');
-            $('#billingModal' + trainerId).modal('hide'); // Close the billing modal
-            $('#paymentOptionModal' + trainerId).modal('show'); // Show the payment option modal
+    }
+    // Function to update Razorpay amount based on the selected package
+    function updateRazorpayAmount(trainerId) {
+        var packageAmountElement = document.getElementById("packageAmount" + trainerId);
+        var amountMatch = packageAmountElement.innerText.match(/\$([0-9,]+)/);
+
+        if (amountMatch && amountMatch.length > 1) {
+            return parseFloat(amountMatch[1].replace(',', ''));
         }
+
+        return 0;
+    }
+
+    // Update Razorpay amount when the payment option modal is opened
+    function openPaymentOptionModal(button) {
+        var trainerId = $(button).data('trainer-id');
+        $('#billingModal' + trainerId).modal('hide'); // Close the billing modal
+        $('#paymentOptionModal' + trainerId).modal('show'); // Show the payment option modal
+        updateRazorpayAmount(trainerId); // Update Razorpay amount
+    }
         function selectPaymentOption(option, trainerId) {
             if (option === 'netbanking' || option === 'wallet') {
                 $('#paymentOptionModal' + trainerId).modal('hide'); // Hide the payment option modal
                 openRazorpayPaymentModal(trainerId);
             }
         }
-        
-        function openRazorpayPaymentModal(trainerId) {
-            // Initialize the Razorpay payment gateway with your API key
-            var options = {
-                key: 'rzp_test_v4Tz9K1hhXrTYr', // Replace with your actual test API key
-                amount: 100, // Replace with the actual amount
-                name: 'Fitness Tracker',
-                description: 'Payment for Trainer Services',
-                image: 'https://your-logo-url.com/your-logo.png',
-                prefill: {
-                    name: 'Customer Name',
-                    email: 'customer@example.com',
-                    contact: '1234567890',
-                },
-                theme: {
-                    color: '#6a0dad',
-                },
-            };
-        
-            var rzp = new Razorpay(options);
-            rzp.open();
-        
-            rzp.on('payment.failed', function (response) {
-                alert('Payment failed: ' + response.error.description);
-            });
-        }
-        
-        
-    
-       
+         // Function to open Razorpay payment modal
+    function openRazorpayPaymentModal(trainerId) {
+        var amount = updateRazorpayAmount(trainerId);
+         // Set the amount dynamically in the Razorpay form
+         $('#razorpayPaymentModal' + trainerId + ' #razorpay-form').attr('data-amount', amount * 100);
 
+         // Open the Razorpay payment modal
+         $('#razorpayPaymentModal' + trainerId).modal('show');
+        var options = {
+            key: 'rzp_test_v4Tz9K1hhXrTYr',
+            amount: updateRazorpayAmount(trainerId) * 100,
+            name: 'Fitness Tracker',
+            description: 'Payment for Trainer Services',
+            image: 'https://your-logo-url.com/your-logo.png',
+            prefill: {
+                name: 'Customer Name',
+                email: 'customer@example.com',
+                contact: '1234567890',
+            },
+            theme: {
+                color: '#6a0dad',
+            },
+        };
+
+        var rzp = new Razorpay(options);
+        rzp.open();
+
+        rzp.on('payment.failed', function (response) {
+            alert('Payment failed: ' + response.error.description);
+        });
+    }
+
+    var trainerResponses = [
+        "Feel free to ask any fitness-related questions.",
+        "Hello! How can I help you today?",
+        "I can provide information about workout routines, diet plans, etc.",
+    ];
+
+    function sendMessage() {
+        var userMessage = document.getElementById("message").value;
+        if (userMessage.trim() !== "") {
+            appendMessage("user", userMessage);
+            // Simulate trainer's response (replace this with actual logic to get trainer's response)
+            var trainerResponse = getTrainerResponse();
+            appendMessage("trainer", trainerResponse);
+            document.getElementById("message").value = ""; // Clear the input field
+        }
+    }
+
+    function appendMessage(sender, message) {
+        var chatBox = document.getElementById("chat-box");
+        var messageElement = document.createElement("div");
+        messageElement.classList.add("message", sender);
+        messageElement.innerHTML = `<strong>${sender.charAt(0).toUpperCase() + sender.slice(1)}:</strong> ${message}`;
+        chatBox.appendChild(messageElement);
+        // Scroll to the bottom to show the latest messages
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function getTrainerResponse() {
+        // Simulate trainer's response from the predefined responses
+        var randomIndex = Math.floor(Math.random() * trainerResponses.length);
+        return trainerResponses[randomIndex];
+    }
+        
+       
     </script>
+    
     <!-- Razorpay Payment Modal (with dummy content) -->
+
 <div class="modal fade" id="razorpayPaymentModal{{ trainer.id }}" tabindex="-1" aria-labelledby="razorpayPaymentModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -287,22 +365,23 @@
                 <p><strong>Package Amount:</strong> <span id="packageAmount{{ trainer.id }}"></span></p>
                 <p><strong>Payment Method:</strong> <span id="paymentMethod{{ trainer.id }}"></span></p>
                 
-                <!-- Razorpay payment form (dummy content) -->
+                <!-- Razorpay payment form -->
                 <form id="razorpay-form">
                     <script src="https://checkout.razorpay.com/v1/checkout.js"
-                        data-key="rzp_test_v4Tz9K1hhXrTYr"
-                        data-amount="100" 
+                        data-key="{{ razorpay_key }}"
+                        data-amount=""  
                         data-name="Fitness Tracker"
                         data-description="Payment for Trainer Services"
                         data-image="https://your-logo-url.com/your-logo.png"
-                        data-prefill.name="Customer Name"
-                        data-prefill.email="customer@example.com"
-                        data-prefill.contact="1234567890"
+                        data-prefill.name="{{ payment_id.customer_name }}"
+                        data-prefill.email="{{ payment_id.customer_email }}"
+                        data-prefill.contact="{{ payment_id.customer_contact }}"
                         data-theme.color="#6a0dad"></script>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>

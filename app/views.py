@@ -79,7 +79,7 @@ def register(request):
     return render(request, 'register.html', locals())
 
 from django.shortcuts import render
-from .models import Trainer
+
 
 def trainerhome(request):
     # Check if the user is authenticated and a trainer
@@ -90,9 +90,58 @@ def trainerhome(request):
     else:
         return redirect('signin')  # Redirect to login if not authenticated or not a trainer
 
-def trainerprofile(request):
+# views.py
+
+from django.shortcuts import render, redirect
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import UserProfile1  # Adjust the import based on your models
+from django.http import HttpResponse
+
+class TrainerProfileView(LoginRequiredMixin, View):
+    template_name = 'trainerprofile.html'
+
+    def get(self, request):
+        # Your existing GET logic
+        # Assuming you have a TrainerProfile model, adjust accordingly
+        trainer_profile, created = UserProfile1.objects.get_or_create(user=request.user)
+
+        # Pass the trainer_profile to the template
+        context = {
+            'trainer_profile': trainer_profile,
+        }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        user = request.user
+        fullname = request.POST.get('fname')
+        
+        phone = request.POST.get('phone')
+        gender = request.POST.get('gender')
+        state = request.POST.get('state')
+        district = request.POST.get('district')
+        age = request.POST.get('age')
+
+        # Check if a TrainerProfile instance already exists for the user
+        # Adjust the model name to match your TrainerProfile model
+        trainer_profile, created = UserProfile1.objects.get_or_create(user=user)
+
+        # Update the fields with the new data
+        trainer_profile.fullname = fullname
+      
+        trainer_profile.phone = phone
+        trainer_profile.gender = gender
+        trainer_profile.state = state
+        trainer_profile.district = district
+        trainer_profile.age = age
+
+        # Save the changes to the trainer profile
+        trainer_profile.save()
+
+        return redirect('trainerprofile')
     
-    return render(request, 'trainerprofile.html')
+
 
 
 
@@ -187,7 +236,7 @@ def nutritiondetails(request):
     return render(request, 'nutritiondetails.html', context)
 
 
-from .models import Trainer  # Import the Trainer model
+
 
 def trainerdetails(request):
     trainers = Trainer.objects.all()  # Query the Trainer model
@@ -198,9 +247,7 @@ def trainerdetails(request):
     return render(request, 'trainerdetails.html', context)
 
 
-def usertrainer(request):
-    # Your view logic here
-    return render(request, 'usertrainer.html')
+
 
 def usernutrition (request):
     
@@ -288,7 +335,7 @@ def content(request):
     return render(request, "content.html")
 
 from django.shortcuts import render, redirect
-from .models import Trainer  # Import your Trainer model
+
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 def trainerreg(request):
@@ -297,39 +344,42 @@ def trainerreg(request):
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
-        specialization = request.POST['specialization']
+        specialization_id = request.POST['specialization']  # Assuming 'specialization' is an id
         phone_number = request.POST['phoneno']
         gender = request.POST['gender']
         certificate1 = request.FILES['certificate']
         govt_id = request.FILES['govt_id']
 
-        
+        # Fetch the Specialization instance
+        specialization_instance = Specialization.objects.get(pk=specialization_id)
 
         # Create a new Trainer object and save it to the database
         trainer = Trainer(
             full_name=full_name,
             username=username,
             email=email,
-            
-            specialization=specialization,
+            specialization=specialization_instance,  # Assign the instance, not the id
             phone_number=phone_number,
             gender=gender,
-            certificate = certificate1,
-            govt_id = govt_id,
-
+            certificate=certificate1,
+            govt_id=govt_id,
         )
         trainer.password = make_password(password)
         trainer.save()
-        details=CustomUser(username=username,
+
+        details = CustomUser(
+            username=username,
             email=email,
-            is_trainer=True)
-        details.set_password(password) 
+            is_trainer=True
+        )
+        details.set_password(password)
         details.save()
 
         messages.success(request, "Registered Successfully")
-        
+
         # Redirect to a different URL after registration (change 'some_url_name' to your desired URL)
         return redirect('/signin')
+
     specialization = Specialization.objects.all()
     return render(request, 'trainerreg.html', {'specialization': specialization})
 
@@ -374,7 +424,6 @@ def nutritionreg(request):
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import UserProfile1
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import UserProfile1  # Import your model
@@ -608,6 +657,37 @@ def usertrainer(request):
    
     return render(request, 'usertrainer.html', {'trainers': trainers})
 
+from .models import Payment
+
+def payment(request):
+    if request.method == 'POST':
+        # Assuming you have a form that captures customer details
+        customer_name = request.POST.get('customer_name')
+        customer_email = request.POST.get('customer_email')
+        customer_contact = request.POST.get('customer_contact')
+        amount = 100  # You may adjust this based on your logic
+
+        try:
+            payment = Payment.objects.create(
+                amount=amount,
+                customer_name=customer_name,
+                customer_email=customer_email,
+                customer_contact=customer_contact
+            )
+            print(f"Payment successful: {payment}")
+        except Exception as e:
+            print(f"Error saving payment: {e}")
+            return HttpResponse("Error saving payment. Please try again.")
+
+        # Pass the payment ID to the Razorpay checkout.js script
+        context = {
+            'payment_id': payment.id,
+            'razorpay_key': 'rzp_test_v4Tz9K1hhXrTYr',  # Your Razorpay API key
+        }
+        return redirect('usertrainer')
+
+    return HttpResponse("Method not allowed")
+
 def consult_trainer(request):
     if request.method == 'POST':
         # Handle the consultation logic here
@@ -683,26 +763,38 @@ def rate_trainer(request, trainer_id):
         'trainers': trainers,
     }
     return render(request, 'rating.html', context)
+from django.contrib.auth.decorators import login_required
 
-from .models import TimeSlot
-
+@login_required
 def add_slot(request):
+    try:
+        trainer =Trainer.objects.get(username=request.user.username)
+    except Trainer.DoesNotExist:
+        messages.error(request, 'Trainer information not found for the current user.')
+        return redirect('trainerhome')  # Redirect to an appropriate page
+
     if request.method == "POST":
         session = request.POST.get('session')
         time = request.POST.get('time')
-        
-        # Check if the time slot already exists
-        if TimeSlot.objects.filter(session=session, time=time).exists():
+
+        # Check if the time slot already exists for the current trainer
+        if TimeSlot.objects.filter(session=session, time=time, trainer=trainer).exists():
             messages.error(request, 'This time slot already exists.')
         else:
-            TimeSlot.objects.create(session=session, time=time)
+            TimeSlot.objects.create(session=session, time=time, trainer=trainer)
             messages.success(request, 'Slot added successfully.')  # Set success message
 
-    slots = TimeSlot.objects.all()
-    return render(request, 'addslot.html', {"slots": slots})
+    slots = TimeSlot.objects.filter(trainer=trainer)
+    trainer=request.user
+    context={
+        'trainer':trainer,
+        'slots ':slots,
+
+    }
+    return render(request, 'addslot.html',context)
 
 from django.shortcuts import render
-from .models import TimeSlot
+
 
 def trainer_list(request):
     # Fetch all available slots for the current trainer

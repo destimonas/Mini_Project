@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
-from .views import UserProfileCreateView
+from .views import UserProfileCreateView,TrainerProfileView
 
 
 urlpatterns = [
@@ -65,10 +65,9 @@ urlpatterns = [
 
     path('specialization/update/<int:pk>/', views.update_specialization, name='update_specialization'),
 
-  
-    
     path('consult_trainer/', views.consult_trainer, name='consult_trainer'),
-    path('trainerhome/trainerprofile/', views.trainerprofile, name='trainerprofile'),
+    
+    path('trainerhome/trainerprofile/',TrainerProfileView.as_view(), name='trainerprofile'),
     
     path('trainerhome/schedule/', views.weekly_class_schedule, name='weekly_class_schedule'),
 
@@ -79,6 +78,8 @@ urlpatterns = [
     path('rate_trainer/<int:trainer_id>/', views.rate_trainer, name='rate_trainer'),
 
     path('addslot/', views.add_slot, name='add_slot'),
+    path('pay/', views.payment, name='pay'),
+    
 
     
     
