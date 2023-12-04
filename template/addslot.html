@@ -218,9 +218,13 @@
     <div class="header" style="background-color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
         <h1 style="color: #d92cf9; margin-left: 10px;">FITUP</h1>
         <div>
-            {% if trainer.is_authenticated %} 
-                <p class="mb-0"><span class="text-muted">Welcome, {{ trainer.username }}</span></p>
-            {% endif %}
+            <div>
+                
+                {% if trainer.is_authenticated %} 
+                    <p class="mb-0"><span class="text-muted">Welcome, {{ trainer.username }}</span></p>
+                {% endif %}
+            </div>
+            
         </div>
         <button id="backButton" class="btn btn-primary">Back</button>
     </div>
@@ -463,7 +467,6 @@
             window.location.href = "{% url 'trainerhome' %}";
         });
     </script>
-    
    
     
 

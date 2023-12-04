@@ -132,20 +132,7 @@
                 ratingInput.value = '5';
             }
         });
-        var feedbackTextarea = document.getElementById('feedback');
-
-    // Add an event listener to validate the feedback
-    feedbackTextarea.addEventListener('input', function () {
-        var feedback = feedbackTextarea.value;
-        
-        // Check if the feedback is too short
-        if (feedback.length < 10) {
-            // You can display an error message or disable the submit button here
-            // For simplicity, we will just alert a message
-            alert('Feedback should be at least 10 characters long.');
-        }
-    });
+       
     </script>
-    
 </body>
 </html>

@@ -105,7 +105,6 @@ class TrainerProfileView(LoginRequiredMixin, View):
         # Your existing GET logic
         # Assuming you have a TrainerProfile model, adjust accordingly
         trainer_profile, created = UserProfile1.objects.get_or_create(user=request.user)
-
         # Pass the trainer_profile to the template
         context = {
             'trainer_profile': trainer_profile,
@@ -767,11 +766,13 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def add_slot(request):
+    # Fetch the Trainer instance associated with the current user outside of the if block
     try:
-        trainer =Trainer.objects.get(username=request.user.username)
+        trainer = Trainer.objects.get(username=request.user)
     except Trainer.DoesNotExist:
         messages.error(request, 'Trainer information not found for the current user.')
         return redirect('trainerhome')  # Redirect to an appropriate page
+    print("Trainer instance:", trainer)  # Add this line for debugging
 
     if request.method == "POST":
         session = request.POST.get('session')
@@ -782,16 +783,13 @@ def add_slot(request):
             messages.error(request, 'This time slot already exists.')
         else:
             TimeSlot.objects.create(session=session, time=time, trainer=trainer)
-            messages.success(request, 'Slot added successfully.')  # Set success message
-
+            messages.success(request, 'Slot added successfully.') 
     slots = TimeSlot.objects.filter(trainer=trainer)
-    trainer=request.user
-    context={
-        'trainer':trainer,
-        'slots ':slots,
-
+    context = {
+        "slots": slots,
+        "trainer": trainer
     }
-    return render(request, 'addslot.html',context)
+    return render(request, 'addslot.html', context)
 
 from django.shortcuts import render
 

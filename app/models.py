@@ -121,7 +121,7 @@ class UserRating(models.Model):
 
 
     def __str__(self):
-        return f'{self.user.username} rated {self.trainer.name} - {self.rating} stars'
+        return f'{self.user.username} rated {self.trainer.full_name} - {self.rating} stars'
 
 
 

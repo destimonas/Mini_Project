@@ -66,10 +66,7 @@
         .trainer {
             color: #28a745;
         }
-   
-
-  
-
+        
     </style>
 </head>
 <body>
@@ -81,20 +78,32 @@
                 <p class="mb-0"><span class="text-muted">Welcome, {{ user.username }}</span></p>
             {% endif %}
         </div>
+        
         <div>
             <p class="mb-0"><span class="text-muted"></span><a href="{% url 'userhome' %}" class="btn btn-primary">Back <i class="fas fa-angle-down ms-1"></i></a></p>
         </div>
     </header>
-    
+   
     <section class="h-100" style="background-color: #eee;">
         <div class="container h-100 py-5">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-10">
+                    <div class="row d-flex justify-content-between align-items-start mb-4"> <!-- Use flex utility classes -->
+                    <!-- Modify the search bar code -->
+                    <div class="col-6">
+                        <!-- Search Bar -->
+                        <form class="d-flex">
+                            <input id="searchTrainers" class="form-control me-2" type="search" placeholder="Search Trainers" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                    </div>
                    
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 class="fw-normal mb-0 text-black">Trainer List </h3>
                        
                     </div>
+                    <!-- Add this around your trainer cards -->
+                    <div id="trainerCardsContainer">
                     {% for trainer in trainers %}
                         <div class="card rounded-3 mb-4">
                             <div class="card-body p-4">
@@ -110,9 +119,13 @@
                                         <p><span class="text-muted">Specialization: </span>{{ trainer.specialization.name }}</p>
                                         <p><span class="text-muted">Gender: </span>{{ trainer.gender }}</p>
                                         <p><span class="text-muted">Available Timings: </span></p>
-                                        <ul>
+                                        <ul id="timeSlots{{ trainer.id }}">
                                             {% for time_slot in trainer.time_slots.all %}
-                                                <li>{{ time_slot.session }}: {{ time_slot.time }}</li>
+                                            <li>
+                                                <!-- Add the "onchange" attribute to each checkbox -->
+                                                <input type="checkbox" id="timeSlot{{ trainer.id }}_{{ forloop.counter }}" name="timeSlots" value="{{ time_slot.session }}: {{ time_slot.time }}" onchange="updateEnrollButton({{ trainer.id }})">
+                                                <label for="timeSlot{{ trainer.id }}_{{ forloop.counter }}">{{ time_slot.session }}: {{ time_slot.time }}</label>
+                                            </li>
                                             {% endfor %}
                                         </ul>
                 
@@ -122,68 +135,68 @@
                                     
                                     <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                                         
-                                        <button type="button" id="consultbtn" class="btn btn-warning btn-lg ms-2" data-bs-toggle="modal" data-bs-target="#consultModal{{ trainer.id }}">Enrol</button>
-<!-- Consultation Modal -->
-<div class="modal fade" id="consultModal{{ trainer.id }}" tabindex="-1" aria-labelledby="consultModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="consultModalLabel">Enrol Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <a href="{% url 'rate_trainer' trainer.id %}">Rate Trainer</a>
-            <div class="modal-body">
-                <p>Choose a Package:</p>
-                <button type="button" class="btn btn-primary" onclick="displayStarterPackage({{ trainer.id }})">12 Week Starter Package</button>
-                <button type="button" class="btn btn-primary" onclick="displayAdvancedPackage({{ trainer.id }})">24 Week Advanced Package</button>
-                <div id="packageDetails{{ trainer.id }}"></div>
-            </div>
-        </div>
-    </div>
-</div>
+                                        <button type="button" id="consultbtn" class="btn btn-warning btn-lg ms-2" data-bs-toggle="modal" data-bs-target="#consultModal{{ trainer.id }}" disabled>Enroll</button>
+                                        <!-- Consultation Modal -->
+                                    <div class="modal fade" id="consultModal{{ trainer.id }}" tabindex="-1" aria-labelledby="consultModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="consultModalLabel">Enrol Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <a href="{% url 'rate_trainer' trainer.id %}">Rate Trainer</a>
+                                                <div class="modal-body">
+                                                    <p>Choose a Package:</p>
+                                                    <button type="button" class="btn btn-primary" onclick="displayStarterPackage({{ trainer.id }})">12 Week Starter Package</button>
+                                                    <button type="button" class="btn btn-primary" onclick="displayAdvancedPackage({{ trainer.id }})">24 Week Advanced Package</button>
+                                                    <div id="packageDetails{{ trainer.id }}"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-<!-- Billing Modal -->
-<div class="modal fade" id="billingModal{{ trainer.id }}" tabindex="-1" aria-labelledby="billingModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="billingModalLabel">Billing Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h4>Package Information</h4>
-                <div id="selectedPackage{{ trainer.id }}"></div>
-                <hr>
-                <h4>Billing</h4>
-                <p><strong>Package Amount:</strong> <span id="packageAmount{{ trainer.id }}"></span></p>
-                <p><strong>Discount:</strong> 0</p>
-                <p><strong>Renewal Discount:</strong> 0</p>
-                
-                
-                <button type="button" class="btn btn-primary" data-trainer-id="{{ trainer.id }}" onclick="openPaymentOptionModal(this)">Make Payment</button>
+                                    <!-- Billing Modal -->
+                                    <div class="modal fade" id="billingModal{{ trainer.id }}" tabindex="-1" aria-labelledby="billingModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="billingModalLabel">Billing Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h4>Package Information</h4>
+                                                    <div id="selectedPackage{{ trainer.id }}"></div>
+                                                    <hr>
+                                                    <h4>Billing</h4>
+                                                    <p><strong>Package Amount:</strong> <span id="packageAmount{{ trainer.id }}"></span></p>
+                                                    <p><strong>Discount:</strong> 0</p>
+                                                    <p><strong>Renewal Discount:</strong> 0</p>
+                                                    
+                                                    
+                                                    <button type="button" class="btn btn-primary" data-trainer-id="{{ trainer.id }}" onclick="openPaymentOptionModal(this)">Make Payment</button>
 
-            </div>
-        </div>
-    </div>
-</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-<!-- Payment Option Modal -->
-<div class="modal fade" id="paymentOptionModal{{ trainer.id }}" tabindex="-1" aria-labelledby="paymentOptionModalLabel" aria-hidden="true">
-    
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="paymentOptionModalLabel">Select Payment Option</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <button type="button" class="btn btn-primary" onclick="selectPaymentOption('netbanking', {{ trainer.id }})">Netbanking, Credit Card, Debit Card, UPI, EMI</button>
-                <button type="button" class="btn btn-primary" onclick="selectPaymentOption('wallet', {{ trainer.id }})">Payment Wallet</button>
-            </div>
-            
-        </div>
-    </div>
-</div>
+                                <!-- Payment Option Modal -->
+                                <div class="modal fade" id="paymentOptionModal{{ trainer.id }}" tabindex="-1" aria-labelledby="paymentOptionModalLabel" aria-hidden="true">
+                                    
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="paymentOptionModalLabel">Select Payment Option</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <button type="button" class="btn btn-primary" onclick="selectPaymentOption('netbanking', {{ trainer.id }})">Netbanking, Credit Card, Debit Card, UPI, EMI</button>
+                                                <button type="button" class="btn btn-primary" onclick="selectPaymentOption('wallet', {{ trainer.id }})">Payment Wallet</button>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
 
                                 </div>
                                 <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
@@ -218,6 +231,7 @@
                             </div>
                         </div>
                     {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -226,38 +240,66 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script>
+            // Function to enable or disable the "Enroll" button based on checkbox selection
+        function updateEnrollButton() {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            var enrollButton = document.getElementById('consultbtn');
+
+            // Check if at least one checkbox is selected for any trainer
+            enrollButton.disabled = checkboxes.length === 0;
+        }
+
+        // Attach the function to the change event of all checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+            checkbox.addEventListener('change', updateEnrollButton);
+        });
+
+        function validateEnrollment(trainerId) {
+            var checkboxes = document.querySelectorAll('#timeSlots' + trainerId + ' input[type="checkbox"]:checked');
+            if (checkboxes.length === 0) {
+                alert('Please select at least one available time.');
+                return false;
+            }
+            return true;
+        }
         function displayStarterPackage(trainerId) {
-            var packageDetails = document.getElementById("packageDetails" + trainerId);
-            var selectedPackage = document.getElementById("selectedPackage" + trainerId);
-            var packageAmount = document.getElementById("packageAmount" + trainerId);
-            selectedPackage.innerHTML = "<p><strong>Package Name:</strong> 12 Week Starter Package</p><p><strong>Duration:</strong> 12 weeks</p><p><strong>Price:</strong> $4500</p>";
-            packageAmount.innerText = "$4500";
-            $('#consultModal' + trainerId).modal('hide');
-            $('#billingModal' + trainerId).modal('show');
+            var isValid = validateEnrollment(trainerId);
+            if (isValid) {
+                // Your existing code to display the package details
+                var packageDetails = document.getElementById("packageDetails" + trainerId);
+                var selectedPackage = document.getElementById("selectedPackage" + trainerId);
+                var packageAmount = document.getElementById("packageAmount" + trainerId);
+                selectedPackage.innerHTML = "<p><strong>Package Name:</strong> 12 Week Starter Package</p><p><strong>Duration:</strong> 12 weeks</p><p><strong>Price:</strong> $4500</p>";
+                packageAmount.innerText = "$4500";
+                $('#consultModal' + trainerId).modal('hide');
+                $('#billingModal' + trainerId).modal('show');
+            }
         }
     
         function displayAdvancedPackage(trainerId) {
-            var packageDetails = document.getElementById("packageDetails" + trainerId);
-            var selectedPackage = document.getElementById("selectedPackage" + trainerId);
-            var packageAmount = document.getElementById("packageAmount" + trainerId);
-            selectedPackage.innerHTML = "<p><strong>Package Name:</strong> 24 Week Advanced Package</p><p><strong>Duration:</strong> 24 weeks</p><p><strong>Price:</strong> $8500</p>";
-            packageAmount.innerText = "$8500";
-            $('#consultModal' + trainerId).modal('hide');
-            $('#billingModal' + trainerId).modal('show');
+            var isValid = validateEnrollment(trainerId);
+            if (isValid) {
+                // Your existing code to display the package details
+                var packageDetails = document.getElementById("packageDetails" + trainerId);
+                var selectedPackage = document.getElementById("selectedPackage" + trainerId);
+                var packageAmount = document.getElementById("packageAmount" + trainerId);
+                selectedPackage.innerHTML = "<p><strong>Package Name:</strong> 24 Week Advanced Package</p><p><strong>Duration:</strong> 24 weeks</p><p><strong>Price:</strong> $8500</p>";
+                packageAmount.innerText = "$8500";
+                $('#consultModal' + trainerId).modal('hide');
+                $('#billingModal' + trainerId).modal('show');
+            }
         }
-    
         function showBillingDetails(trainerId) {
             $('#billingModal' + trainerId).modal('show');
         }
     
-        
-       // Update Razorpay amount when payment option is selected
-    function selectPaymentOption(option, trainerId) {
-        if (option === 'netbanking' || option === 'wallet') {
-            $('#paymentOptionModal' + trainerId).modal('hide');
-            openRazorpayPaymentModal(trainerId);
+        function selectPaymentOption(option, trainerId) {
+            if (option === 'netbanking' || option === 'wallet') {
+                $('#paymentOptionModal' + trainerId).modal('hide'); // Hide the payment option modal
+                updateRazorpayAmount(trainerId); // Update Razorpay amount
+                rzp.open(); // Open the Razorpay payment modal
+            }
         }
-    }
     // Function to update Razorpay amount based on the selected package
     function updateRazorpayAmount(trainerId) {
         var packageAmountElement = document.getElementById("packageAmount" + trainerId);
@@ -308,6 +350,18 @@
         };
 
         var rzp = new Razorpay(options);
+            // Add this script at the end of your existing script
+        $(document).ready(function () {
+            // Function to handle search input changes
+            $('#searchTrainers').on('input', function () {
+                var searchValue = $(this).val().toLowerCase();
+                $('#trainerCardsContainer .card').each(function () {
+                    var trainerName = $(this).find('.lead').text().toLowerCase();
+                    $(this).toggle(trainerName.includes(searchValue));
+                });
+            });
+        });
+       
         rzp.open();
 
         rzp.on('payment.failed', function (response) {
@@ -347,7 +401,8 @@
         var randomIndex = Math.floor(Math.random() * trainerResponses.length);
         return trainerResponses[randomIndex];
     }
-        
+
+       
        
     </script>
     
