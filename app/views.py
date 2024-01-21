@@ -188,9 +188,9 @@ def signin(request):
 
 
         
-
-def logout(request):  # Rename the function to 'logout_view'
-    auth_logout(request)
+from django.contrib.auth import authenticate,logout
+def logout_user(request):  # Rename the function to 'logout_view'
+    logout(request)
     return redirect('home')
    # return redirect('home')  # Replace 'home' with your actual URL name
 
@@ -817,6 +817,3 @@ def trainer_list(request):
 
     return render(request, 'userhome.html', context)
 
-
-
- 

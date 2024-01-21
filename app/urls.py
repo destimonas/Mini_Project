@@ -8,7 +8,7 @@ urlpatterns = [
     path('', views.home, name="home"),
     path('register/', views.register, name="register"),
     path('signin/', views.signin, name="signin"),
-    path('logout/',auth_views.LogoutView.as_view(),name="logout"),
+    path('logout/',views.logout_user,name="logout"),
     path('about/', views.about, name="about"),
     path('service/', views.service, name="service"),
     path('userhome/', views.userhome, name="userhome"),
@@ -79,6 +79,8 @@ urlpatterns = [
 
     path('addslot/', views.add_slot, name='add_slot'),
     path('pay/', views.payment, name='pay'),
+
+   
     
 
     
