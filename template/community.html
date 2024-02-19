@@ -209,8 +209,66 @@
         .messages .success {
             color: green;
         }
+        /* CSS styles for the top horizontal sidebar */
+.top-sidebar {
+  
+    width: 40%; /* Adjust width as per your preference */
+    margin: 0 auto; /* Center the sidebar horizontally */
+    background-color: #cecece; /* Change the background color */
+    text-align: center;
+    padding: 15px 0; /* Add padding for better appearance */
+}
+
+.top-sidebar-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.top-sidebar-options li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.top-sidebar-options li:last-child {
+    margin-right: 0;
+}
+
+.top-sidebar-options li a {
+    text-decoration: none;
+    color: #333;
+    padding: 10px 15px;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.top-sidebar-options li a:hover {
+    background-color: #ddd;
+}
+
+.button-group {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.button-group button {
+    background-color: #6f42c1;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px; /* Adjust margin as needed */
+}
+
+.button-group button:hover {
+    background-color: #512da8;
+}
+
         
  
+
 
         
         
@@ -226,21 +284,40 @@
 {% endif %}
 
 
-    <div class="header">
-        <div class="header-options">
-            <h1>FitUp</h1>
-            <ul>
-                <li>Me</li>
-                <li>Community</li>
-                <li>Post</li>
-                <li>Explore</li>
-                <li>Group</li>
-                <a href="{% url 'userhome' %}" style="position: absolute; right: 20px; top: 20px; color: white;">Back</a>
-               
-            </ul>
-        </div>
+
+<div class="header">
+    <div class="header-options">
+        <h1>FitUp</h1>
+        <ul>
+            <li>Me</li>
+            <li><a href="{% url 'communitydetails' %}" style="color: white;">Community</a></li>
+            <li>Post</li>
+            <li>Explore</li>
+            <li>Group</li>
+            <li><a href="{% url 'userhome' %}" style="position: absolute; right: 20px; top: 20px; color: white;">Back</a></li>
+        </ul>
     </div>
-  
+</div>
+
+<div class="top-sidebar">
+    <ul class="top-sidebar-options">
+        <li><a href="#" onclick="showModal('discussion')">Discussion</a></li>
+        <li><a href="#" onclick="showModal('fitnessUpdate')">Fitness Update</a></li>
+        <li><a href="#" onclick="showModal('transformation')">Transformation</a></li>
+        <li><a href="#" onclick="showModal('recipe')">Recipe</a></li>
+       
+    </ul>
+</div> 
+<!-- Add buttons below the top sidebar -->
+<div class="button-group" style="text-align: center;">
+    <button><a href="#">All</a></button>
+    <button><a href="#">Discussion</a></button>
+    <button><a href="#">Transformation</a></button>
+    <button><a href="#">Recipe</a></button>
+    <button><a href="#">Article</a></button>
+</div>
+
+
     <div class="sidebar">
         <!-- User Avatar and Name -->
         <img src="{% static 'images/avathar.jpg' %}" alt="User Avatar" width="50" height="50">

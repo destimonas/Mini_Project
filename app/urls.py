@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 
 
 
+
 urlpatterns = [
     path('', views.home, name="home"),
     path('register/', views.register, name="register"),
@@ -110,6 +111,9 @@ urlpatterns = [
     path('userhome/post_recipe/', views.post_recipe, name='post_recipe'),
     path('userhome/community/product.html', views.product_view, name='product_html'),  
     path('community/', views.community, name='community'),
+    path('communitydetails/', views.community_details_view, name='communitydetails'),
+
+
 
     
 

@@ -1012,9 +1012,11 @@ def post_fitness_update(request):
                 image=image,
                 user=user
             )
+            messages.success(request, 'Fitness updates added successfully')  # Add success message
             return redirect('community')
         else:
             # Handle case where content is missing or empty
+            messages.error(request, 'Content is required')  # Add error message
             return render(request, 'community.html', {'error_message': 'Content is required'})
 
     # Handle GET request or invalid form submission
@@ -1034,9 +1036,11 @@ def post_transformation(request):
                 image=image,
                 user=user
             )
+            messages.success(request, 'Successfully added transformation post')  # Add success message
             return redirect('community')
         else:
             # Handle case where content is missing or empty
+            messages.error(request, 'Content is required')  # Add error message
             return render(request, 'community.html', {'error_message': 'Content is required'})
 
     # Handle GET request or invalid form submission
@@ -1069,10 +1073,19 @@ def post_recipe(request):
                 image=image,
                 user=user
             )
+            messages.success(request, 'Recipe post added successfully')  # Add success message
             return redirect('community')
         else:
             # Handle case where essential fields are missing or empty
+            messages.error(request, 'Name, Ingredients, and Directions are required')  # Add error message
             return render(request, 'community.html', {'error_message': 'Name, Ingredients, and Directions are required'})
 
     # Handle GET request or invalid form submission
     return render(request, 'community.html')
+
+
+
+def community_details_view(request):
+    # Your view logic goes here
+    
+    return render(request, 'communitydetails.html')
