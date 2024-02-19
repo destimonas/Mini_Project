@@ -237,6 +237,8 @@
         </div>
     </section>
     <!-- Your JavaScript code here -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script>
@@ -351,16 +353,17 @@
 
         var rzp = new Razorpay(options);
             // Add this script at the end of your existing script
-        $(document).ready(function () {
-            // Function to handle search input changes
-            $('#searchTrainers').on('input', function () {
-                var searchValue = $(this).val().toLowerCase();
-                $('#trainerCardsContainer .card').each(function () {
-                    var trainerName = $(this).find('.lead').text().toLowerCase();
-                    $(this).toggle(trainerName.includes(searchValue));
+            $(document).ready(function () {
+                // Event delegation for dynamically added elements
+                $(document).on('input', '#searchTrainers', function () {
+                    var searchValue = $(this).val().toLowerCase();
+                    $('#trainerCardsContainer .card').each(function () {
+                        var trainerName = $(this).find('.lead').text().toLowerCase();
+                        $(this).toggle(trainerName.includes(searchValue));
+                    });
                 });
             });
-        });
+            
        
         rzp.open();
 

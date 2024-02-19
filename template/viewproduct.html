@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Products</title>
+   
+    <head>
+        <div class="header">
+            <h2><center>View product</center></h2>
+            <a href="{% url 'dashboardbase' %}" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">Back</a>
+        </div>
+        <!-- Basic -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+        <title>Fitness Products</title>
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+        <!-- Font Awesome styles -->
+        <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+        <!-- jQuery UI CSS for the date picker -->
+        <link rel="stylesheet" type="text css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <!-- Custom styles for this template -->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+        <!-- Responsive style -->
+        <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+        <style>
+            .header {
+                background-color: #6f42c1;
+                color: #fff;
+                text-align: center; /* Center the content horizontally and vertically */
+                padding: 1px;
+                position: relative;
+                height: 15vh; /* Set the header's height to the viewport height */
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+            }
+            .left-corner-heading {
+                position: absolute;
+                left: ; /* Align it to the left side of its container */
+                top: 0; /* Align it to the top of its container */
+            }
+            .delete-button, .edit-button {
+                background-color: #2ecc71;
+                color: #fff; /* Text color */
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-right: 5px; /* Add some spacing between the buttons */
+            }
+            
+            .delete-button:hover, .edit-button:hover {
+                background-color: #2ecc71; /* Darker red color on hover */
+            }
+          
+                .left-corner-heading {
+                    position: absolute;
+                    left: ; /* Align it to the left side of its container */
+                    top: 0; /* Align it to the top of its container */
+                }
+                .delete-button, .edit-button {
+                    background-color: #2ecc71; 
+                    color: #fff; /* Text color */
+                    border: none;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    margin-right: 5px; /* Add some spacing between the buttons */
+                }
+                
+                .delete-button:hover, .edit-button:hover {
+                    background-color: #2ecc71; 
+                }
+    
+                /* Apply #6f42c1 color to the header */
+                .header_section {
+                    background-color: #6f42c1;
+                }
+         
+        </style>
+        
+    
+    </head>
+<body class="sub_page"> 
+    <div class="hero_area">
+       <!-- header section strats -->
+       <header class="header_section" style="background-color: white;">
+
+          <div class="container">
+             <nav class="navbar navbar-expand-lg custom_nav-container ">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class=""> </span>
+                </button>
+               
+          </div>
+        </header>
+        <section class="inner_page_head">
+    
+            <div class="container_fuild">
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="full">
+                           
+                            
+                        </div>
+                        <form class="form-inline" style="float: right;" action="{% url 'search_view' %}" method="get">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search" name="q" value="{{ query }}">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Subcategory</th>
+                <th>Stock</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Discount (%)</th>
+                <th>Sale Price</th>
+                <th>Status</th>
+                <th>Product Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ product.product_name }}</td>
+                    <td>{{ product.category }}</td>
+                    <td>{{ product.subcategory }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.discount }}%</td>
+                    <td>{{ product.sale_price }}</td>
+                    <td>{{ product.status }}</td>
+                    {% comment %} <td>
+                        <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" width="100">
+                    </td> {% endcomment %}
+                    <td>
+                    {% if product.product_image %}
+    <img src="{{ product.product_image.url }}" width="100">
+{% endif %}</td>
+           
+
+<td>
+
+    <form action="{% url 'delete_product' product.id %}" method="post">
+
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <button type="submit" class="delete-button">Delete</button>
+    </form>
+</td>
+    <!-- Edit button --><td>
+    <a class="edit-button" href="{% url 'edit_product' product.id %}">Edit</a>
+</td>
+     
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

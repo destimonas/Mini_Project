@@ -2,6 +2,9 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 from .views import UserProfileCreateView,TrainerProfileView
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 
 urlpatterns = [
@@ -80,13 +83,39 @@ urlpatterns = [
     path('addslot/', views.add_slot, name='add_slot'),
     path('pay/', views.payment, name='pay'),
 
-   
+
+ 
+    path('userhome/questions', views.questions_view, name='questions'),
+
+    path('addproduct/', views.add_product, name='add_product'),
+    path('viewproduct/', views.view_product, name='view_product'),
+    path('editproduct/', views.edit_product, name='edit_product'),
     
+    path('delete/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('editproduct/<int:id>/', views.edit_product, name='edit_product'),
+    path('search/', views.search_view, name='search_view'),
+
+    path('product/', views.product_view, name='product_view'),
+
+    path('community/product.html', views.product_view, name='product_html'),
+    path('products/<str:subcategory>/', views.products_by_subcategory, name='products_by_subcategory'),
+    path('product/<int:product_name>/', views.product_details, name='product_details'),
+
+    path('add-to-wishlist/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
+    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+
+    path('userhome/community/', views.community, name='community'),
+    path('userhome/post_fitness_update/', views.post_fitness_update, name='post_fitness_update'),
+    path('userhome/post_transformation/', views.post_transformation, name='post_transformation'),
+    path('userhome/post_recipe/', views.post_recipe, name='post_recipe'),
+    path('userhome/community/product.html', views.product_view, name='product_html'),  
+    path('community/', views.community, name='community'),
 
     
-    
 
-
+  
 
  
 ] 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

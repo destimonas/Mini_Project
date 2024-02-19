@@ -1,0 +1,484 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #6f42c1; 
+            color: #fff;
+            padding: 10px;
+            text-align: left;
+        }
+        .header-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .header-options ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .header-options ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 130px;
+            left: 10%; /* Adjusted position */
+            width: 200px;
+            background-color: #cecece;
+            padding: 10px;
+            text-align: center;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        .sidebar ul li a {
+            color: #333;
+            text-decoration: none;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 45%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+       .cancel-btn, .post-btn {
+            background-color: #6f42c1;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .cancel-btn:hover, .post-btn:hover {
+            background-color: #512da8;
+        }
+
+        .modal-content form {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .media-upload {
+            display: flex;
+            align-items: center;
+        }
+
+        .media-upload img {
+            margin-right: 10px;
+        }
+
+        .media-upload span {
+            font-size: 16px;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .modal-content {
+            width: 60%; /* Adjust width as needed */
+        }
+        
+        #discussionTitle {
+            width: 100%; /* Make title input full width */
+            margin-bottom: 20px; /* Add some space below the title */
+        }
+        
+        .media-upload {
+            margin-bottom: 20px; /* Add space below the media upload section */
+        }
+        
+        #discussionContent {
+            width: 100%; /* Make textarea full width */
+            resize: vertical; /* Allow vertical resizing */
+            margin-bottom: 20px; /* Add space below the textarea */
+        }
+        
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .cancel-btn,
+        .post-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .cancel-btn:hover,
+        .post-btn:hover {
+            background-color: #512da8;
+        }
+        
+        .modal-content form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .modal-content {
+                width: 90%; /* Adjust width for smaller screens */
+            }
+        }
+        .messages .success {
+            color: green;
+        }
+        
+ 
+
+        
+        
+    </style>
+</head>
+<body>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+    <div class="header">
+        <div class="header-options">
+            <h1>FitUp</h1>
+            <ul>
+                <li>Me</li>
+                <li>Community</li>
+                <li>Post</li>
+                <li>Explore</li>
+                <li>Group</li>
+                <a href="{% url 'userhome' %}" style="position: absolute; right: 20px; top: 20px; color: white;">Back</a>
+               
+            </ul>
+        </div>
+    </div>
+  
+    <div class="sidebar">
+        <!-- User Avatar and Name -->
+        <img src="{% static 'images/avathar.jpg' %}" alt="User Avatar" width="50" height="50">
+        <br>
+        <ul>
+            {% if user.is_authenticated %}
+            <p>{{ user.username }}</p>
+            {% endif %}
+          
+            <li><a href="#">Get a Coach</a></li>
+            <li><a href="#">My Plan</a></li>
+            <li><a href="product.html">Fitshop</a></li>
+        </ul>
+        <div class="dropdown">
+            <a class="dropbtn">+Add Post</a>
+           
+            <div class="dropdown-content">
+                <a href="#" onclick="showModal('discussion')" value="Discussion">Discussion</a>
+                <a href="#" onclick="showModal('fitnessUpdate')" value="Fitness Update">Fitness Update</a>
+                <a href="#" onclick="showModal('transformation')" value="Transformation">Transformation</a>
+                <a href="#" onclick="showModal('recipe')" value="Recipe">Recipe</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals for different post types -->
+    <div id="discussionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('discussion')">&times;</span>
+            <h2>Start a Discussion</h2>
+            <form id="discussionForm" method="POST" action="/userhome/community/" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="text" id="discussionTitle" name="title" placeholder="Title" maxlength="255"><br><br>
+                <div class="media-upload">
+                    <label for="fileInput">
+                        <img src="{% static 'images/addimage.jpg' %}" alt="Choose File" width="50" height="50" style="cursor: pointer;">
+                        <span id="addPhotosVideos">Add photos/videos</span>
+                    </label>
+                    <input type="file" id="fileInput" name="image" accept="image/*, video/*" onchange="displaySelectedFile(this, 'previewImage', 'addPhotosVideos')" multiple style="display: none;">
+                    <br>
+                    <img id="previewImage" src="#" alt="Selected Image" width="100" height="100" style="display: none;">
+                </div>
+                <br>
+                <br>
+
+                <textarea id="discussionContent" name="content" rows="4" cols="50" placeholder="Start a discussion with the community!" maxlength="1000"></textarea><br>
+               
+                <div class="button-group">
+                    <button type="button" onclick="closeModal('discussion')" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="post-btn">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    
+    <div id="fitnessUpdateModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('fitnessUpdate')">&times;</span>
+            <h2>Post Update</h2>
+            <form id="fitnessUpdateForm" method="POST" action="/userhome/post_fitness_update/" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="media-upload">
+                    <label for="fileInputFitnessUpdate">
+                        <img src="{% static 'images/addimage.jpg' %}" alt="Choose File" width="50" height="50" style="cursor: pointer;">
+                        <span id="addPhotosVideosFitnessUpdate">Add photos/videos</span>
+                    </label>
+                    <input type="file" id="fileInputFitnessUpdate" name="fileInputFitnessUpdate" accept="image/*, video/*" onchange="displaySelectedFile(this, 'previewImageFitnessUpdate', 'addPhotosVideosFitnessUpdate')" multiple style="display: none;">
+                    <br>
+                    <img id="previewImageFitnessUpdate" src="#" alt="Selected Image" width="100" height="100" style="display: none;">
+                </div>
+
+
+                <textarea id="fitnessUpdateContent" name="fitnessUpdateContent" rows="4" cols="50" placeholder="Share fitness updates and tag others!" maxlength="1000"></textarea><br>
+               
+                <br>
+                <br>
+                <div class="button-group">
+                    <button type="button" onclick="closeModal('fitnessUpdate')" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="post-btn">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    
+    <!-- Transformation Modal -->
+    <div id="transformationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('transformation')">&times;</span>
+            <h2>Post Your Transformation</h2>
+            <form id="transformationForm" method="POST" action="{% url 'post_transformation' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="media-upload">
+                    <label for="fileInputTransformation">
+                        <img src="{% static 'images/addimage.jpg' %}" alt="Choose File" width="50" height="50" style="cursor: pointer;">
+                        <span id="addPhotosVideosTransformation">Add photos/videos</span>
+                    </label>
+                    <input type="file" id="fileInputTransformation" name="fileInputTransformation" accept="image/*, video/*" onchange="displaySelectedFile(this, 'previewImageTransformation', 'addPhotosVideosTransformation')" multiple style="display: none;">
+                    <br>
+                    <img id="previewImageTransformation" src="#" alt="Selected Image" width="100" height="100" style="display: none;">
+                </div>
+                <br>
+                
+                <textarea id="transformationContent" name="transformationContent" rows="4" cols="50" placeholder="Share your transformation and inspire others!" maxlength="1000"></textarea><br>
+                <div class="button-group">
+                    <button type="button" onclick="closeModal('transformation')" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="post-btn">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    
+    <div id="recipeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('recipe')">&times;</span>
+            <h2>Post Your Recipe</h2>
+            <form id="recipeForm" method="POST" action="{% url 'post_recipe' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="media-upload">
+                    <label for="fileInputRecipe">
+                        <img src="{% static 'images/addimage.jpg' %}" alt="Choose File" width="50" height="50" style="cursor: pointer;">
+                        <span id="addPhotosVideosRecipe">Add photos/videos</span>
+                    </label>
+                    <input type="file" id="fileInputRecipe" name="fileInputRecipe" accept="image/*, video/*" onchange="displaySelectedFile(this, 'previewImageRecipe', 'addPhotosVideosRecipe')" multiple style="display: none;">
+                    <br>
+                    <img id="previewImageRecipe" src="#" alt="Selected Image" width="100" height="100" style="display: none;">
+                </div>
+                <br>
+                <input type="text" id="recipeName" name="recipeName" placeholder="Enter the name of your recipe" style="width: 90%; padding: 8px; margin-bottom: 10px;"><br>
+                <label for="recipeStory">Does it have a story?</label><br>
+                <textarea id="recipeStory" name="recipeStory" rows="5" cols="50" placeholder="Share the story behind your recipe" style="width: 90%; padding: 8px; margin-bottom: 10px;"></textarea><br>
+               
+                <select id="foodType" name="foodType" style="width: 90%; padding: 8px; margin-bottom: 10px;">
+                    <option value="Selectfoodtype">Select food type</option>
+                    <option value="vegetarian">Vegetarian</option>
+                    <option value="non-vegetarian">Non-Vegetarian</option>
+                    <option value="eggetarian">Eggetarian</option>
+                    <option value="vegan">Vegan</option>
+                </select><br>
+            
+                <select id="cuisineType" name="cuisineType" style="width: 90%; padding: 8px; margin-bottom: 10px;">
+                    <option value="Selectcuisinetype">Select cuisine type</option>
+                    <option value="others">Others</option>
+                    <option value="indian">Indian</option>
+                    <option value="chinese">Chinese</option>
+                    <option value="north-indian">North Indian</option>
+                    <option value="south-indian">South Indian</option>
+                    <option value="american">American</option>
+                </select><br>
+                <br>
+                <input type="text" id="cookingTime" name="cookingTime" placeholder="Cooking time" style="width: 90%; padding: 8px; margin-bottom: 10px;"><br>
+                <label for="ingredients">Ingredients:</label><br>
+                <textarea id="ingredients" name="ingredients" rows="4" cols="50" placeholder="List the ingredients" style="width: 90%; padding: 8px; margin-bottom: 10px;"></textarea><br>
+                <label for="directions">Directions:</label><br>
+                <textarea id="directions" name="directions" rows="4" cols="50" placeholder="Provide cooking directions" style="width: 90%; padding: 8px; margin-bottom: 10px;"></textarea><br>
+                <div class="button-group" style="text-align: right;">
+                    <button type="button" onclick="closeModal('recipe')" class="cancel-btn" style="background-color: #ccc; color: #000; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Cancel</button>
+                    <button type="submit" class="post-btn" style="background-color: #6f42c1; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</div>
+
+
+
+<script>
+    function showModal(type) {
+        var modal = document.getElementById(type + 'Modal');
+        modal.style.display = "block";
+    }
+
+    function closeModal(type) {
+        var modal = document.getElementById(type + 'Modal');
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        var modals = document.getElementsByClassName('modal');
+        for (var i = 0; i < modals.length; i++) {
+            if (event.target == modals[i]) {
+                modals[i].style.display = "none";
+            }
+        }
+    }
+
+    function displaySelectedFile(input, imgTagId, addPhotosVideosId) {
+        var file = input.files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var img = document.getElementById(imgTagId);
+            img.src = e.target.result;
+            img.style.display = "block"; // Display the selected image
+        }
+        reader.readAsDataURL(file);
+
+        // Hide the "Add photos/videos" span and the placeholder image
+        var addPhotosVideos = document.getElementById(addPhotosVideosId);
+        addPhotosVideos.style.display = "none";
+
+        var addImage = document.querySelector('label[for="' + input.id + '"] img');
+        addImage.style.display = "none";
+        input.style.display = "none";
+    }
+    // Function to submit discussion form using AJAX
+    function postDiscussion() {
+        // Prevent default form submission
+        event.preventDefault();
+
+        // Collect data from the form fields
+        var content = document.getElementById('discussionContent').value;
+        var image = document.getElementById('fileInput').files[0];
+        // Other form field values can be collected similarly
+
+        // Create a FormData object
+        var formData = new FormData();
+        formData.append('content', content);
+        formData.append('image', image);
+        // Append other form field values to the FormData object
+
+        // Send the form data to the server using AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/post_discussion/'); // Replace with your server endpoint
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken')); // Set CSRF token
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                alert('Post added successfully.'); // Display success message
+                closeModal('discussion'); // Close the modal after successful submission
+            } else {
+                alert('Error adding post.'); // Display error message
+            }
+        };
+        xhr.send(formData);
+    }
+
+</script>
+</body>
+</html>

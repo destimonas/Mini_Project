@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Questionnaire</title>
+    <style>
+        /* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+    </style>
+</head>
+<body>
+    <h2>Fitness Questionnaire</h2>
+    <form method="post" action="{% url 'userhome' %}">
+        {% csrf_token %}
+
+        <label for="fitness_goals">1. What are your primary fitness goals?</label><br>
+        <input type="text" id="fitness_goals" name="fitness_goals" required><br><br>
+
+        <label for="target_weights">2. Do you have any specific target weights or measurements?</label><br>
+        <input type="text" id="target_weights" name="target_weights"><br><br>
+
+        <label for="motivation">3. What motivates you to pursue your fitness goals?</label><br>
+        <input type="text" id="motivation" name="motivation" required><br><br>
+
+        <label for="fitness_level">4. How would you describe your current fitness level?</label><br>
+        <input type="radio" id="beginner" name="fitness_level" value="Beginner"> Beginner<br>
+        <input type="radio" id="intermediate" name="fitness_level" value="Intermediate"> Intermediate<br>
+        <input type="radio" id="advanced" name="fitness_level" value="Advanced"> Advanced<br><br>
+
+        <label for="exercises">5. What types of exercises do you enjoy?</label><br>
+        <input type="text" id="exercises" name="exercises" required><br><br>
+
+        <label for="dislikes">6. Are there any exercises or activities you dislike or prefer to avoid?</label><br>
+        <input type="text" id="dislikes" name="dislikes"><br><br>
+
+        <label for="workout_preference">7. Do you prefer working out alone or in group settings?</label><br>
+        <input type="text" id="workout_preference" name="workout_preference" required><br><br>
+
+        <label for="commitment">8. How many days per week are you willing to commit to exercise?</label><br>
+        <input type="number" id="commitment" name="commitment" required><br><br>
+
+        <label for="workout_time">9. What times of day do you prefer to work out?</label><br>
+        <input type="text" id="workout_time" name="workout_time" required><br><br>
+
+        <label for="time_constraints">10. Do you have any time constraints or scheduling preferences?</label><br>
+        <input type="text" id="time_constraints" name="time_constraints"><br><br>
+
+        <label for="gym_access">11. Do you have access to a gym or prefer home workouts?</label><br>
+        <input type="text" id="gym_access" name="gym_access" required><br><br>
+
+        <label for="equipment_preference">12. Are you interested in using fitness equipment or prefer bodyweight exercises?</label><br>
+        <input type="text" id="equipment_preference" name="equipment_preference" required><br><br>
+
+        <label for="specific_equipment">13. Do you have any specific fitness equipment you'd like to learn more about or incorporate into your workouts?</label><br>
+        <input type="text" id="specific_equipment" name="specific_equipment"><br><br>
+
+        <label for="nutrition_guidance">14. Are you interested in nutrition guidance or meal planning?</label><br>
+        <input type="text" id="nutrition_guidance" name="nutrition_guidance" required><br><br>
+
+        <label for="dietary_restrictions">15. Do you have any dietary restrictions or preferences?</label><br>
+        <input type="text" id="dietary_restrictions" name="dietary_restrictions"><br><br>
+
+        <label for="eating_habits">16. How would you rate your current eating habits?</label><br>
+        <input type="text" id="eating_habits" name="eating_habits" required><br><br>
+
+        <label for="features">17. Are there any specific features or functionalities you would like to see in the fitness tracking application?</label><br>
+        <input type="text" id="features" name="features" required><br><br>
+
+        <label for="virtual_classes">18. Would you like to join any virtual fitness classes or communities within the app?</label><br>
+        <input type="text" id="virtual_classes" name="virtual_classes" required><br><br>
+
+        <label for="progress_tracking">19. How do you prefer to track your progress?</label><br>
+        <input type="text" id="progress_tracking" name="progress_tracking" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

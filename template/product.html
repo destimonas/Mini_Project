@@ -1,0 +1,239 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+   
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #6f42c1;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .sidebar {
+            background-color: #777666; /* Change the background color to match the search button */
+            color: #fff;
+            padding: 20px;
+            width: 200px;
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            text-align: center;
+        }
+        
+        .sidebar h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .main-content {
+            width: 80%;
+            margin: 0 auto; /* Center the container horizontally */
+            padding: 20px;
+        }
+
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 30%;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .product-details h4 {
+            margin-top: 0;
+        }
+
+        .product-details p {
+            margin: 5px 0;
+        }
+
+        .wishlist-button,
+        .cart-button {
+            background-color: #6f42c1;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .wishlist-button:hover,
+        .cart-button:hover {
+            background-color: #503184;
+        }
+
+        .strikethrough {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        
+
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 60%; /* Adjusted width */
+            max-width: 500px; /* Added maximum width */
+            border-radius: 5px; /* Added border radius for a nicer appearance */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added box shadow */
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+        .sidebar {
+            position: fixed;
+            top: 120px; /* Adjusted position */
+            left: 20px; /* Adjusted position */
+            width: 200px;
+            background-color: #cecece;
+            padding: 10px;
+            text-align: center;
+        }
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* This allows items to wrap if they exceed the container's width */
+            width: 100%; /* Set the width to 100% to ensure it spans the entire width of its parent container */
+            padding: 20px; /* Add padding if needed */
+            box-sizing: border-box; /* Ensure padding is included in the width calculation */
+        }
+        
+        .product-container {
+            /* Add any additional styling for the product container if needed */
+            display: flex;
+            flex-wrap: wrap; /* Allow products to wrap */
+            justify-content: center; /* Center products horizontally */
+        }
+        
+        .product-card {
+            /* Add any additional styling for the product card if needed */
+            margin: 10px; /* Add margin between product cards */
+            width: 250px; /* Set a fixed width for the product cards */
+        }
+        
+        .product-details {
+            /* Add any additional styling for the product details if needed */
+            text-align: center; /* Center align the content within each product card */
+        }
+        
+        .product-details h4 {
+            /* Add styling for the product name if needed */
+        }
+        
+        .product-details p {
+            /* Add styling for other product details if needed */
+        }
+        
+        /* Style for product images */
+        .product-card img {
+            max-width: 100%; /* Ensure images don't exceed the width of their container */
+            height: auto; /* Maintain aspect ratio */
+        }
+        
+       
+        
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <a href="{% url 'community' %}" style="position: absolute; right: 20px; top: 20px; color: white;">Back</a>
+        <h1>Products</h1>
+       
+    </div>
+
+    <!-- Sidebar Section -->
+    <div class="sidebar">
+        <h3>Categories</h3>
+        <ul>
+            <li><a href="{% url 'products_by_subcategory' 'Yoga Mats' %}">Yoga Mats</a></li>
+            <li><a href="{% url 'products_by_subcategory' 'Dumbbells' %}">Dumbbells</a></li>
+            <li><a href="{% url 'products_by_subcategory' 'Exercise Ball' %}">Exercise Ball</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="main-content">
+        <div class="product-container">
+            {% for product in products %}
+                <div class="product-card">
+                    <a href="{% url 'product_details' product.id %}">
+                        {% if product.product_image %}
+                            <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
+                        {% endif %}
+                    </a>
+                    <div class="product-details">
+                        <h4>{{ product.product_name }}</h4> 
+                        <p>Rs.{{ product.sale_price }}</p>
+                        <p>{{ product.discount }}%</p>
+                        <p class="strikethrough">Rs.{{ product.price }}</p>
+                        <form method="post" action="{% url 'add_to_wishlist' product.id %}">
+                            {% csrf_token %}
+                            <button class="wishlist-button" type="submit">Add to Wishlist</button>
+                        </form>
+                        <form method="post" action="{% url 'add_to_cart' product.id %}">
+                            {% csrf_token %}
+                            <button class="cart-button" type="submit">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

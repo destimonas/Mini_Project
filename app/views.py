@@ -817,3 +817,262 @@ def trainer_list(request):
 
     return render(request, 'userhome.html', context)
 
+
+def questions_view(request):
+  
+    return render(request, 'questions.html') 
+
+
+def add_product(request):
+    if request.method == 'POST':
+        category_name = request.POST.get('category-name')
+        category, created = Category1.objects.get_or_create(name=category_name)
+
+        # Retrieve or create the Subcategory2 instance while providing the Category2 instance
+        subcategory_name = request.POST.get('subcategory-name')
+        subcategory, created = Subcategory1.objects.get_or_create(name=subcategory_name, category=category)
+
+        # Handle the form submission
+        product_name = request.POST.get('product-name')
+        stock = request.POST.get('stock')  # Retrieve quantity from the form
+        description = request.POST.get('description')
+        price = request.POST.get('price')
+        discount = request.POST.get('discount')
+        status = request.POST.get('status')
+        product_image = request.FILES.get('product-image')
+
+        price = float(price)
+        discount = float(discount)
+
+        # Calculate sale_price
+        sale_price = price - (price * (discount / 100))
+
+        # Create a new Product2 object and save it to the database
+        product = Product1(
+            product_name=product_name,
+            category=category,
+            subcategory=subcategory,
+            stock=stock,  # Assign the quantity field
+            description=description,
+            price=price,
+            discount=discount,
+            sale_price=sale_price,
+            status=status,
+            product_image=product_image,
+        )
+        product.save()
+
+        # Redirect to a success page or any other desired action
+        return redirect('dashboardbase')
+
+    return render(request, 'addproduct.html')
+
+
+def view_product(request):
+    products = Product1.objects.all()  # Retrieve all products from the database
+    return render(request, 'viewproduct.html', {'products': products})
+
+def delete_product(request, product_id):
+    if request.method == 'POST':
+        # Delete the product from the database
+        try:
+            product = Product1.objects.get(pk=product_id)
+            product.delete()
+        
+        except Product1.DoesNotExist:
+            pass
+    return redirect('view_product')  # Redirect back to the product list view
+
+def edit_product(request, id):
+    # Retrieve the product using get_object_or_404 to handle cases where the product doesn't exist
+    product = get_object_or_404(Product1, pk=id)
+
+    if request.method == 'POST':
+       
+        product.product_name = request.POST['product-name']
+        product.category1 = request.POST['category-name']
+        product.subcategory1 = request.POST['subcategory-name']
+        product.stock = request.POST['stock']
+        product.description = request.POST['description']
+        product.price = request.POST['price']
+        product.discount = request.POST['discount']
+        product.sale_price = request.POST['sale-price']
+     
+        
+        # Save the updated product
+        product.save()
+
+        # Redirect to a product detail page or a success page
+        #return HttpResponseRedirect('/product_detail/{0}/'.format(product.product_id))
+       # return HttpResponseRedirect('adminpanel')
+
+    # If the request method is GET, render the edit product form
+    return render(request, 'editproduct.html', {'product': product})
+
+def search_view(request):
+    query = request.GET.get('q')
+    if query:
+        # Perform the search operation based on the query
+        products = Product1.objects.filter(product_name__icontains=query)
+    else:
+        # If no query is provided, return all products
+        products = Product1.objects.all()
+
+    return render(request, 'viewproduct.html', {'products': products, 'query': query})
+
+
+
+
+def product_view(request):
+   
+    return render(request, 'product.html')
+
+    
+
+def products_by_subcategory(request, subcategory):
+    # Retrieve the subcategory object based on its name
+    subcategory = get_object_or_404(Subcategory1, name=subcategory)
+    
+    # Query products based on the retrieved subcategory object
+    products = Product1.objects.filter(subcategory=subcategory)
+    
+    return render(request, 'product.html', {'products': products})
+
+
+def product_details(request, product_name):
+    try:
+        product = Product1.objects.get(id=product_name)
+        # Your code to handle the product details
+    except Product1.DoesNotExist:
+        # Handle the case where the product does not exist
+        pass
+
+
+def add_to_wishlist(request, product_id):
+    if request.method == 'POST':
+        product = Product1.objects.get(pk=product_id)
+       
+        messages.success(request, f'{product.product_name} added to wishlist successfully.')
+        return redirect('product.html')  
+    else:
+        return redirect('product.html')  
+
+def add_to_cart(request, product_id):
+    if request.method == 'POST':
+        product = Product1.objects.get(pk=product_id)
+        # Logic to add the product to the cart (you may need to implement this based on your application's requirements)
+        # For example, you might associate the product with the user's cart in the database.
+        messages.success(request, f'{product.product_name} added to cart successfully.')
+        return redirect('product.html')  # Redirect the user to the products page after adding to cart
+    else:
+        return redirect('product.html')  # Redirect to products page if method is not POST
+    
+from django.shortcuts import render, redirect
+from .models import Discussion
+
+@login_required
+def community(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        image = request.FILES.get('image')
+        
+        if title and content:
+            # Ensure the user is authenticated and is an instance of CustomUser
+            if isinstance(request.user, CustomUser):
+                user = request.user  
+                discussion = Discussion.objects.create(
+                    title=title,
+                    content=content,
+                    image=image,
+                    user=user
+                )
+                messages.success(request, 'Discussion post added successfully')
+                return redirect('community')
+            else:
+                messages.error(request, 'User is not authenticated or is not a CustomUser instance.')
+                return redirect('login')  # Redirect to login page if user is not authenticated
+        else:
+            messages.error(request, 'Title and content cannot be empty.')
+            return redirect('community')  # Redirect back to the community page
+    return render(request, 'community.html')
+
+
+@login_required
+def post_fitness_update(request):
+    if request.method == 'POST':
+        content = request.POST.get('fitnessUpdateContent')
+        image = request.FILES.get('fileInputFitnessUpdate')
+
+        if content:  # Check if content is not empty
+            # Assuming you have a CustomUser model for authenticated users
+            user = request.user
+            fitness_update = FitnessUpdate.objects.create(
+                content=content,
+                image=image,
+                user=user
+            )
+            return redirect('community')
+        else:
+            # Handle case where content is missing or empty
+            return render(request, 'community.html', {'error_message': 'Content is required'})
+
+    # Handle GET request or invalid form submission
+    return render(request, 'community.html')
+
+@login_required
+def post_transformation(request):
+    if request.method == 'POST':
+        content = request.POST.get('transformationContent')
+        image = request.FILES.get('fileInputTransformation')
+
+        if content:  # Check if content is not empty
+            # Assuming you have a CustomUser model for authenticated users
+            user = request.user
+            transformation = Transformation.objects.create(
+                content=content,
+                image=image,
+                user=user
+            )
+            return redirect('community')
+        else:
+            # Handle case where content is missing or empty
+            return render(request, 'community.html', {'error_message': 'Content is required'})
+
+    # Handle GET request or invalid form submission
+    return render(request, 'community.html')
+
+
+@login_required
+def post_recipe(request):
+    if request.method == 'POST':
+        name = request.POST.get('recipeName')
+        story = request.POST.get('recipeStory')
+        food_type = request.POST.get('foodType')
+        cuisine_type = request.POST.get('cuisineType')
+        cooking_time = request.POST.get('cookingTime')
+        ingredients = request.POST.get('ingredients')
+        directions = request.POST.get('directions')
+        image = request.FILES.get('fileInputRecipe')
+
+        if name and ingredients and directions:  # Check if essential fields are not empty
+            # Assuming you have a CustomUser model for authenticated users
+            user = request.user
+            recipe = Recipe.objects.create(
+                name=name,
+                story=story,
+                food_type=food_type,
+                cuisine_type=cuisine_type,
+                cooking_time=cooking_time,
+                ingredients=ingredients,
+                directions=directions,
+                image=image,
+                user=user
+            )
+            return redirect('community')
+        else:
+            # Handle case where essential fields are missing or empty
+            return render(request, 'community.html', {'error_message': 'Name, Ingredients, and Directions are required'})
+
+    # Handle GET request or invalid form submission
+    return render(request, 'community.html')
