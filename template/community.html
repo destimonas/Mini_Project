@@ -265,6 +265,26 @@
 .button-group button:hover {
     background-color: #512da8;
 }
+/* Centering the discussion container */
+.discussion-container {
+    text-align: center;
+}
+
+/* Styles for discussion content */
+.discussion {
+    margin: 0 auto; /* Center the discussion */
+    max-width: 600px; /* Adjust the max-width as per your design */
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.discussion img {
+    max-width: 100%; /* Ensure images don't exceed container width */
+    height: auto;
+    margin-top: 10px; /* Add some spacing between content and image */
+}
+
 
         
  
@@ -308,15 +328,14 @@
        
     </ul>
 </div> 
-<!-- Add buttons below the top sidebar -->
-<div class="button-group" style="text-align: center;">
-    <button><a href="#">All</a></button>
-    <button><a href="#">Discussion</a></button>
-    <button><a href="#">Transformation</a></button>
-    <button><a href="#">Recipe</a></button>
-    <button><a href="#">Article</a></button>
-</div>
 
+<div class="button-group" style="text-align: center;">
+    <button id="btn-all">All</button>
+    <button id="btn-discussion" onclick="showDiscussions()">Discussion</button>
+    <button id="btn-transformation" onclick="showTransformations()">Transformation</button>
+    <button id="btn-recipe">Recipe</button>
+    <button id="btn-article">Article</button>
+</div>
 
     <div class="sidebar">
         <!-- User Avatar and Name -->
@@ -342,6 +361,48 @@
             </div>
         </div>
     </div>
+
+
+<!-- Inside your HTML file -->
+<div class="container" id="discussion-container">
+    <h3 style="text-align: center;">Discussions</h3>
+    {% if discussions %}
+        {% for discussion in discussions %}
+            <div class="discussion">
+                <h4>{{ discussion.title }}</h4>
+                {% if discussion.image %}
+                    <img src="{{ discussion.image.url }}" alt="Discussion Image" style="max-width: 100%;">
+                {% endif %}
+                <p>{{ discussion.content }}</p>
+                <p>Posted by: {{ discussion.user.username }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No discussions available.</p>
+    {% endif %}
+</div>
+
+<div class="container" id="transformation-container">
+    <h3 style="text-align: center;">Transformations</h3>
+    {% if transformations %}
+        {% for transformation in transformations %}
+            <div class="transformation">
+                {% if transformation.image %}
+                    <img src="{{ transformation.image.url }}" alt="Transformation Image" style="max-width: 100%;">
+                {% endif %}
+                <p>{{ transformation.content }}</p>
+                <p>Posted by: {{ transformation.user.username }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No transformations available.</p>
+    {% endif %}
+</div>
+
+
+
+
+
 
     <!-- Modals for different post types -->
     <div id="discussionModal" class="modal">
@@ -370,6 +431,7 @@
                     <button type="submit" class="post-btn">Post</button>
                 </div>
             </form>
+     
         </div>
     </div>
     
@@ -431,7 +493,6 @@
         </div>
     </div>
     
-    
     <div id="recipeModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('recipe')">&times;</span>
@@ -486,6 +547,7 @@
 </div>
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     function showModal(type) {
@@ -555,7 +617,28 @@
         };
         xhr.send(formData);
     }
+    function showDiscussions() {
+        var discussionContainer = document.getElementById('discussion-container');
+        if (discussionContainer.style.display === 'none') {
+            discussionContainer.style.display = 'block';
+            // You may add code here to fetch and populate discussions dynamically
+        } else {
+            discussionContainer.style.display = 'none';
+        }
+    }
 
+    function showTransformations() {
+        var transformationContainer = document.getElementById('transformation-container');
+        if (transformationContainer.style.display === 'none' || transformationContainer.style.display === '') {
+            transformationContainer.style.display = 'block';
+            // You may add code here to fetch and populate transformations dynamically
+        } else {
+            transformationContainer.style.display = 'none';
+        }
+    }
+    
+    
+    
 </script>
 </body>
 </html>

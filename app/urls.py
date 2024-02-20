@@ -103,15 +103,31 @@ urlpatterns = [
     path('product/<int:product_name>/', views.product_details, name='product_details'),
 
     path('add-to-wishlist/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
-    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('add-to-cart/<int:id>/', views.add_to_cart, name='add_to_cart'),
+    path('view_cart', views.view_cart, name='view_cart'),
+
 
     path('userhome/community/', views.community, name='community'),
+    path('userhome/community/', views.community, name='community'),
+
     path('userhome/post_fitness_update/', views.post_fitness_update, name='post_fitness_update'),
     path('userhome/post_transformation/', views.post_transformation, name='post_transformation'),
     path('userhome/post_recipe/', views.post_recipe, name='post_recipe'),
     path('userhome/community/product.html', views.product_view, name='product_html'),  
     path('community/', views.community, name='community'),
     path('communitydetails/', views.community_details_view, name='communitydetails'),
+
+    path('productdetails/', views.product_details, name='productdetails'),
+    path('productdetails/<int:product_id>/', views.product_details, name='product_details'),
+
+    path('increase-cart-item/<int:id>/', views.increase_cart_item, name='increase-cart-item'),
+    path('decrease-cart-item/<int:id>/', views.decrease_cart_item, name='decrease-cart-item'),
+    path('remove-from-cart/<int:id>/', views.remove_from_cart, name='remove-from-cart'),
+
+
+
+    
+
 
 
 

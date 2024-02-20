@@ -232,6 +232,21 @@ class Recipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
+class CartItem(models.Model):
+    cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product1, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def _str_(self):
+        return f"{self.quantity} x {self.product.product_name}"
+
+class Cart(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Product1, through='CartItem')
+
+    def _str_(self):
+        return f"Cart for {self.user.fullName}"
+
 
 
 

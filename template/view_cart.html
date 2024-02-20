@@ -1,0 +1,154 @@
+{% load static %}
+{% comment %} {% include 'includes/cartheader.html' %} {% endcomment %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/cartt.css' %}">
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+<head>
+    <style>
+        .product-details-container {
+            margin-bottom: 20px;
+        }
+        
+        .product-container {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        .card-body {
+            padding: 0 10px;
+        }
+        
+        .total-price {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .quantity-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        
+        .increase-quantity,
+        .decrease-quantity {
+            padding: 0;
+        }
+        
+        .remove-from-cart-btn {
+            margin-top: 5px;
+        }
+        
+        .price-details-container {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        
+        .order-summary h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .total-price-data {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .continue-shopping-link {
+            display: block;
+            margin-bottom: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .checkout-button {
+            display: block;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .checkout-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="product-details-container">
+                <h2>Your cart</h2>
+                {% for item in cart_items %}
+                <div class="product-container card mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" style="max-width: 250px; height:210px;border: 2px solid #ddd;">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.product.product_name }}</h5>
+                                <p class="card-text">Discount: {{ item.product.discount }}%</p>
+                                {% comment %} <p class="card-text">Sale Price: Rs.{{ item.product.sale_price }}</p> {% endcomment %}
+                                <p class="total-price" id="total-price-{{ item.product.id }}">Total: Rs.{{ item.total_price  }}</p>
+                                <!-- Plus-Minus quantity input -->
+                               
+                            </div>
+                            <div class="cart-item-quantity">
+                                <form action="{% url 'increase-cart-item' item.product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button class="quantity-btn increase-quantity" type="submit">+</button>
+                                </form>
+                                <span class="item-quantity">{{ item.quantity }}</span>
+                                <form action="{% url 'decrease-cart-item' item.product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button class="quantity-btn decrease-quantity" type="submit">-</button>
+                                </form>
+
+                                 <form method="post" action="{% url 'remove-from-cart' item.product.id  %}">
+                                    {% csrf_token %}
+                                    <button type="remove-from-cart-btn" class="btn btn-danger">Remove</button> 
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="price-details-container">
+                <div class="order-summary">
+                    <h3>Price Details</h3>
+                   <p class="total-price-data">Total amount : Rs.<span id="total-price"> {{total_amount}}</span></p>
+                   <a class="continue-shopping-link" href="">Continue Shopping</a>
+                   <a class="checkout-button" href="">Place Order</a>
+                </div>
+            </div>
+        </div>
+        
+        
+           
+<script src="{% static 'js/cart.js' %}"></script>
+
+{% endblock %}

@@ -939,13 +939,18 @@ def products_by_subcategory(request, subcategory):
     return render(request, 'product.html', {'products': products})
 
 
-def product_details(request, product_name):
+def product_details(request, product_id):
+    # Retrieve the product details based on the product_id
     try:
-        product = Product1.objects.get(id=product_name)
-        # Your code to handle the product details
+        product = Product1.objects.get(pk=product_id)
+        return render(request, 'product_details.html', {'product': product})
     except Product1.DoesNotExist:
-        # Handle the case where the product does not exist
-        pass
+        return HttpResponse("Product not found")
+    
+def product_details(request, product_id):  # Define product_id as a parameter
+    # Retrieve the product details based on the product_id
+    product = get_object_or_404(Product1, id=product_id)
+    return render(request, 'productdetails.html', {'product': product})
 
 
 def add_to_wishlist(request, product_id):
@@ -957,21 +962,99 @@ def add_to_wishlist(request, product_id):
     else:
         return redirect('product.html')  
 
-def add_to_cart(request, product_id):
-    if request.method == 'POST':
-        product = Product1.objects.get(pk=product_id)
-        # Logic to add the product to the cart (you may need to implement this based on your application's requirements)
-        # For example, you might associate the product with the user's cart in the database.
-        messages.success(request, f'{product.product_name} added to cart successfully.')
-        return redirect('product.html')  # Redirect the user to the products page after adding to cart
+def add_to_cart(request, id):
+    product = Product1.objects.get(pk=id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+    
+    if not item_created:
+        cart_item.quantity += 1
+        cart_item.save()
+    
+    return redirect('view_cart')
+
+def remove_from_cart(request, id):
+    product = Product1.objects.get(pk=id)
+    cart = Cart.objects.get(user=request.user)
+    try:
+        cart_item = cart.cartitem_set.get(product=product)
+        if cart_item.quantity >= 1:
+             cart_item.delete()
+    except CartItem.DoesNotExist:
+        pass
+    
+    return redirect('view_cart')
+
+@login_required(login_url='login')
+def increase_cart_item(request, id):
+    product = Product1.objects.get(pk=id)
+    cart = request.user.cart
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if cart_item.quantity < product.stock:
+     cart_item.quantity += 1
+     cart_item.save()
+
+    return redirect('view_cart')
+
+@login_required(login_url='login')
+def decrease_cart_item(request, id):
+    product = Product1.objects.get(pk=id)
+    cart = request.user.cart
+    cart_item = cart.cartitem_set.get(product=product)
+
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+        cart_item.save()
     else:
-        return redirect('product.html')  # Redirect to products page if method is not POST
+        cart_item.delete()
+
+    return redirect('view_cart')
+
+
+def view_cart(request):
+    cart = request.user.cart
+    cart_items = CartItem.objects.filter(cart=cart)
+    for item in cart_items:
+        item.total_price = item.product.sale_price * item.quantity
+    
+    total_amount = sum(item.total_price for item in cart_items)
+
+    return render(request, 'view_cart.html', {'cart_items': cart_items,'total_amount': total_amount})
+
+def fetch_cart_count(request):
+    cart_count = 0
+    if request.user.is_authenticated:
+        cart = request.user.cart
+        cart_count = CartItem.objects.filter(cart=cart).count()
+    return JsonResponse({'cart_count': cart_count})
+
+def get_cart_count(request):
+    if request.user.is_authenticated:
+        cart_items = CartItem.objects.filter(cart=request.user.cart)
+        cart_count = cart_items.count()
+    else:
+        cart_count = 0
+    return cart_count
+
+
+def view_cart(request):
+    cart = request.user.cart
+    cart_items = CartItem.objects.filter(cart=cart)
+    for item in cart_items:
+        item.total_price = item.product.sale_price * item.quantity
+    
+    total_amount = sum(item.total_price for item in cart_items)
+
+    return render(request, 'view_cart.html', {'cart_items': cart_items,'total_amount': total_amount})
+
     
 from django.shortcuts import render, redirect
 from .models import Discussion
 
 @login_required
 def community(request):
+    discussions = Discussion.objects.all()
+
     if request.method == 'POST':
         title = request.POST.get('title')
         content = request.POST.get('content')
@@ -995,7 +1078,7 @@ def community(request):
         else:
             messages.error(request, 'Title and content cannot be empty.')
             return redirect('community')  # Redirect back to the community page
-    return render(request, 'community.html')
+    return render(request, 'community.html', {'discussions': discussions})
 
 
 @login_required
@@ -1021,30 +1104,30 @@ def post_fitness_update(request):
 
     # Handle GET request or invalid form submission
     return render(request, 'community.html')
-
 @login_required
 def post_transformation(request):
+    transformations = Transformation.objects.all()
+
     if request.method == 'POST':
         content = request.POST.get('transformationContent')
         image = request.FILES.get('fileInputTransformation')
 
-        if content:  # Check if content is not empty
-            # Assuming you have a CustomUser model for authenticated users
+        if content:  
             user = request.user
             transformation = Transformation.objects.create(
                 content=content,
                 image=image,
                 user=user
             )
-            messages.success(request, 'Successfully added transformation post')  # Add success message
+            messages.success(request, 'Successfully added transformation post')
             return redirect('community')
         else:
-            # Handle case where content is missing or empty
-            messages.error(request, 'Content is required')  # Add error message
-            return render(request, 'community.html', {'error_message': 'Content is required'})
+            messages.error(request, 'Content is required')
+            return redirect('community')
 
-    # Handle GET request or invalid form submission
-    return render(request, 'community.html')
+    return render(request, 'community.html', {'transformations': transformations})
+
+
 
 
 @login_required
@@ -1084,8 +1167,7 @@ def post_recipe(request):
     return render(request, 'community.html')
 
 
-
 def community_details_view(request):
     # Your view logic goes here
-    
     return render(request, 'communitydetails.html')
+
