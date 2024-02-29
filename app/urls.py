@@ -5,6 +5,11 @@ from .views import UserProfileCreateView,TrainerProfileView
 from django.conf import settings
 from django.conf.urls.static import static
 
+from .views import fetch_transformations
+from .views import fetch_recipe
+
+from .views import post_comment
+
 
 
 
@@ -115,7 +120,7 @@ urlpatterns = [
     path('userhome/post_recipe/', views.post_recipe, name='post_recipe'),
     path('userhome/community/product.html', views.product_view, name='product_html'),  
     path('community/', views.community, name='community'),
-    path('communitydetails/', views.community_details_view, name='communitydetails'),
+   
 
     path('productdetails/', views.product_details, name='productdetails'),
     path('productdetails/<int:product_id>/', views.product_details, name='product_details'),
@@ -123,6 +128,32 @@ urlpatterns = [
     path('increase-cart-item/<int:id>/', views.increase_cart_item, name='increase-cart-item'),
     path('decrease-cart-item/<int:id>/', views.decrease_cart_item, name='decrease-cart-item'),
     path('remove-from-cart/<int:id>/', views.remove_from_cart, name='remove-from-cart'),
+
+    path('fetch-transformations/', fetch_transformations, name='fetch_transformations'),
+
+    path('fetch_recipe/', fetch_recipe, name='fetch_recipe'),
+
+    path('post-comment/<int:discussion_id>/', views.post_comment, name='post_comment'),
+
+
+    path('fetch-comments/<int:discussion_id>/', views.fetch_comments, name='fetch_comments'),
+    path('toggle-like/<int:discussion_id>/', views.toggle_like, name='toggle_like'),
+    path('toggle-transformation-like/<int:transformation_id>/', views.toggle_transformation_like, name='toggle_transformation_like'),
+    path('post-transformation-comment/<int:transformation_id>/', views.post_transformation_comment, name='post_transformation_comment'),
+    path('fetch-transformation-comments/<int:transformation_id>/', views.fetch_transformation_comments, name='fetch_transformation_comments'),
+    
+    path('explore/', views.explore, name='explore'),  # Map navigation and search view
+    path('add_fitness_center/', views.add_fitness_center, name='add_fitness_center'),
+
+    path('wishlist/', views.wishlist, name='wishlist'),
+    path('add-to-wishlist/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
+    path('remove-from-wishlist/<int:product_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+
+
+
+
+
+
 
 
 

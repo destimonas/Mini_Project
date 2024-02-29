@@ -77,6 +77,7 @@ class Specialization(models.Model):
 
     def __str__(self):
         return self.name
+    
 class Trainer(models.Model):
     full_name = models.CharField(max_length=100)
     username = models.CharField(max_length=50, unique=True)
@@ -197,6 +198,14 @@ class Product1(models.Model):
 
     def str(self):
         return self.product_name
+    
+
+class WishlistItem(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    product = models.ForeignKey('Product1', on_delete=models.CASCADE)
+
+    def _str_(self):
+        return self.product.product_name
 
 class Discussion(models.Model):
     title = models.CharField(max_length=255,blank=True, null=True)
@@ -204,6 +213,17 @@ class Discussion(models.Model):
     image = models.ImageField(upload_to='discussion_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(CustomUser, related_name='liked_discussions')
+
+
+class Comment(models.Model):
+    discussion = models.ForeignKey('Discussion', on_delete=models.CASCADE, related_name='comments')
+    transformation = models.ForeignKey('Transformation', on_delete=models.CASCADE, related_name='comments', null=True, blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    like_count = models.IntegerField(default=0,null=True,blank=True)  # New field for like count
+
 
 # Model for Fitness Updates
 class FitnessUpdate(models.Model):
@@ -218,6 +238,8 @@ class Transformation(models.Model):
     image = models.ImageField(upload_to='transformations/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(CustomUser, related_name='liked_transformations')
+
 
 # Model for Recipes
 class Recipe(models.Model):
@@ -247,6 +269,18 @@ class Cart(models.Model):
     def _str_(self):
         return f"Cart for {self.user.fullName}"
 
+
+# models.py
+
+
+class FitnessCenter(models.Model):
+    name = models.CharField(max_length=100)
+    latitude = models.CharField(max_length=20)  # Change to CharField
+    longitude = models.CharField(max_length=20)  # Change to CharField
+    address = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
 
 
 

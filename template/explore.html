@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Fitness Centers</title>
+    <!-- Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Include Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Include Leaflet Search Plugin JavaScript -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-search/dist/leaflet-search.min.css" />
+    <script src="https://unpkg.com/leaflet-search/dist/leaflet-search.min.js"></script>
+
+    <style>
+        #map {
+            height: 600px; /* Adjust the height as needed */
+            width: 100%;
+            margin: auto;
+        }
+        .header {
+            background-color: #6f42c1; 
+            color: #fff;
+            padding: 10px;
+            text-align: left;
+        }
+        .header-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .header-options ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .header-options ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-options">
+            <h1>FitUp</h1>
+            <ul>
+                <li><a href="{% url 'community' %}" style="position: absolute; right: 20px; top: 20px; color: white;">Back</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="map"></div>
+
+    <script>
+        var map = L.map('map'); // Create Leaflet map without setting initial center and zoom level
+    
+        // Add OSM Tile Layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="#"></a> '
+        }).addTo(map);
+    
+        // Set the initial view to focus on Kerala, specifically Kottayam
+        var initialView = L.latLng(9.5916, 76.5222); // Coordinates for Kottayam, Kerala
+        map.setView(initialView, 10); // Adjust the zoom level as needed
+    
+        // Add marker for the user's current location
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+    
+                // Add marker for user's current location
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup('Your Location');
+            }, function(error) {
+                console.error('Error getting user location:', error.message);
+            });
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+    
+        // Function to add fitness centers to the map
+        var redIcon = L.icon({
+            iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+    
+        var fitnessCenters = [
+            {% for center in fitness_centers %}
+                { name: '{{ center.name }}', latitude: {{ center.latitude }}, longitude: {{ center.longitude }}, address: '{{ center.address }}' },
+            {% endfor %}
+        ];
+    
+        var fitnessCenterMarkers = L.layerGroup(); // Create a layer group for fitness center markers
+    
+        fitnessCenters.forEach(center => {
+            var marker = L.marker([center.latitude, center.longitude], { icon: redIcon }).addTo(fitnessCenterMarkers);
+            marker.bindPopup(
+                `<b>${center.name}</b><br>Address: ${center.address}<br>Latitude: ${center.latitude}<br>Longitude: ${center.longitude}`
+            );
+        });
+    
+        // Add fitness center markers layer group to the map
+        fitnessCenterMarkers.addTo(map);
+    
+        // Add Leaflet Search Plugin
+        var searchControl = new L.Control.Search({
+            position: 'topright', // Adjust position as needed
+            layer: fitnessCenterMarkers, // Pass the layer group to the search control
+            initial: false,
+            collapsed: true,
+            textPlaceholder: 'Search for fitness centers...'
+        });
+        map.addControl(searchControl);
+    </script>
+    
+  
+</body>
+</html>

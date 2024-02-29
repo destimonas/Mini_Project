@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render,redirect,HttpResponse
 
 from .models import *
@@ -924,9 +925,9 @@ def search_view(request):
 
 
 def product_view(request):
-   
-    return render(request, 'product.html')
-
+    # Retrieve all products from the database
+    products = Product1.objects.all()
+    return render(request, 'product.html', {'products': products})
     
 
 def products_by_subcategory(request, subcategory):
@@ -953,14 +954,6 @@ def product_details(request, product_id):  # Define product_id as a parameter
     return render(request, 'productdetails.html', {'product': product})
 
 
-def add_to_wishlist(request, product_id):
-    if request.method == 'POST':
-        product = Product1.objects.get(pk=product_id)
-       
-        messages.success(request, f'{product.product_name} added to wishlist successfully.')
-        return redirect('product.html')  
-    else:
-        return redirect('product.html')  
 
 def add_to_cart(request, id):
     product = Product1.objects.get(pk=id)
@@ -1054,6 +1047,7 @@ from .models import Discussion
 @login_required
 def community(request):
     discussions = Discussion.objects.all()
+    
 
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -1079,6 +1073,7 @@ def community(request):
             messages.error(request, 'Title and content cannot be empty.')
             return redirect('community')  # Redirect back to the community page
     return render(request, 'community.html', {'discussions': discussions})
+
 
 
 @login_required
@@ -1127,6 +1122,35 @@ def post_transformation(request):
 
     return render(request, 'community.html', {'transformations': transformations})
 
+# @login_required
+# def fetch_transformations(request):
+#     transformations = Transformation.objects.all()
+#     transformation_data = []
+
+#     for transformation in transformations:
+#         transformation_data.append({
+#             'content': transformation.content,
+#             'image': transformation.image.url if transformation.image else None,
+#             'user': transformation.user.username
+#         })
+
+#     return JsonResponse(transformation_data, safe=False)
+# Fetch transformations
+@login_required
+def fetch_transformations(request):
+    transformations = Transformation.objects.all()
+    transformation_data = []
+
+    for transformation in transformations:
+        transformation_data.append({
+            'id': transformation.id,
+            'content': transformation.content,
+            'image': transformation.image.url if transformation.image else None,
+            'user': transformation.user.username,
+            'likes': transformation.likes.count(),
+        })
+
+    return JsonResponse(transformation_data, safe=False)
 
 
 
@@ -1161,13 +1185,187 @@ def post_recipe(request):
         else:
             # Handle case where essential fields are missing or empty
             messages.error(request, 'Name, Ingredients, and Directions are required')  # Add error message
-            return render(request, 'community.html', {'error_message': 'Name, Ingredients, and Directions are required'})
+            # Redirect back to the recipe form page with an error message
+            return redirect('community')
 
-    # Handle GET request or invalid form submission
-    return render(request, 'community.html')
+    # For GET request, fetch all recipes and render the community page
+    recipes = Recipe.objects.all()
+    return render(request, 'community.html', {'recipes': recipes})
+
+def fetch_recipe(request):
+    if request.method == 'GET':
+        recipes = Recipe.objects.all()
+        recipe_data = []
+        for recipe in recipes:
+            recipe_data.append({
+                'name': recipe.name,
+                'story': recipe.story,
+                'food_type': recipe.food_type,
+                'cuisine_type': recipe.cuisine_type,
+                'cooking_time': recipe.cooking_time,
+                'ingredients': recipe.ingredients,
+                'directions': recipe.directions,
+                'image_url': recipe.image.url if recipe.image else None,
+                'posted_by': recipe.user.username
+            })
+        return JsonResponse(recipe_data, safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
+
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+
+@require_POST
+def post_comment(request, discussion_id):
+    discussion = get_object_or_404(Discussion, pk=discussion_id)
+    user = request.user
+    content = request.POST.get('content')
+
+    if content:
+        # Create the comment object
+        comment = Comment.objects.create(discussion=discussion, user=user, content=content)
+        # Return success response
+        return JsonResponse({'status': 'success', 'message': 'Comment posted successfully.'})
+    else:
+        # Return error response if content is missing
+        return JsonResponse({'status': 'error', 'message': 'Content is required.'})
 
 
-def community_details_view(request):
-    # Your view logic goes here
-    return render(request, 'communitydetails.html')
+def fetch_comments(request, discussion_id):
+    discussion = Discussion.objects.get(pk=discussion_id)
+    comments = discussion.comments.all()
+    comment_data = []
+    for comment in comments:
+        comment_data.append({
+            'user': comment.user.username,
+            'content': comment.content
+        })
+    return JsonResponse(comment_data, safe=False)
+
+@require_POST
+def toggle_like(request, discussion_id):
+    discussion = get_object_or_404(Discussion, pk=discussion_id)
+    user = request.user
+
+    if user in discussion.likes.all():
+        # If the user already liked the discussion, unlike it
+        discussion.likes.remove(user)
+        liked = False
+    else:
+        # If the user hasn't liked the discussion yet, like it
+        discussion.likes.add(user)
+        liked = True
+
+    like_count = discussion.likes.count()  # Get the total number of likes for the discussion
+
+    return JsonResponse({'status': 'success', 'like_count': like_count})
+
+
+# Toggle like for a transformation
+@login_required
+@require_POST
+def toggle_transformation_like(request, transformation_id):
+    transformation = get_object_or_404(Transformation, pk=transformation_id)
+    user = request.user
+
+    if user in transformation.likes.all():
+        transformation.likes.remove(user)
+        liked = False
+    else:
+        transformation.likes.add(user)
+        liked = True
+
+    like_count = transformation.likes.count()
+
+    return JsonResponse({'status': 'success'})
+
+# Post a comment for a transformation
+@login_required
+@require_POST
+def post_transformation_comment(request, transformation_id):
+    transformation = get_object_or_404(Transformation, pk=transformation_id)
+    user = request.user
+    content = request.POST.get('content')
+
+    if content:
+        comment = Comment.objects.create(transformation=transformation, user=user, content=content)
+        return JsonResponse({'status': 'success', 'message': 'Comment posted successfully.'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Content is required.'})
+
+def fetch_transformation_comments(request, transformation_id):
+    transformation_comments = Comment.objects.filter(transformation_id=transformation_id)
+    comments_data = [{'user': comment.user.username, 'content': comment.content} for comment in transformation_comments]
+    return JsonResponse(comments_data, safe=False)
+
+
+from django.shortcuts import render
+from .models import FitnessCenter  # Import your FitnessCenter model
+
+def explore(request):
+    # Fetch fitness centers from the database
+    fitness_centers = FitnessCenter.objects.all()
+    return render(request, 'explore.html', {'fitness_centers': fitness_centers})
+
+
+def add_to_wishlist(request, product_id):
+    if request.user.is_authenticated:
+        product = Product1.objects.get(id=product_id)
+        wishlist_item, created = WishlistItem.objects.get_or_create(user=request.user, product=product)
+        if created:
+            # The item was added to the wishlist
+            messages.success(request, f'{product.product_name} has been added to your wishlist.')
+        else:
+            # The item is already in the wishlist
+            messages.warning(request, f'{product.product_name} is already in your wishlist.')
+    return redirect('wishlist')
+
+
+
+def wishlist(request):
+    if request.user.is_authenticated:
+        wishlist_items = WishlistItem.objects.filter(user=request.user)
+        return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})
+    else:
+        return redirect('product_view') 
+
+def remove_from_wishlist(request, product_id):
+    if request.user.is_authenticated:
+        # Get the wishlist item or return a 404 if it doesn't exist
+        wishlist_item = get_object_or_404(WishlistItem, user=request.user, product_id=product_id)
+        
+        # Delete the wishlist item
+        wishlist_item.delete()
+        
+        # Display a success message
+        messages.success(request, f'Item removed from your wishlist.')
+
+    return redirect('wishlist') 
+
+
+# views.py
+from .models import FitnessCenter
+
+def add_fitness_center(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        latitude_str = request.POST.get('latitude')
+        longitude_str = request.POST.get('longitude')
+        address = request.POST.get('address')
+        
+        # Create a new FitnessCenter object and save it to the database
+
+        # Create a new FitnessCenter object and save it
+        fitness_center = FitnessCenter.objects.create(
+            name=name,
+            latitude=latitude_str,
+            longitude=longitude_str,
+            address=address
+        )
+        fitness_center.save()
+
+        return redirect('dashboardbase')
+    return render(request, 'add_fitness_center.html')
+
 

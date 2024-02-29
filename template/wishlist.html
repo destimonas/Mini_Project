@@ -1,0 +1,52 @@
+{% load static %}
+
+{% block content %}
+<head>
+    <style>
+        
+    </style>
+</head>
+	
+    <main>
+        <div class="content">
+            <div id="product-container" class="product-container">
+          
+    
+            {% if wishlist_items %}
+                {% for item in wishlist_items %}
+                <div class="product-card">
+                    <a href="{% url 'product_details' item.product.id %}">
+                        <div class="product-image">
+                            {% if item.product.product_image %}
+                            <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}">{% endif %}
+                        </div>
+                        <div class="product-details">
+                            <h4>{{ item.product.product_name }}</h4>
+                            <div class="product-price">
+                                <span> Rs.{{ item.product.sale_price }}</span>
+                                <span> {{ item.product.discount }}%</span>
+                            </div>
+                            <div class="button-container">
+                                <form method="post" action="{% url 'remove_from_wishlist' item.product.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="remove-button">Remove</button>
+                                </form>
+                                <form method="post" action="{% url 'add_to_cart' item.product.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="add-to-cart-button">Add to Cart</button>
+                                </form>
+                            </div>
+                        </div>
+                    
+                    {% comment %} <p class="price">Price: Rs.{{ item.product.price }}</p> {% endcomment %}
+                </div>
+                
+                {% endfor %}
+            {% else %}
+                <p class="no-products">Your wishlist is empty.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

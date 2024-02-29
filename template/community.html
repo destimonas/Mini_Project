@@ -209,90 +209,248 @@
         .messages .success {
             color: green;
         }
-        /* CSS styles for the top horizontal sidebar */
-.top-sidebar {
-  
-    width: 40%; /* Adjust width as per your preference */
-    margin: 0 auto; /* Center the sidebar horizontally */
-    background-color: #cecece; /* Change the background color */
-    text-align: center;
-    padding: 15px 0; /* Add padding for better appearance */
+                /* CSS styles for the top horizontal sidebar */
+        .top-sidebar {
+        
+            width: 40%; /* Adjust width as per your preference */
+            margin: 0 auto; /* Center the sidebar horizontally */
+            background-color: #cecece; /* Change the background color */
+            text-align: center;
+            padding: 15px 0; /* Add padding for better appearance */
+        }
+
+        .top-sidebar-options {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .top-sidebar-options li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .top-sidebar-options li:last-child {
+            margin-right: 0;
+        }
+
+        .top-sidebar-options li a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px 15px;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .top-sidebar-options li a:hover {
+            background-color: #ddd;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .button-group button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px; /* Adjust margin as needed */
+        }
+
+        .button-group button:hover {
+            background-color: #512da8;
+        }
+        /* Centering the discussion container */
+        .discussion-container {
+            text-align: center;
+        }
+
+        /* Styles for discussion content */
+        .discussion {
+            margin: 0 auto; /* Center the discussion */
+            max-width: 600px; /* Adjust the max-width as per your design */
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .discussion img {
+            max-width: 100%; /* Ensure images don't exceed container width */
+            height: auto;
+            margin-top: 10px; /* Add some spacing between content and image */
+        }
+
+        /* CSS styles for the transformation container */
+        .transformations-content {
+            margin: 0 auto; /* Center the content horizontally */
+            max-width: 800px; /* Adjust the maximum width as needed */
+            padding: 20px;
+        }
+
+        .transformation {
+            background-color: #f9f9f9; /* Background color for each transformation */
+            border: 1px solid #ddd; /* Border around each transformation */
+            border-radius: 5px; /* Rounded corners */
+            padding: 15px; /* Padding around each transformation */
+            margin-bottom: 20px; /* Spacing between transformations */
+        }
+
+        .transformation img {
+            max-width: 100%; /* Ensure images don't exceed container width */
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 10px; /* Spacing below the image */
+        }
+
+        .transformation p {
+            margin-bottom: 10px; /* Spacing between paragraphs */
+        }
+
+        .transformation p:last-child {
+            margin-bottom: 0; /* Remove bottom margin for the last paragraph */
+        }
+        /* CSS styles for the transformation container */
+        #transformation-container {
+            margin: 0 auto; /* Center the container horizontally */
+            max-width: 800px; /* Adjust the maximum width as needed */
+            padding: 20px;
+        }
+
+        .transformation {
+            background-color: #f9f9f9; /* Background color for each transformation */
+            border: 1px solid #ddd; /* Border around each transformation */
+            border-radius: 5px; /* Rounded corners */
+            padding: 15px; /* Padding around each transformation */
+            margin-bottom: 20px; /* Spacing between transformations */
+            text-align: center; /* Center content inside transformation */
+        }
+
+        .transformation img {
+            max-width: 100%; /* Ensure images don't exceed container width */
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 10px; /* Spacing below the image */
+        }
+
+        .transformation p {
+            margin-bottom: 10px; /* Spacing between paragraphs */
+        }
+
+        .transformation p:last-child {
+            margin-bottom: 0; /* Remove bottom margin for the last paragraph */
+        }
+
+
+        #recipe-container {
+            width: 40%; /* Adjust the width as per your preference */
+            margin: 0 auto; /* Center the container horizontally */
+            padding: 20px; /* Add padding for spacing */
+            background-color: #f2f2f2; /* Set background color */
+            border-radius: 10px; /* Add rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+        }
+
+        .recipe {
+            margin-bottom: 20px; /* Add space between recipes */
+            border-bottom: 1px solid #ddd; /* Add a bottom border between recipes */
+            padding-bottom: 20px; /* Add padding between recipes */
+        }
+
+        .recipe img {
+            max-width: 100%; /* Ensure images don't exceed container width */
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Center images horizontally */
+            margin: 10px auto; /* Center images vertically */
+            border-radius: 5px; /* Add rounded corners to images */
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .actions .action {
+            margin: 0 55px; /* Adjust the margin to add spacing between action icons */
+        }
+
+        .actions .action img {
+            width: 20px; /* Set the width of the action icons */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+
+        .action img {
+            width: 20px; /* Adjust the width to your preference */
+            height: 20px; /* Adjust the height to your preference */
+            margin-right: 5px; /* Adjust the margin to your preference */
+        }
+
+        .comment-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .comment-input {
+            width: 70%;
+            flex: 1;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        .comment-button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        } 
+     /* Share Modal Styles */
+#share-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
-.top-sidebar-options {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.top-sidebar-options li {
-    display: inline-block;
-    margin-right: 20px;
-}
-
-.top-sidebar-options li:last-child {
-    margin-right: 0;
-}
-
-.top-sidebar-options li a {
-    text-decoration: none;
-    color: #333;
-    padding: 10px 15px;
-    display: inline-block;
-    transition: background-color 0.3s;
-}
-
-.top-sidebar-options li a:hover {
-    background-color: #ddd;
-}
-
-.button-group {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-}
-
-.button-group button {
-    background-color: #6f42c1;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0 5px; /* Adjust margin as needed */
-}
-
-.button-group button:hover {
-    background-color: #512da8;
-}
-/* Centering the discussion container */
-.discussion-container {
-    text-align: center;
-}
-
-/* Styles for discussion content */
-.discussion {
-    margin: 0 auto; /* Center the discussion */
-    max-width: 600px; /* Adjust the max-width as per your design */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
     padding: 20px;
-    border: 1px solid #ccc;
-    margin-bottom: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Adjust as needed */
+    max-width: 500px; /* Maximum width for the modal content */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
 }
 
-.discussion img {
-    max-width: 100%; /* Ensure images don't exceed container width */
-    height: auto;
-    margin-top: 10px; /* Add some spacing between content and image */
+.btn-share {
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.btn-share:hover {
+    color: #000;
 }
 
 
-        
- 
-
-
-        
-        
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     {% if messages %}
@@ -310,7 +468,7 @@
         <h1>FitUp</h1>
         <ul>
             <li>Me</li>
-            <li><a href="{% url 'communitydetails' %}" style="color: white;">Community</a></li>
+            <li><a href="{% url 'explore' %}"Community</li>
             <li>Post</li>
             <li>Explore</li>
             <li>Group</li>
@@ -330,10 +488,10 @@
 </div> 
 
 <div class="button-group" style="text-align: center;">
-    <button id="btn-all">All</button>
+    <button id="btn-all" onclick="showAll()">All</button>
     <button id="btn-discussion" onclick="showDiscussions()">Discussion</button>
     <button id="btn-transformation" onclick="showTransformations()">Transformation</button>
-    <button id="btn-recipe">Recipe</button>
+    <button id="btn-recipe" onclick="showRecipes()">Recipe</button>
     <button id="btn-article">Article</button>
 </div>
 
@@ -363,46 +521,226 @@
     </div>
 
 
-<!-- Inside your HTML file -->
-<div class="container" id="discussion-container">
-    <h3 style="text-align: center;">Discussions</h3>
-    {% if discussions %}
-        {% for discussion in discussions %}
-            <div class="discussion">
-                <h4>{{ discussion.title }}</h4>
-                {% if discussion.image %}
-                    <img src="{{ discussion.image.url }}" alt="Discussion Image" style="max-width: 100%;">
-                {% endif %}
-                <p>{{ discussion.content }}</p>
-                <p>Posted by: {{ discussion.user.username }}</p>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>No discussions available.</p>
-    {% endif %}
-</div>
+    <div class="container" id="discussion-container">
+        <h3 style="text-align: center;">Discussions</h3>
+        {% if discussions %}
+            {% for discussion in discussions %}
+                <div class="discussion" id="discussion-{{ discussion.id }}">
+                    <h4>{{ discussion.title }}</h4>
+                    {% if discussion.image %}
+                        <img src="{{ discussion.image.url }}" alt="Discussion Image" style="max-width: 100%;">
+                    {% endif %}
+                    <p>{{ discussion.content }}</p>
+                    <p>Posted by: {{ discussion.user.username }}</p>
+    
+                    <hr>
+                    <div class="actions">
+                        <div class="like-section">
+                            <span class="action" onclick="toggleLike('{{ discussion.id }}')">
+                                <img src="{% static 'images/like.jpg.jpg' %}" alt="Like" id="like-icon-{{ discussion.id }}" class="{% if request.user in discussion.likes.all %} liked {% endif %}">
+                                <span id="like-count-{{ discussion.id }}">{{ discussion.like_count }}</span>
+                            </span>
+                        </div>
+                        
+                        <span class="action" onclick="toggleCommentSection('{{ discussion.id }}')"><img src="{% static 'images/comment.jpg.jpg' %}" alt="Comment"> Comment</span>
+                        <span class="action" onclick="showShareModal('{{ discussion.id }}')"><img src="{% static 'images/share.jpg.jpg' %}" alt="Share"> Share</span>
+                    </div>
+                    <div id="comment-section-{{ discussion.id }}" class="comment-section" style="display: none;">
+                        <input type="text" id="comment-input-{{ discussion.id }}" class="comment-input" placeholder="Write a comment">
+                        <button onclick="postComment('{{ discussion.id }}')" class="comment-button">Post Comment</button>
+                        <div id="comment-list-{{ discussion.id }}"></div>
+                    </div>
+                    <hr>
+                    <script>
+                        function postComment(discussionId) {
+                            var commentInput = document.getElementById('comment-input-' + discussionId);
+                            var content = commentInput.value.trim(); // Trim any leading/trailing whitespaces
+                        
+                            if (content !== '') {
+                                // Send AJAX request to post comment
+                                $.ajax({
+                                    url: '/post-comment/' + discussionId + '/', // Your Django view URL
+                                    method: 'POST',
+                                    data: {
+                                        'content': content,
+                                        'csrfmiddlewaretoken': '{{ csrf_token }}' // Ensure CSRF token is included
+                                    },
+                                    success: function(response) {
+                                        if (response.status === 'success') {
+                                            // Clear the comment input field
+                                            commentInput.value = '';
+                                            // Refresh the comment section (if needed)
+                                            // You can append the new comment to the comment list without reloading the page
+                                            fetchComments(discussionId); // Fetch comments after posting a new comment
+                                        } else {
+                                            alert('Failed to post comment: ' + response.message);
+                                        }
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error('Error posting comment:', error);
+                                    }
+                                });
+                            } else {
+                                alert('Please enter a non-empty comment.');
+                            }
+                        }
+                        
+                        // Function to fetch and display comments for a discussion
+                        function fetchComments(discussionId) {
+                            $.ajax({
+                                url: '/fetch-comments/' + discussionId + '/',
+                                method: 'GET',
+                                success: function(response) {
+                                    var commentList = document.getElementById('comment-list-' + discussionId);
+                                    commentList.innerHTML = ''; // Clear previous comments
+                                    response.forEach(function(comment) {
+                                        var commentDiv = document.createElement('div');
+                                        commentDiv.innerHTML = '<p><strong>' + comment.user + '</strong>: ' + comment.content + '</p>';
+                                        commentList.appendChild(commentDiv);
+                                    });
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error fetching comments:', error);
+                                }
+                            });
+                        }
 
-<div class="container" id="transformation-container">
+                        // Toggle comment section visibility and fetch comments
+                        function toggleCommentSection(discussionId) {
+                            var commentSection = document.getElementById('comment-section-' + discussionId);
+                            if (commentSection.style.display === 'none') {
+                                commentSection.style.display = 'block';
+                                fetchComments(discussionId); // Fetch comments when the comment section is toggled
+                            } else {
+                                commentSection.style.display = 'none';
+                            }
+                        }
+                        function toggleLike(discussionId) {
+                            // Send AJAX request to like/unlike the discussion
+                            $.ajax({
+                                url: '/toggle-like/' + discussionId + '/',
+                                method: 'POST',
+                                data: {
+                                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                                },
+                                success: function(response) {
+                                    if (response.status === 'success') {
+                                        // Update the like icon and count
+                                        var likeIcon = document.getElementById('like-icon-' + discussionId);
+                                        var likeCount = document.getElementById('like-count-' + discussionId);
+                                        likeIcon.classList.toggle('liked');
+                                        likeCount.innerText = response.like_count + ' Like';
+                                    } else {
+                                        alert('Failed to like discussion: ' + response.message);
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error toggling like:', error);
+                                }
+                            });
+                        }   
+                    </script>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+<!-- Share Modal -->
+<div id="share-modal" class="modal">
+    <div class="modal-content">
+        <!-- Share Button -->
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="btn-share">
+        <i class="fab fa-facebook-f"></i>Facebook
+    </a>
+    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ product.product_name }}" target="_blank" class="btn-share">
+        <i class="fab fa-twitter"></i>Twitter
+    </a>
+    <a href="mailto:?subject={{ product.product_name }}&body=Check out this product: {{ request.build_absolute_uri }}" class="btn-share">
+        <i class="fas fa-envelope"></i>Mail
+    </a>
+    <a href="https://www.instagram.com/?url={{ request.build_absolute_uri }}" target="_blank" class="btn-share">
+        <i class="fab fa-instagram"></i>Instagram
+    </a>
+    </div>
+</div>
+    
+
+<div id="transformation-container" class="container">
     <h3 style="text-align: center;">Transformations</h3>
-    {% if transformations %}
-        {% for transformation in transformations %}
-            <div class="transformation">
-                {% if transformation.image %}
-                    <img src="{{ transformation.image.url }}" alt="Transformation Image" style="max-width: 100%;">
-                {% endif %}
-                <p>{{ transformation.content }}</p>
-                <p>Posted by: {{ transformation.user.username }}</p>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>No transformations available.</p>
-    {% endif %}
+    <div class="transformations-content">
+        {% if transformations %}
+            {% for transformation in transformations %}
+                <div class="transformation" id="transformation-{{ transformation.id }}">
+                    {% if transformation.image %}
+                        <img src="{{ transformation.image.url }}" alt="Transformation Image">
+                    {% endif %}
+                    <p>{{ transformation.content }}</p>
+                    <p>Posted by: {{ transformation.user.username }}</p>
+                    <hr>
+                    <div class="actions">
+                        <div class="like-section">
+                            <span class="action" onclick="toggleTransformationLike('{{ transformation.id }}')">
+                                <img src="{% static 'images/like.jpg.jpg' %}" alt="Like" id="like-icon-{{ transformation.id }}" class="{% if request.user in transformation.likes.all %} liked {% endif %}">
+                                <span id="like-count-{{ transformation.id }}">{{ transformation.likes }}</span> Like
+                            </span>
+                        </div>
+                        <span class="action" onclick="toggleTransformationCommentSection('{{ transformation.id }}')"><img src="{% static 'images/comment.jpg.jpg' %}" alt="Comment"> Comment</span>
+                        <span class="action" onclick="showShareModal('{{ transformation.id }}')"><img src="{% static 'images/share.jpg.jpg' %}" alt="Share"> Share</span>
+                    </div>
+                    <div id="comment-section-{{ transformation.id }}" class="comment-section" style="display: none;">
+                        <input type="text" id="comment-input-{{ transformation.id }}" class="comment-input" placeholder="Write a comment">
+                        <button onclick="postTransformationComment('{{ transformation.id }}')" class="comment-button">Post Comment</button>
+                        <div id="comment-list-{{ transformation.id }}"></div>
+                    </div>
+                    <hr>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 </div>
 
 
-
-
-
+    
+    <div class="container" id="recipe-container">
+        <h3 style="text-align: center;">Recipes</h3>
+        <div class="recipes-content">
+            {% if recipes %}
+                {% for recipe in recipes %}
+                    <div class="recipe" id="recipe-{{ recipe.id }}">
+                        <h4>{{ recipe.name }}</h4>
+                        <p>{{ recipe.story }}</p>
+                        <p>Food Type: {{ recipe.food_type }}</p>
+                        <p>Cuisine Type: {{ recipe.cuisine_type }}</p>
+                        <p>Cooking Time: {{ recipe.cooking_time }}</p>
+                        <p>Ingredients: {{ recipe.ingredients }}</p>
+                        <p>Directions: {{ recipe.directions }}</p>
+                        {% if recipe.image %}
+                            <img src="{{ recipe.image.url }}" alt="Recipe Image">
+                        {% endif %}
+                        <p>Posted by: {{ recipe.user.username }}</p>
+                        <hr>
+                        <div class="actions">
+                            <div class="like-section">
+                                <span class="action" onclick="likeRecipe('{{ recipe.id }}')">
+                                    <img src="{% static 'images/like.jpg.jpg' %}" alt="Like" id="like-icon-{{ recipe.id }}">
+                                    <span id="like-count-{{ recipe.id }}">{{ recipe.likes }}</span> Like
+                                </span>
+                            </div>
+                            <span class="action" onclick="showRecipeCommentSection('{{ recipe.id }}')"><img src="{% static 'images/comment.jpg.jpg' %}" alt="Comment"> Comment</span>
+                            <span class="action" onclick="showRecipeShareModal('{{ recipe.id }}')"><img src="{% static 'images/share.jpg.jpg' %}" alt="Share"> Share</span>
+                        </div>
+                        <div id="recipe-comment-section-{{ recipe.id }}" class="comment-section" style="display: none;">
+                            <input type="text" id="recipe-comment-input-{{ recipe.id }}" class="comment-input" placeholder="Write a comment">
+                            <button onclick="postRecipeComment('{{ recipe.id }}')" class="comment-button">Post Comment</button>
+                            <div id="recipe-comment-list-{{ recipe.id }}"></div>
+                        </div>
+                        <hr>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    
 
     <!-- Modals for different post types -->
     <div id="discussionModal" class="modal">
@@ -466,33 +804,41 @@
     </div>
     
     
-    <!-- Transformation Modal -->
-    <div id="transformationModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('transformation')">&times;</span>
-            <h2>Post Your Transformation</h2>
-            <form id="transformationForm" method="POST" action="{% url 'post_transformation' %}" enctype="multipart/form-data">
-                {% csrf_token %}
+<!-- Transformation Modal -->
+<div id="transformationModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('transformation')">&times;</span>
+        <h2>Post Your Transformation</h2>
+        <!-- Validation Messages -->
+        <div id="transformationValidationMessages"></div>
+        <form id="transformationForm" method="POST" action="{% url 'post_transformation' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="fileInputTransformation"></label>
                 <div class="media-upload">
-                    <label for="fileInputTransformation">
+                    <input type="file" id="fileInputTransformation" name="fileInputTransformation" accept="image/*, video/*" onchange="displaySelectedFile(this, 'previewImageTransformation', 'addPhotosVideosTransformation')" multiple style="display: none;">
+                    <label for="fileInputTransformation" class="file-input-label">
                         <img src="{% static 'images/addimage.jpg' %}" alt="Choose File" width="50" height="50" style="cursor: pointer;">
                         <span id="addPhotosVideosTransformation">Add photos/videos</span>
                     </label>
-                    <input type="file" id="fileInputTransformation" name="fileInputTransformation" accept="image/*, video/*" onchange="displaySelectedFile(this, 'previewImageTransformation', 'addPhotosVideosTransformation')" multiple style="display: none;">
-                    <br>
-                    <img id="previewImageTransformation" src="#" alt="Selected Image" width="100" height="100" style="display: none;">
                 </div>
-                <br>
-                
-                <textarea id="transformationContent" name="transformationContent" rows="4" cols="50" placeholder="Share your transformation and inspire others!" maxlength="1000"></textarea><br>
-                <div class="button-group">
-                    <button type="button" onclick="closeModal('transformation')" class="cancel-btn">Cancel</button>
-                    <button type="submit" class="post-btn">Post</button>
-                </div>
-            </form>
-        </div>
+                <img id="previewImageTransformation" src="#" alt="Selected Image" width="100" height="100" style="display: none;">
+            </div>
+            
+            <div class="form-group">
+                <label for="transformationContent">Transformation Description:</label>
+                <textarea id="transformationContent" name="transformationContent" rows="4" placeholder="Share your transformation and inspire others!" maxlength="1000"></textarea>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" onclick="closeModal('transformation')" class="cancel-btn">Cancel</button>
+                <button type="submit" class="post-btn">Post</button>
+            </div>
+        </form>
     </div>
-    
+</div>
+
+
     <div id="recipeModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('recipe')">&times;</span>
@@ -548,6 +894,7 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/global-functions.js' %}"></script>
 
 <script>
     function showModal(type) {
@@ -617,28 +964,219 @@
         };
         xhr.send(formData);
     }
+    function showAll() {
+        var discussionContainer = document.getElementById('discussion-container');
+        var transformationContainer = document.getElementById('transformation-container');
+        var recipeContainer = document.getElementById('recipe-container');
+    
+        // Display all containers
+        discussionContainer.style.display = 'block';
+        transformationContainer.style.display = 'block';
+        recipeContainer.style.display = 'block';
+
+        fetchDiscussions();
+        fetchTransformations();
+        fetchRecipes();
+    }
     function showDiscussions() {
         var discussionContainer = document.getElementById('discussion-container');
-        if (discussionContainer.style.display === 'none') {
-            discussionContainer.style.display = 'block';
-            // You may add code here to fetch and populate discussions dynamically
-        } else {
-            discussionContainer.style.display = 'none';
-        }
+        var transformationContainer = document.getElementById('transformation-container');
+        var recipeContainer = document.getElementById('recipe-container');
+    
+        // Display discussion container
+        discussionContainer.style.display = 'block';
+        transformationContainer.style.display = 'none'; // Hide transformation container
+        recipeContainer.style.display = 'none'; // Hide recipe container
+    
+        // Fetch and display discussion posts
+        fetchDiscussions();
+    }
+    
+    // Function to fetch and display transformations dynamically
+    function showTransformations() {
+    var discussionContainer = document.getElementById('discussion-container');
+    var transformationContainer = document.getElementById('transformation-container');
+    var recipeContainer = document.getElementById('recipe-container');
+
+    // Display transformation container
+    discussionContainer.style.display = 'none'; // Hide discussion container
+    transformationContainer.style.display = 'block';
+    recipeContainer.style.display = 'none'; // Hide recipe container
+
+        // Fetch and display transformation posts
+    fetchTransformations();
     }
 
-    function showTransformations() {
-        var transformationContainer = document.getElementById('transformation-container');
-        if (transformationContainer.style.display === 'none' || transformationContainer.style.display === '') {
-            transformationContainer.style.display = 'block';
-            // You may add code here to fetch and populate transformations dynamically
-        } else {
-            transformationContainer.style.display = 'none';
-        }
+    function fetchTransformations() {
+        fetch('/fetch-transformations/')
+            .then(response => response.json())
+            .then(data => {
+                var transformationHTML = '';
+                data.forEach(transformation => {
+                    transformationHTML += `
+                        <div class="transformation" id="transformation-${transformation.id}">
+                            ${transformation.image ? `<img src="${transformation.image}" alt="Transformation Image" style="max-width: 100%;">` : ''}
+                            <p>${transformation.content}</p>
+                            <p>Posted by: ${transformation.user}</p>
+                            <hr>
+                            <div class="actions">
+                                <div class="like-section">
+                                    <span class="action" onclick="toggleTransformationLike('${transformation.id}')">
+                                        <img src="{% static 'images/like.jpg.jpg' %}" alt="Like" id="like-icon-${transformation.id}">
+                                        <span id="like-count-${transformation.id}">${transformation.likes}</span> Like
+                                    </span>
+                                </div>
+                                <span class="action" onclick="showTransformationShareModal('${transformation.id}')"><img src="{% static 'images/share.jpg.jpg' %}" alt="Share"> Share</span>
+                            </div>
+                            <div class="comment-section">
+                                <input type="text" id="comment-input-${transformation.id}" class="comment-input" placeholder="Write a comment">
+                                <button onclick="postTransformationComment('${transformation.id}')" class="comment-button">Post Comment</button>
+                                <div id="comment-list-${transformation.id}"></div>
+                            </div>
+                            <hr>
+                        </div>
+                    `;
+                });
+                // Update the content of the transformations-content div
+                document.querySelector('.transformations-content').innerHTML = transformationHTML;
+            })
+            .catch(error => console.error('Error fetching transformations:', error));
     }
     
-    
-    
+
+    function fetchRecipes() {
+        fetch('/fetch_recipe/')
+            .then(response => response.json())
+            .then(data => {
+                // Update HTML content with fetched recipe details
+                var recipeHTML = '';
+                data.forEach(recipe => {
+                    recipeHTML += `
+                        <div class="recipe" id="recipe-${recipe.id}">
+                            <h4>${recipe.name}</h4>
+                            <p>${recipe.story}</p>
+                            <p>Food Type: ${recipe.food_type}</p>
+                            <p>Cuisine Type: ${recipe.cuisine_type}</p>
+                            <p>Cooking Time: ${recipe.cooking_time}</p>
+                            <p>Ingredients: ${recipe.ingredients}</p>
+                            <p>Directions: ${recipe.directions}</p>
+                            ${recipe.image_url ? `<img src="${recipe.image_url}" alt="Recipe Image" style="max-width: 100%;">` : ''}
+                            <p>Posted by: ${recipe.posted_by}</p>
+                            <hr>
+                            <div class="actions">
+                                <div class="like-section">
+                                    <span class="action" onclick="likeRecipe('${recipe.id}')">
+                                        <img src="{% static 'images/like.jpg.jpg' %}" alt="Like" id="like-icon-${recipe.id}">
+                                        <span id="like-count-${recipe.id}">${recipe.likes}</span> Like
+                                    </span>
+                                </div>
+                                <span class="action" onclick="showRecipeCommentSection('${recipe.id}')"><img src="{% static 'images/comment.jpg.jpg' %}" alt="Comment"> Comment</span>
+                                <span class="action" onclick="showRecipeShareModal('${recipe.id}')"><img src="{% static 'images/share.jpg.jpg' %}" alt="Share"> Share</span>
+                            </div>
+                            <div id="recipe-comment-section-${recipe.id}" class="comment-section" style="display: none;">
+                                <input type="text" id="recipe-comment-input-${recipe.id}" class="comment-input" placeholder="Write a comment">
+                                <button onclick="postRecipeComment('${recipe.id}')" class="comment-button">Post Comment</button>
+                                <div id="recipe-comment-list-${recipe.id}"></div>
+                            </div>
+                            <hr>
+                        </div>
+                    `;
+                });
+                document.getElementById('recipe-container').innerHTML = recipeHTML;
+            })
+            .catch(error => console.error('Error fetching recipes:', error));
+    }
+
+        // Call fetchRecipes function when the page loads or when the user clicks on the recipes button
+        window.onload = function() {
+            fetchRecipes();
+        };
+        
+        function showRecipes() {
+            var discussionContainer = document.getElementById('discussion-container');
+        var transformationContainer = document.getElementById('transformation-container');
+        var recipeContainer = document.getElementById('recipe-container');
+
+        // Display recipe container
+        discussionContainer.style.display = 'none'; // Hide discussion container
+        transformationContainer.style.display = 'none'; // Hide transformation container
+        recipeContainer.style.display = 'block';
+
+        // Fetch and display recipe posts
+        fetchRecipes();
+        }
+        
+
+        {% comment %} function showCommentModal(discussionId) {
+            var commentSection = document.getElementById('comment-section-' + discussionId);
+            commentSection.style.display = 'block';
+        } {% endcomment %}
+
+        function showShareModal(discussionId) {
+            var shareModal = document.getElementById('share-modal');
+            shareModal.style.display = 'block';
+        }
+
+        function showTransformationCommentSection(transformationId) {
+            var commentSection = document.getElementById('comment-section-' + transformationId);
+            if (commentSection.style.display === 'none') {
+                commentSection.style.display = 'block';
+            } else {
+                commentSection.style.display = 'none';
+            }
+        }
+        function postTransformationComment(transformationId) {
+            var commentInput = document.getElementById('comment-input-' + transformationId);
+            var content = commentInput.value.trim();
+        
+            if (content !== '') {
+                $.ajax({
+                    url: '/post-transformation-comment/' + transformationId + '/',
+                    method: 'POST',
+                    data: {
+                        'content': content,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            commentInput.value = '';
+                            fetchTransformationComments(transformationId);
+                        } else {
+                            alert('Failed to post comment: ' + response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error posting transformation comment:', error);
+                    }
+                });
+            } else {
+                alert('Please enter a non-empty comment.');
+            }
+        }
+        
+        {% comment %} function showShareModal(transformationId) {
+            var shareModal = document.getElementById('share-modal-' + transformationId);
+            shareModal.style.display = 'block';
+        }
+         {% endcomment %}
+        function fetchTransformationComments(transformationId) {
+            $.ajax({
+                url: '/fetch-transformation-comments/' + transformationId + '/',
+                method: 'GET',
+                success: function(response) {
+                    var commentList = document.getElementById('comment-list-' + transformationId);
+                    commentList.innerHTML = ''; // Clear existing comments
+                    response.forEach(function(comment) {
+                        var commentDiv = document.createElement('div');
+                        commentDiv.innerText = comment.user + ': ' + comment.content;
+                        commentList.appendChild(commentDiv);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching transformation comments:', error);
+                }
+            });
+        }      
 </script>
 </body>
 </html>

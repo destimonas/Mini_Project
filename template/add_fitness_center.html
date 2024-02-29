@@ -1,0 +1,38 @@
+{% extends "dashboardbase.html" %}
+{% block title %}UserDetail{% endblock %}
+
+{% block content %}
+
+<!-- add_fitness_center.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Fitness Center</title>
+</head>
+<body>
+    <h2>Add Fitness Center</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_name">Name:</label>
+        <input type="text" id="id_name" name="name" required><br>
+        
+        <label for="id_latitude">Latitude:</label>
+        <input type="text" id="id_latitude" name="latitude" required><br>
+        
+        <label for="id_longitude">Longitude:</label>
+        <input type="text" id="id_longitude" name="longitude" required><br>
+        
+        <label for="id_address">Address:</label>
+        <textarea id="id_address" name="address" required></textarea><br>
+        
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
+
+
+
+{% endblock %}

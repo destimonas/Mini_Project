@@ -29,13 +29,13 @@
             width: 200px;
             position: fixed;
             top: 100px;
-            left: 20px;
+            left: 0px;
             text-align: center;
         }
         
         .sidebar h3 {
             margin-top: 0;
-            color: #fff;
+            color: black;
         }
 
         .sidebar ul {
@@ -48,7 +48,7 @@
         }
 
         .sidebar ul li a {
-            color: #fff;
+            color: black;
             text-decoration: none;
         }
 
@@ -204,6 +204,7 @@
             <li><a href="{% url 'products_by_subcategory' 'Dumbbells' %}">Dumbbells</a></li>
             <li><a href="{% url 'products_by_subcategory' 'Exercise Ball' %}">Exercise Ball</a></li>
             <li><a href="{% url 'products_by_subcategory' 'Resistance Bands' %}">Resistance Bands</a></li>
+            <li><a href="{% url 'products_by_subcategory' 'Jump Rope' %}">Jump Rope</a></li>
         </ul>
     </div>
 
