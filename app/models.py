@@ -160,13 +160,12 @@ class Subcategory1(models.Model):
 
     def __str__(self):
         return self.name
-   
 
-class Product1(models.Model):
     
+class Product1(models.Model):
     product_name = models.CharField(max_length=255)
-    category = models.ForeignKey(Category1, on_delete=models.CASCADE)  # Use ForeignKey to relate to Category
-    subcategory = models.ForeignKey(Subcategory1, on_delete=models.CASCADE)  # Use ForeignKey to relate to Subcategory
+    category = models.ForeignKey(Category1, on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(Subcategory1, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField(default=1, null=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -177,27 +176,44 @@ class Product1(models.Model):
         ('In Stock', 'In Stock'),
         ('Out of Stock', 'Out of Stock'),
     ]
-
-
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='In Stock')
+    ratings = models.ManyToManyField('Productrating', blank=True, related_name='rated_products')
 
     def save(self, *args, **kwargs):
-        # Update the status based on the quantity value
-        if self.stock == 0:                                                                                                                                                                 
+        if self.stock == 0:
             self.status = 'Out of Stock'
         else:
             self.status = 'In Stock'
 
-        # Convert self.discount to a float and then calculate the sale price
-        self.discount = float(self.discount)  # Convert to float
-        self.price = float(self.price)  # Convert to float
+        self.discount = float(self.discount)
+        self.price = float(self.price)
         self.sale_price = self.price - (self.price * (self.discount / 100))
 
         super(Product1, self).save(*args, **kwargs)
 
+    def average_rating(self):
+        ratings = self.ratings.all()
+        if ratings:
+            total = sum(rating.value for rating in ratings)
+            return total / len(ratings)
+        return 0
 
-    def str(self):
+    def num_ratings(self):
+        return self.ratings.count()
+
+    def __str__(self):
         return self.product_name
+
+class Productrating(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product1, on_delete=models.CASCADE, related_name='product_rated', null=True)
+    value = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    comment = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.product}: {self.value}"
+
     
 
 class WishlistItem(models.Model):
@@ -270,7 +286,6 @@ class Cart(models.Model):
         return f"Cart for {self.user.fullName}"
 
 
-# models.py
 
 
 class FitnessCenter(models.Model):
@@ -281,6 +296,7 @@ class FitnessCenter(models.Model):
 
     def __str__(self):
         return self.name
+
 
 
 

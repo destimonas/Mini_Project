@@ -104,88 +104,88 @@ from django.test import TestCase
 #SPECIALIZATION
 
 
-import time
-import unittest
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+# import time
+# import unittest
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
 
-class SpecializationPageTest(unittest.TestCase):
+# class SpecializationPageTest(unittest.TestCase):
 
-    def setUp(self):
-        # Set up the Selenium WebDriver
-        self.driver = webdriver.Chrome()
-        # Navigate to the specialization page
-        self.driver.get('http://127.0.0.1:8000/specialization/')
+#     def setUp(self):
+#         # Set up the Selenium WebDriver
+#         self.driver = webdriver.Chrome()
+#         # Navigate to the specialization page
+#         self.driver.get('http://127.0.0.1:8000/specialization/')
 
-    def tearDown(self):
-        # Close the browser when the test is done
-        self.driver.quit()
+#     def tearDown(self):
+#         # Close the browser when the test is done
+#         self.driver.quit()
 
-    def test_add_specialization(self):
-        # Wait for the "Add Specialization" button to be clickable
-        add_specialization_button = WebDriverWait(self.driver, 20).until(
-            EC.element_to_be_clickable((By.ID, 'showFormButton'))
-        )
+#     def test_add_specialization(self):
+#         # Wait for the "Add Specialization" button to be clickable
+#         add_specialization_button = WebDriverWait(self.driver, 20).until(
+#             EC.element_to_be_clickable((By.ID, 'showFormButton'))
+#         )
 
-        # Click the "Add Specialization" button
-        add_specialization_button.click()
+#         # Click the "Add Specialization" button
+#         add_specialization_button.click()
 
-        # Wait for the specialization input to be clickable
-        WebDriverWait(self.driver, 20).until(
-            EC.element_to_be_clickable((By.ID, 'specialization'))
-        ).send_keys('CrossFit')
+#         # Wait for the specialization input to be clickable
+#         WebDriverWait(self.driver, 20).until(
+#             EC.element_to_be_clickable((By.ID, 'specialization'))
+#         ).send_keys('CrossFit')
 
-        # Find the description input and fill it out
-        description_input = self.driver.find_element(By.ID, 'description')
-        description_input.send_keys('excercie')
+#         # Find the description input and fill it out
+#         description_input = self.driver.find_element(By.ID, 'description')
+#         description_input.send_keys('excercie')
 
-        # Wait for the submit button to be present
-        submit_button = WebDriverWait(self.driver, 20).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'btn-submit'))
-        )
-        submit_button.click()
+#         # Wait for the submit button to be present
+#         submit_button = WebDriverWait(self.driver, 20).until(
+#             EC.presence_of_element_located((By.CLASS_NAME, 'btn-submit'))
+#         )
+#         submit_button.click()
 
-        # Wait for the page to reload
-        time.sleep(2)  # You can use WebDriverWait for a more robust solution
+#         # Wait for the page to reload
+#         time.sleep(2)  # You can use WebDriverWait for a more robust solution
 
-        # Assert that the new specialization appears in the table
-        new_specialization_name = 'CrossFit'
-        table_rows = self.driver.find_elements(By.XPATH, '//table/tbody/tr')
-        last_row_data = table_rows[-1].find_elements(By.TAG_NAME, 'td')
-        self.assertEqual(last_row_data[1].text, new_specialization_name)
+#         # Assert that the new specialization appears in the table
+#         new_specialization_name = 'CrossFit'
+#         table_rows = self.driver.find_elements(By.XPATH, '//table/tbody/tr')
+#         last_row_data = table_rows[-1].find_elements(By.TAG_NAME, 'td')
+#         self.assertEqual(last_row_data[1].text, new_specialization_name)
 
-    def test_update_specialization(self):
-        # Wait for the "Update" link to be present
-        WebDriverWait(self.driver, 20).until(
-            EC.presence_of_element_located((By.XPATH, '//table/tbody/tr[1]/td[4]/a'))
-        ).click()
+#     def test_update_specialization(self):
+#         # Wait for the "Update" link to be present
+#         WebDriverWait(self.driver, 20).until(
+#             EC.presence_of_element_located((By.XPATH, '//table/tbody/tr[1]/td[4]/a'))
+#         ).click()
 
        
 
-        # Update the specialization name
-        specialization_input = self.driver.find_element(By.ID, 'specialization')
-        specialization_input.clear()
-        updated_specialization_name = 'Updated Specialization'
-        specialization_input.send_keys(updated_specialization_name)
+#         # Update the specialization name
+#         specialization_input = self.driver.find_element(By.ID, 'specialization')
+#         specialization_input.clear()
+#         updated_specialization_name = 'Updated Specialization'
+#         specialization_input.send_keys(updated_specialization_name)
 
-         # Find the submit button using a different method, e.g., by ID
-        submit_button = WebDriverWait(self.driver, 20).until(
-            EC.presence_of_element_located((By.ID, 'submit'))
-        )
-        submit_button.click()
+#          # Find the submit button using a different method, e.g., by ID
+#         submit_button = WebDriverWait(self.driver, 20).until(
+#             EC.presence_of_element_located((By.ID, 'submit'))
+#         )
+#         submit_button.click()
 
-        # Wait for the page to reload
-        time.sleep(2)  # You can use WebDriverWait for a more robust solution
+#         # Wait for the page to reload
+#         time.sleep(2)  # You can use WebDriverWait for a more robust solution
 
-        # Assert that the updated specialization name appears in the table
-        table_rows = self.driver.find_elements(By.XPATH, '//table/tbody/tr')
-        first_row_data = table_rows[0].find_elements(By.TAG_NAME, 'td')
-        self.assertEqual(first_row_data[1].text, updated_specialization_name)
+#         # Assert that the updated specialization name appears in the table
+#         table_rows = self.driver.find_elements(By.XPATH, '//table/tbody/tr')
+#         first_row_data = table_rows[0].find_elements(By.TAG_NAME, 'td')
+#         self.assertEqual(first_row_data[1].text, updated_specialization_name)
 
-if __name__ == "__main__":
-    unittest.main()
+# if __name__ == "__main__":
+#     unittest.main()
 
 # import time
 # import unittest

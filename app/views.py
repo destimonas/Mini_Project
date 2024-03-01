@@ -940,19 +940,16 @@ def products_by_subcategory(request, subcategory):
     return render(request, 'product.html', {'products': products})
 
 
+@login_required
 def product_details(request, product_id):
-    # Retrieve the product details based on the product_id
-    try:
-        product = Product1.objects.get(pk=product_id)
-        return render(request, 'product_details.html', {'product': product})
-    except Product1.DoesNotExist:
-        return HttpResponse("Product not found")
-    
-def product_details(request, product_id):  # Define product_id as a parameter
-    # Retrieve the product details based on the product_id
-    product = get_object_or_404(Product1, id=product_id)
-    return render(request, 'productdetails.html', {'product': product})
+    # Retrieve the product
+    product = get_object_or_404(Product1, pk=product_id)
 
+    # Fetch all ratings for the current product
+    ratings = Productrating.objects.filter(product=product)
+
+    # Pass product and ratings to the template context
+    return render(request, 'productdetails.html', {'product': product, 'ratings': ratings})
 
 
 def add_to_cart(request, id):
@@ -1313,12 +1310,12 @@ def add_to_wishlist(request, product_id):
     if request.user.is_authenticated:
         product = Product1.objects.get(id=product_id)
         wishlist_item, created = WishlistItem.objects.get_or_create(user=request.user, product=product)
-        if created:
-            # The item was added to the wishlist
-            messages.success(request, f'{product.product_name} has been added to your wishlist.')
-        else:
-            # The item is already in the wishlist
-            messages.warning(request, f'{product.product_name} is already in your wishlist.')
+        # if created:
+        #     # The item was added to the wishlist
+        #     messages.success(request, f'{product.product_name} has been added to your wishlist.')
+        # else:
+        #     # The item is already in the wishlist
+        #     messages.warning(request, f'{product.product_name} is already in your wishlist.')
     return redirect('wishlist')
 
 
@@ -1339,7 +1336,7 @@ def remove_from_wishlist(request, product_id):
         wishlist_item.delete()
         
         # Display a success message
-        messages.success(request, f'Item removed from your wishlist.')
+        # messages.success(request, f'Item removed from your wishlist.')
 
     return redirect('wishlist') 
 
@@ -1367,5 +1364,35 @@ def add_fitness_center(request):
 
         return redirect('dashboardbase')
     return render(request, 'add_fitness_center.html')
+
+
+
+@login_required
+def rate_product(request, product_id):
+    if request.method == 'POST':
+        # Retrieve the product
+        product = get_object_or_404(Product1, pk=product_id)
+
+        # Get rating and comment from the form submission
+        rating_value = int(request.POST.get('rating'))
+        comment = request.POST.get('comment')
+
+        # Create a new product rating object
+        product_rating = Productrating.objects.create(
+            user=request.user,
+            product=product,
+            value=rating_value,
+            comment=comment
+        )
+
+        # Fetch all ratings for the current product
+        ratings = Productrating.objects.filter(product=product)
+
+        # Render the template with the updated ratings
+        return render(request, 'productdetails', {'ratings': ratings})
+    else:
+        # Handle GET requests if needed
+        pass
+
 
 

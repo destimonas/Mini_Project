@@ -22,69 +22,73 @@
             padding: 20px;
         }
 
-        .sidebar {
-            background-color: #777666; /* Change the background color to match the search button */
-            color: #fff;
-            padding: 20px;
-            width: 200px;
-            position: fixed;
-            top: 100px;
-            left: 0px;
-            text-align: center;
+        .category-dropdown {
+            position: relative;
+            display: inline-block;
         }
-        
-        .sidebar h3 {
-            margin-top: 0;
+
+        .category-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            z-index: 1;
+        }
+
+        .category-dropdown-content a {
             color: black;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            margin-bottom: 10px;
-        }
-
-        .sidebar ul li a {
-            color: black;
+            padding: 12px 16px;
             text-decoration: none;
+            display: block;
         }
 
-        .main-content {
-            width: 80%;
-            margin: 0 auto; /* Center the container horizontally */
-            padding: 20px;
+        .category-dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .category-dropdown:hover .category-dropdown-content {
+            display: block;
         }
 
         .product-container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
+            justify-content: center;
+            margin-top: 20px;
         }
-
         .product-card {
             background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin-bottom: 20px;
+            border: none;
+            padding: 10px;
+            margin-bottom: 15px;
             width: 30%;
+            max-width: 300px;
+            box-sizing: border-box;
+            margin-right: 50px;
+            margin-left: 50px;
+            border-radius: 8px; /* Rounded edges */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow */
+            transition: box-shadow 0.3s, transform 0.3s; /* Smooth transition for box shadow and transform */
         }
-
+        
+        .product-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Highlight on mouseover */
+            transform: translateY(-4px); /* Add a slight lift on mouseover */
+        }
+        
         .product-card img {
-            max-width: 100%;
+            max-width: 100%; /* Ensure images fit within their container */
             height: auto;
         }
-
+        
         .product-details h4 {
             margin-top: 0;
         }
-
+        
         .product-details p {
             margin: 5px 0;
         }
-
+        
         .wishlist-button,
         .cart-button {
             background-color: #6f42c1;
@@ -95,96 +99,61 @@
             cursor: pointer;
             margin-top: 10px;
         }
-
+        
         .wishlist-button:hover,
         .cart-button:hover {
             background-color: #503184;
         }
-
+        
         .strikethrough {
             text-decoration: line-through;
             color: #999;
         }
-
         
 
-        
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 60%; /* Adjusted width */
-            max-width: 500px; /* Added maximum width */
-            border-radius: 5px; /* Added border radius for a nicer appearance */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added box shadow */
+        .category-dropdown {
+            position: relative;
+            display: inline-block;
+            float: right; /* Align to the right */
+            margin-right: 20px; /* Adjust as needed */
         }
         
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+        .category-dropdown-btn {
+        
+            padding: 10px 10px;
+            font-size: 16px;
+            border: none;
             cursor: pointer;
         }
         
-        .close:hover,
-        .close:focus {
+        .category-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        
+        .category-dropdown-content a {
             color: black;
+            padding: 12px 16px;
             text-decoration: none;
-        }
-        .sidebar {
-            position: fixed;
-            top: 120px; /* Adjusted position */
-            left: 20px; /* Adjusted position */
-            width: 200px;
-            background-color: #cecece;
-            padding: 10px;
-            text-align: center;
-        }
-        .main-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap; /* This allows items to wrap if they exceed the container's width */
-            width: 100%; /* Set the width to 100% to ensure it spans the entire width of its parent container */
-            padding: 20px; /* Add padding if needed */
-            box-sizing: border-box; /* Ensure padding is included in the width calculation */
+            display: block;
         }
         
-        .product-container {
-            /* Add any additional styling for the product container if needed */
-            display: flex;
-            flex-wrap: wrap; /* Allow products to wrap */
-            justify-content: center; /* Center products horizontally */
+        .category-dropdown-content a:hover {
+            background-color: #f1f1f1;
         }
         
-        .product-card {
-            /* Add any additional styling for the product card if needed */
-            margin: 10px; /* Add margin between product cards */
-            width: 250px; /* Set a fixed width for the product cards */
+        .category-dropdown:hover .category-dropdown-content {
+            display: block;
         }
         
-        .product-details {
-            /* Add any additional styling for the product details if needed */
-            text-align: center; /* Center align the content within each product card */
+        /* Adjust dropdown position */
+        .category-dropdown-content {
+            right: 0;
         }
-        
-        .product-details h4 {
-            /* Add styling for the product name if needed */
-        }
-        
-        .product-details p {
-            /* Add styling for other product details if needed */
-        }
-        
-        /* Style for product images */
-        .product-card img {
-            max-width: 100%; /* Ensure images don't exceed the width of their container */
-            height: auto; /* Maintain aspect ratio */
-        }
-        
-       
         
     </style>
 </head>
@@ -193,19 +162,19 @@
     <div class="header">
         <a href="{% url 'community' %}" style="position: absolute; right: 20px; top: 20px; color: white;">Back</a>
         <h1>Products</h1>
-       
-    </div>
-
-    <!-- Sidebar Section -->
-    <div class="sidebar">
-        <h3>Categories</h3>
-        <ul>
-            <li><a href="{% url 'products_by_subcategory' 'Yoga Mats' %}">Yoga Mats</a></li>
-            <li><a href="{% url 'products_by_subcategory' 'Dumbbells' %}">Dumbbells</a></li>
-            <li><a href="{% url 'products_by_subcategory' 'Exercise Ball' %}">Exercise Ball</a></li>
-            <li><a href="{% url 'products_by_subcategory' 'Resistance Bands' %}">Resistance Bands</a></li>
-            <li><a href="{% url 'products_by_subcategory' 'Jump Rope' %}">Jump Rope</a></li>
-        </ul>
+        {% if user.is_authenticated %}
+        <p style="text-align: left;">Welcome,{{ user.username }}</p>
+        {% endif %}
+        <div class="category-dropdown">
+            <button class="category-dropdown-btn">Categories</button>
+            <div class="category-dropdown-content">
+                <a href="{% url 'products_by_subcategory' 'Yoga Mats' %}">Yoga Mats</a>
+                <a href="{% url 'products_by_subcategory' 'Dumbbells' %}">Dumbbells</a>
+                <a href="{% url 'products_by_subcategory' 'Exercise Ball' %}">Exercise Ball</a>
+                <a href="{% url 'products_by_subcategory' 'Resistance Bands' %}">Resistance Bands</a>
+                <a href="{% url 'products_by_subcategory' 'Jump Rope' %}">Jump Rope</a>
+            </div>
+        </div>
     </div>
 
     <!-- Main Content Section -->

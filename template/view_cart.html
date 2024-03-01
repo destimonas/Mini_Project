@@ -1,5 +1,4 @@
 {% load static %}
-{% comment %} {% include 'includes/cartheader.html' %} {% endcomment %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/cartt.css' %}">
 <link rel="stylesheet" href="{% static 'css/cart.css' %}">
@@ -103,6 +102,9 @@
   <div class="header">
     <a href="{% url 'product_view' %}" style="position: absolute; right: 20px; top: 20px; color: white;">Back</a>
     <h1>My Carts</h1>
+    {% if user.is_authenticated %}
+        <p style="text-align: left;">{{ user.username }}</p>
+    {% endif %}
    
 </div>
 

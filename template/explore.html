@@ -27,7 +27,6 @@
         }
         .header-options {
             display: flex;
-            justify-content: space-between;
             align-items: center;
             padding: 0 20px;
         }
@@ -45,14 +44,13 @@
 <body>
     <div class="header">
         <div class="header-options">
-            <h1>FitUp</h1>
+            <h1>FitUp</h1>  
             <ul>
-                <li><a href="{% url 'community' %}" style="position: absolute; right: 20px; top: 20px; color: white;">Back</a></li>
+                <li><a href="{% url 'community' %}" style="position: absolute; right: 20px; top: 40px; color: white;">Back</a></li>
             </ul>
         </div>
     </div>
-    <div id="map"></div>
-
+    <div id="map"></div> <!-- Ensure that the div with ID 'map' is properly defined -->
     <script>
         var map = L.map('map'); // Create Leaflet map without setting initial center and zoom level
     
@@ -93,7 +91,7 @@
     
         var fitnessCenters = [
             {% for center in fitness_centers %}
-                { name: '{{ center.name }}', latitude: {{ center.latitude }}, longitude: {{ center.longitude }}, address: '{{ center.address }}' },
+                { name: '{{ center.name }}', latitude: '{{ center.latitude }}', longitude: '{{ center.longitude }}', address: '{{ center.address }}' },
             {% endfor %}
         ];
     
@@ -106,8 +104,6 @@
             );
         });
     
-        // Add fitness center markers layer group to the map
-        fitnessCenterMarkers.addTo(map);
     
         // Add Leaflet Search Plugin
         var searchControl = new L.Control.Search({
@@ -115,11 +111,30 @@
             layer: fitnessCenterMarkers, // Pass the layer group to the search control
             initial: false,
             collapsed: true,
-            textPlaceholder: 'Search for fitness centers...'
+            textPlaceholder: 'Search for fitness centers...',
+            propertyName: 'name', // Set propertyName to 'name' for searching by the name property
+            moveToLocation: function(latlng, title, map) {
+                // Move the map to the location and set zoom level
+                map.setView(latlng, 15); // You can adjust the zoom level as needed
+            }
         });
-        map.addControl(searchControl);
-    </script>
     
-  
+        // Event listener for when a location is found through the search
+        searchControl.on('search:locationfound', function(e) {
+            e.layer.openPopup(); // Open popup for the found location
+            map.setView(e.layer.getLatLng(), 15); // Zoom to the found location
+        });
+    
+        // Event listener for when the search does not find any location
+        searchControl.on('search:collapsed', function(e) {
+            // Clear the search text and close any open popups
+            fitnessCenterMarkers.eachLayer(function(layer) {
+                layer.closePopup();
+            });
+        });
+    
+        map.addControl(searchControl);
+    
+    </script>
 </body>
 </html>

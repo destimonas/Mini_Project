@@ -1,24 +1,138 @@
 {% load static %}
 
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist</title>
+   
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #6f42c1;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 120px; /* Adjusted position */
+            left: 20px; /* Adjusted position */
+            width: 200px;
+            background-color: #cecece;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* This allows items to wrap if they exceed the container's width */
+            width: 100%; /* Set the width to 100% to ensure it spans the entire width of its parent container */
+            padding: 20px; /* Add padding if needed */
+            box-sizing: border-box; /* Ensure padding is included in the width calculation */
+        }
         
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .product-card {
+            background-color: #fff;
+            border: none;
+            padding: 10px;
+            margin-bottom: 15px;
+            width: 30%;
+            max-width: 300px;
+            box-sizing: border-box;
+            margin-right: 50px;
+            margin-left: 50px;
+            border-radius: 8px; /* Rounded edges */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow */
+            transition: box-shadow 0.3s, transform 0.3s; /* Smooth transition for box shadow and transform */
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Highlight on mouseover */
+            transform: translateY(-4px); /* Add a slight lift on mouseover */
+        }
+        
+        .product-card img {
+            max-width: 100%; /* Ensure images fit within their container */
+            height: auto;
+        }
+        
+        .product-details h4 {
+            margin-top: 0;
+        }
+        
+        .product-details p {
+            margin: 5px 0;
+        }
+        
+        
+        .button-container {
+            /* Add styling for the button container if needed */
+        }
+        
+        .remove-button,
+        .add-to-cart-button {
+            /* Add styling for the remove and add to cart buttons if needed */
+            background-color: #6f42c1;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .remove-button:hover,
+        .add-to-cart-button:hover {
+            /* Add hover styling for buttons if needed */
+            background-color: #503184;
+        }
+        
+        .no-products {
+            /* Add styling for the message when wishlist is empty if needed */
+            text-align: center;
+            font-style: italic;
+            color: #999;
+        }
     </style>
 </head>
-	
-    <main>
-        <div class="content">
-            <div id="product-container" class="product-container">
-          
-    
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <a href="{% url 'product_view' %}" style="position: absolute; right: 20px; top: 20px; color: white;">Back</a>
+        <h1>My Wishlist</h1>
+        {% if user.is_authenticated %}
+        <p style="text-align: left;">{{ user.username }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="main-content">
+        <div class="product-container">
             {% if wishlist_items %}
                 {% for item in wishlist_items %}
                 <div class="product-card">
                     <a href="{% url 'product_details' item.product.id %}">
                         <div class="product-image">
                             {% if item.product.product_image %}
-                            <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}">{% endif %}
+                            <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}">
+                            {% endif %}
                         </div>
                         <div class="product-details">
                             <h4>{{ item.product.product_name }}</h4>
@@ -37,16 +151,14 @@
                                 </form>
                             </div>
                         </div>
-                    
-                    {% comment %} <p class="price">Price: Rs.{{ item.product.price }}</p> {% endcomment %}
+                    </a>
                 </div>
-                
                 {% endfor %}
             {% else %}
                 <p class="no-products">Your wishlist is empty.</p>
             {% endif %}
         </div>
     </div>
+
 </body>
 </html>
-{% endblock %}
