@@ -150,6 +150,11 @@ urlpatterns = [
     path('remove-from-wishlist/<int:product_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
     path('rate-product/<int:product_id>/', views.rate_product, name='rate_product'),
 
+    path('checkout/', views.checkout, name='checkout'),
+    path('edit_address/', views.edit_address, name='edit_address'),
+    path('handle_payment/', views.handle_payment, name='handle_payment'),
+
+
 
 
 

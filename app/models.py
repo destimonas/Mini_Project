@@ -54,6 +54,9 @@ class UserProfile1(models.Model):
     weight = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     phone = models.CharField(max_length=15, blank=True, null=True)
     gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)  # New field for address
+    pincode = models.CharField(max_length=10, blank=True, null=True)  # New field for pincode
+
 
     def __str__(self):
         return self.user.username

@@ -105,7 +105,6 @@
     {% if user.is_authenticated %}
         <p style="text-align: left;">{{ user.username }}</p>
     {% endif %}
-   
 </div>
 
     <div class="row">
@@ -155,7 +154,7 @@
                     <h3>Price Details</h3>
                    <p class="total-price-data">Total amount : Rs.<span id="total-price"> {{total_amount}}</span></p>
                    <a class="continue-shopping-link" href="{% url 'product_view' %}">Continue Shopping</a>
-                   <a class="checkout-button" href="">Place Order</a>
+                   <a class="checkout-button" href="{% url 'checkout' %}">Place Order</a>
                 </div>
             </div>
         </div>

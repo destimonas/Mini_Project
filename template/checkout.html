@@ -1,0 +1,260 @@
+{% load static %}
+
+{% block content %}
+<head>
+    <style>
+        .header {
+            background-color: #6f42c1;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Shipping Address Container */
+        .shipping-address-container {
+            width: 50%;
+            float: left;
+            padding: 20px;
+        }
+
+        .shipping-address-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .shipping-address-box h3 {
+            color: #6f42c1;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .profile-details p {
+            margin-bottom: 10px;
+        }
+
+        /* Order Summary Container */
+        .order-summary-container {
+            width: 40%; /* Adjust width as needed */
+            float: right;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+
+        .order-summary-container h2 {
+            color: #6f42c1;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .order-summary-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .order-summary-container ul li {
+            margin-bottom: 5px;
+        }
+
+        .order-summary-container p {
+            margin-top: 20px;
+        }
+
+        #total_item_amount {
+            font-weight: bold;
+        }
+
+        #rzp-button1 {
+            background-color: #6f42c1;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #rzp-button1:hover {
+            background-color: #512da8;
+        }
+
+        /* Address Form Styling */
+        .address-form {
+            margin-bottom: 20px;
+        }
+
+        .address-form input[type="text"],
+        .address-form input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .address-form input[type="submit"] {
+            background-color: #6f42c1;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .address-form input[type="submit"]:hover {
+            background-color: #512da8;
+        }
+    </style>
+
+    <!-- Header Section -->
+    <div class="header">
+        <a href="{% url 'product_view' %}" style="position: absolute; right: 20px; top: 20px; color: white;">Back</a>
+        <h1>checkout</h1>
+        {% if user.is_authenticated %}
+            <p style="text-align: left;">{{ user.username }}</p>
+        {% endif %}
+    </div>
+</head>
+<div class="checkout-container">
+    <div class="shipping-address-container">
+        {% if user_profile %}
+            <div class="shipping-address-box">
+                <h3>Shipping Address</h3>
+                
+                <form class="address-form" method="post" action="{% url 'edit_address' %}">
+                    {% csrf_token %}
+                    <div class="profile-details">
+                        <input type="text" name="fullname" placeholder="Full Name" value="{{ user_profile.fullname }}" required>
+                        <input type="text" name="phone" placeholder="Phone" value="{{ user_profile.phone }}" required>
+                        <input type="text" name="gender" placeholder="Gender" value="{{ user_profile.gender }}" required>
+                        <input type="text" name="state" placeholder="State" value="{{ user_profile.state }}" required>
+                        <input type="text" name="district" placeholder="District" value="{{ user_profile.district }}" required>
+                        <input type="text" name="address" placeholder="Address" value="{{ user_profile.address }}" required>
+                        <input type="text" name="pincode" placeholder="Pincode" value="{{ user_profile.pincode }}" required>
+                        <input type="submit" value="Edit Address">
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+    <div class="order-summary-container">
+        <!-- Order summary content goes here -->
+        <h2>Order Summary</h2>
+        
+        <ul>
+            {% for item in cart_items %}
+                <li>{{ item.product.product_name }} x {{ item.quantity }}</li>
+            {% endfor %}
+        </ul>
+        <p>Total Amount: Rs. <span id="total_item_amount">{{total_amount}}</span></p>
+        <button id="rzp-button1" onclick="payWithRazorpay()">Pay with Razorpay</button>
+
+    </div>
+</div>
+
+<div id="checkout-data" data-email="{{ email }}" data-fullname="{{ full_name }}">
+    <!-- Additional checkout data goes here -->
+</div>
+
+{% comment %} 
+<p>Order Summary :</p>
+<ul>
+    {% for item in cart_items %}
+        <li>{{ item.product.product_name }} x {{ item.quantity }}</li>
+    {% endfor %}
+</ul>
+<p>Total Amount: &#8377<span id="total_item_amount">{{total_amount}}</span></p>
+<button id="rzp-button1">Pay with Razorpay</button>
+</div>
+<div id="checkout-data" data-email="{{ email }}" data-fullname="{{ full_name }}">
+</div>
+{% endcomment %}
+
+<script>
+    var handlePaymentUrl = "#";
+    var orderCompleteUrl = "#"; 
+</script>
+
+<script src="{% static 'js/checkout.js' %}"></script> 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    var handlePaymentUrl = "{% url 'handle_payment' %}";
+    var amountInPaise = {{ total_amount }} * 100
+
+    function payWithRazorpay() {
+        var options = {
+            "key": "rzp_test_v4Tz9K1hhXrTYr",
+            "amount": amountInPaise, // Amount in paise (should be integer)
+            "currency": "INR",
+            "name": "Fitness Tracker",
+            "description": "Payment Description",
+            "image": "https://your-logo-url.com/your-logo.png",
+            "handler": function (response){
+                // Handle the response from Razorpay
+                console.log(response);
+                // Send the Razorpay payment ID to the server
+                var razorpayPaymentId = response.razorpay_payment_id;
+                var razorpayOrderId = response.razorpay_order_id;
+                var razorpaySignature = response.razorpay_signature;
+                var csrf_token = "{{ csrf_token }}";
+
+                // Create a form and submit it to the server
+                var form = document.createElement('form');
+                form.action = handlePaymentUrl;
+                form.method = 'post';
+                form.target = '_top';
+
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = csrf_token;
+                form.appendChild(csrfInput);
+
+                var razorpayPaymentIdInput = document.createElement('input');
+                razorpayPaymentIdInput.type = 'hidden';
+                razorpayPaymentIdInput.name = 'razorpay_payment_id';
+                razorpayPaymentIdInput.value = razorpayPaymentId;
+                form.appendChild(razorpayPaymentIdInput);
+
+                var razorpayOrderIdInput = document.createElement('input');
+                razorpayOrderIdInput.type = 'hidden';
+                razorpayOrderIdInput.name = 'razorpay_order_id';
+                razorpayOrderIdInput.value = razorpayOrderId;
+                form.appendChild(razorpayOrderIdInput);
+
+                var razorpaySignatureInput = document.createElement('input');
+                razorpaySignatureInput.type = 'hidden';
+                razorpaySignatureInput.name = 'razorpay_signature';
+                razorpaySignatureInput.value = razorpaySignature;
+                form.appendChild(razorpaySignatureInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            },
+            "prefill": {
+                "name": "{{ user_profile.fullname }}",
+                "email": "{{ email }}",
+                "contact": "{{ user_profile.phone }}"
+            },
+            "theme": {
+                "color": "#6a0dad"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+</script>
+
+
+
+
+
+{% endblock %}

@@ -1394,5 +1394,59 @@ def rate_product(request, product_id):
         # Handle GET requests if needed
         pass
 
+@login_required  
+def checkout(request):
+    user_profile = UserProfile1.objects.filter(user=request.user).first()
+
+    cart_items = CartItem.objects.filter(cart=request.user.cart)
+    total_amount = sum(item.product.price * item.quantity for item in cart_items)
+
+    cart_count = get_cart_count(request)
+
+    context = {
+        'cart_count': cart_count,
+        'cart_items': cart_items,
+        'total_amount': total_amount,
+        'user_profile': user_profile,
+    }
+    return render(request, 'checkout.html', context)
+
+def edit_address(request):
+    if request.method == 'POST':
+        # Assuming you have a UserProfile1 model with fields 'address' and 'pincode'
+        address = request.POST.get('address')
+        pincode = request.POST.get('pincode')
+
+        # Retrieve the user's profile
+        user_profile = UserProfile1.objects.filter(user=request.user).first()
+
+        # Update the address and pincode fields
+        if user_profile:
+            user_profile.address = address
+            user_profile.pincode = pincode
+            user_profile.save()
+
+        # Redirect to the checkout page after editing the address
+        return redirect('checkout')
+
+    # If the request method is not POST, simply redirect to the checkout page
+    return redirect('checkout')
+
+def handle_payment(request):
+    if request.method == 'POST':
+        # Retrieve the payment details from the POST request
+        razorpay_payment_id = request.POST.get('razorpay_payment_id')
+        razorpay_order_id = request.POST.get('razorpay_order_id')
+        razorpay_signature = request.POST.get('razorpay_signature')
+
+        # Perform signature verification
+        # Your code for verifying the signature goes here
+
+        # If signature is verified, mark the payment as successful
+        # Your code for updating the order status and processing the payment goes here
+
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'failure'})
 
 
