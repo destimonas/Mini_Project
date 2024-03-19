@@ -77,8 +77,10 @@ urlpatterns = [
     path('consult_trainer/', views.consult_trainer, name='consult_trainer'),
     
     path('trainerhome/trainerprofile/',TrainerProfileView.as_view(), name='trainerprofile'),
+
+    path('trainerhome/schedule/', views.schedule_page, name='schedule'),
+    path('schedule/class/', views.schedule_class, name='schedule_class'),
     
-    path('trainerhome/schedule/', views.weekly_class_schedule, name='weekly_class_schedule'),
 
     path('save_user_profile/', views.save_user_profile, name='save_user_profile'),
 
@@ -91,7 +93,7 @@ urlpatterns = [
 
 
  
-    path('userhome/questions', views.questions_view, name='questions'),
+    path('userhome/bookingtrainer', views.bookingtrainer, name='bookingtrainer'),
 
     path('addproduct/', views.add_product, name='add_product'),
     path('viewproduct/', views.view_product, name='view_product'),
@@ -153,26 +155,20 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('edit_address/', views.edit_address, name='edit_address'),
     path('handle_payment/', views.handle_payment, name='handle_payment'),
-
-
-
-
-
-
-
-
-
-
+    path('myorders/', views.myorders, name='myorders'),
+    path('create_order/', views.create_order, name='create_order'),
     
 
 
 
+    path('success/<int:booking_id>/', views.success_view, name='success'),
+    path('generate_pdf_receipt/<int:booking_id>/', views.generate_pdf_receipt, name='generate_pdf_receipt'),
+    path('bookings/', views.handle_booking, name='bookings'),
+    path('myclients/', views.my_clients, name='myclients'),
 
-    
-
-  
-
- 
+    path('booking/<int:booking_id>/reject/', views.RejectBookingView, name='reject_booking'),
+    path('booking/<int:booking_id>/approve/', views.ApproveBookingView, name='approve_booking'),
+    # Add other URL patterns as needed
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

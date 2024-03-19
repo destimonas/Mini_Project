@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Add your custom CSS styling here -->
+    <style>
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #d92cf9;
+        }
+
+        /* Add custom CSS styling for FitUp logo */
+        .fitup-logo {
+            font-size: 24px;
+        }
+
+        /* Add custom CSS styling for back button */
+        .back-button {
+            font-size: 16px;
+        }
+
+        .booking-container {
+            margin-top: 20px;
+        }
+
+        /* Add custom CSS styling for the booking details container */
+        .booking-details {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Add custom CSS styling for the buttons */
+        .accept-button,
+        .reject-button {
+            margin-right: 10px;
+        }
+
+        /* Styling for accepted booking message */
+        .accepted-message {
+            color: green;
+        }
+
+        /* Styling for rejected booking message */
+        .rejected-message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<div class="header">
+    <!-- FitUp Logo -->
+    <div class="fitup-logo">
+        FITUP
+    </div>
+    <!-- Back Button -->
+    <div class="back-button">
+        <a href="{% url 'trainerhome' %}" class="btn btn-light">Back</a>
+    </div>
+</div>
+
+<!-- Heading for Booking Details -->
+<h2 class="text-center mt-4">My Clients</h2>
+
+<!-- Container for Booking Details -->
+<div class="container booking-container">
+    <!-- Display each booking in a separate container -->
+    {% for booking in bookings %}
+    <div class="booking-details">
+        <p><strong>User:</strong> {{ booking.user.username }}</p>
+        <p><strong>Package Name:</strong> {{ booking.package_name }}</p>
+        <p><strong>Package Amount:</strong> {{ booking.package_amount }}</p>
+        <p><strong>Discount:</strong> {{ booking.discount }}</p>
+        <p><strong>Renewal Discount:</strong> {{ booking.renewal_discount }}</p>
+        <p><strong>Selected Time Slots:</strong> {{ booking.selected_time_slots }}</p>
+
+        {% if booking.is_accepted %}
+            <p class="accepted-message">This booking has been accepted.</p>
+            {% if booking.payment_set.all %}
+                <p>Payment done </p>
+            {% endif %}
+        {% elif booking.is_rejected %}
+            <p class="rejected-message">This booking has been rejected.</p>
+        {% else %}
+            <a href="{% url 'approve_booking' booking.id %}" class="btn btn-success">Approve</a>
+            <a href="{% url 'reject_booking' booking.id %}" class="btn btn-danger">Reject</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Bootstrap and jQuery Scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Add your custom JavaScript code for accepting/rejecting bookings -->
+
+</body>
+</html>

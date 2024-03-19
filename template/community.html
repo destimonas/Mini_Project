@@ -451,6 +451,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-QPgG2egMmjS0Dy3woM8Zq4/fdZblzPTJjbJ63aUp87mKfFUSVCZflw2WZ0VLnyq2FMI8vzTmZ5jnhHWZ5F1ilQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/path/to/font-awesome/css/all.min.css">
+   
+
+
 </head>
 <body>
     {% if messages %}
@@ -521,7 +526,6 @@
         </div>
     </div>
 
-
     <div class="container" id="discussion-container">
         <h3 style="text-align: center;">Discussions</h3>
         {% if discussions %}
@@ -585,8 +589,8 @@
                                 alert('Please enter a non-empty comment.');
                             }
                         }
-                        
-                        // Function to fetch and display comments for a discussion
+
+                    // Function to fetch and display comments for a discussion
                         function fetchComments(discussionId) {
                             $.ajax({
                                 url: '/fetch-comments/' + discussionId + '/',
@@ -595,9 +599,82 @@
                                     var commentList = document.getElementById('comment-list-' + discussionId);
                                     commentList.innerHTML = ''; // Clear previous comments
                                     response.forEach(function(comment) {
-                                        var commentDiv = document.createElement('div');
-                                        commentDiv.innerHTML = '<p><strong>' + comment.user + '</strong>: ' + comment.content + '</p>';
-                                        commentList.appendChild(commentDiv);
+                                        // Create a container for each comment
+                                        var commentContainer = document.createElement('div');
+                                        commentContainer.classList.add('comment-container'); // Add a CSS class for styling
+
+                                        // Display user's comment content
+                                        var commentContent = document.createElement('p');
+                                        commentContent.innerHTML = '<strong>' + comment.user + '</strong>: ' + comment.content;
+                                        commentContainer.appendChild(commentContent);
+
+                                        // Add like button
+                                        var likeButton = document.createElement('img');
+                                        likeButton.src = '{% static "images/like.jpg.jpg" %}';
+                                        likeButton.alt = 'Like';
+                                        likeButton.classList.add('like-button'); // Add a CSS class for styling
+                                        likeButton.style.width = '20px'; // Adjust the width of the like button
+                                        likeButton.style.height = '20px'; // Adjust the height of the like button
+                                        commentContainer.appendChild(likeButton);
+
+                                        // Add share button
+                                        var shareButton = document.createElement('img');
+                                        shareButton.src = '{% static "images/share.jpg.jpg" %}';
+                                        shareButton.alt = 'Share';
+                                        shareButton.classList.add('share-button'); // Add a CSS class for styling
+                                        shareButton.style.width = '25px'; // Adjust the width of the share button
+                                        shareButton.style.height = '25px'; // Adjust the height of the share button
+                                        shareButton.setAttribute('data-comment-id', comment.id); // Set a data attribute to identify the comment
+                                        shareButton.addEventListener('click', function() {
+                                            // Show a textbox for replying to the comment
+                                            var commentId = this.getAttribute('data-comment-id');
+                                            var existingReplyTextbox = document.querySelector('.reply-textbox');
+                                            if (!existingReplyTextbox) {
+                                                var replyTextbox = document.createElement('input');
+                                                replyTextbox.type = 'text';
+                                                replyTextbox.placeholder = 'Reply to comment';
+                                                replyTextbox.classList.add('reply-textbox'); // Add a CSS class for styling
+                                                var postReplyButton = document.createElement('button');
+                                                postReplyButton.innerHTML = 'Post Reply';
+                                                postReplyButton.classList.add('post-reply-button'); // Add a CSS class for styling
+                                                postReplyButton.addEventListener('click', function() {
+                                                    // Handle posting the reply
+                                                    var replyContent = replyTextbox.value;
+                                                    if (replyContent.trim() !== '') {
+                                                        // Send AJAX request to post reply
+                                                        // Example:
+                                                        // $.ajax({
+                                                        //     url: '/post-reply/',
+                                                        //     method: 'POST',
+                                                        //     data: {
+                                                        //         'commentId': commentId,
+                                                        //         'replyContent': replyContent,
+                                                        //         'csrfmiddlewaretoken': '{{ csrf_token }}'
+                                                        //     },
+                                                        //     success: function(response) {
+                                                        //         // Handle success
+                                                        //     },
+                                                        //     error: function(xhr, status, error) {
+                                                        //         console.error('Error posting reply:', error);
+                                                        //     }
+                                                        // });
+
+                                                        // For demonstration, simply log the reply content
+                                                        console.log('Reply to comment ' + commentId + ': ' + replyContent);
+                                                        // Clear the reply textbox
+                                                        replyTextbox.value = '';
+                                                    } else {
+                                                        alert('Please enter a non-empty reply.');
+                                                    }
+                                                });
+                                                commentContainer.appendChild(replyTextbox);
+                                                commentContainer.appendChild(postReplyButton);
+                                            }
+                                        });
+                                        commentContainer.appendChild(shareButton);
+
+                                        // Append the comment container to the comment list
+                                        commentList.appendChild(commentContainer);
                                     });
                                 },
                                 error: function(xhr, status, error) {
@@ -605,6 +682,7 @@
                                 }
                             });
                         }
+
 
                         // Toggle comment section visibility and fetch comments
                         function toggleCommentSection(discussionId) {
@@ -617,6 +695,9 @@
                             }
                         }
                         function toggleLike(discussionId) {
+                            var likeIcon = document.getElementById('like-icon-' + discussionId); // Get the like icon element
+                            var likeCount = document.getElementById('like-count-' + discussionId); // Get the like count element
+                        
                             // Send AJAX request to like/unlike the discussion
                             $.ajax({
                                 url: '/toggle-like/' + discussionId + '/',
@@ -627,10 +708,15 @@
                                 success: function(response) {
                                     if (response.status === 'success') {
                                         // Update the like icon and count
-                                        var likeIcon = document.getElementById('like-icon-' + discussionId);
-                                        var likeCount = document.getElementById('like-count-' + discussionId);
                                         likeIcon.classList.toggle('liked');
                                         likeCount.innerText = response.like_count + ' Like';
+                        
+                                        // Rotate the like icon upside down when liked
+                                        if (likeIcon.classList.contains('liked')) {
+                                            likeIcon.style.transform = 'rotate(180deg)';
+                                        } else {
+                                            likeIcon.style.transform = 'none'; // Revert rotation to default
+                                        }
                                     } else {
                                         alert('Failed to like discussion: ' + response.message);
                                     }
@@ -639,7 +725,8 @@
                                     console.error('Error toggling like:', error);
                                 }
                             });
-                        }   
+                        }
+                          
                     </script>
                 </div>
             {% endfor %}

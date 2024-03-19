@@ -52,7 +52,8 @@
                             {% endif %}
                             <li class="smooth-menu"><a href='trainerprofile'>Profile</a></li>
                             <li class="smooth-menu"><a href='schedule'>Schedule</a></li>
-                            <li class="smooth-menu"><a href='#'>My Clients</a></li>
+                            <li class="smooth-menu"><a href="{% url 'myclients' %}">My Clients</a></li>
+
                             <li class="smooth-menu"><a href="{% url 'add_slot' %}">Add Slots</a></li>
                             <li class="smooth-menu"> <a href='#' id="goal-setting-link">Goal Setting</a>
                                 <select id="goal-type-dropdown" class="hidden">

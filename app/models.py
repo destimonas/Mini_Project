@@ -142,14 +142,39 @@ class Nutritionist(models.Model):
     def __str__(self):
         return self.full_name
     
-class Payment(models.Model):
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    customer_name = models.CharField(max_length=255)
-    customer_email = models.EmailField()
-    customer_contact = models.CharField(max_length=15)
+# class Payment(models.Model):
+#     amount = models.DecimalField(max_digits=10, decimal_places=2)
+#     customer_name = models.CharField(max_length=255)
+#     customer_email = models.EmailField()
+#     customer_contact = models.CharField(max_length=15)
 
-    def __str__(self):
-        return f"{self.customer_name} - {self.amount}"
+#     def __str__(self):
+#         return f"{self.customer_name} - {self.amount}"
+
+class Booking(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE)
+    package_name = models.CharField(max_length=100)
+    package_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    renewal_discount = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    selected_time_slots = models.JSONField()  # Store selected time slots as JSON data
+    is_accepted=models.BooleanField(default=False)
+    is_rejected=models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class Payment(models.Model):
+    booking=models.ForeignKey(Booking, on_delete=models.CASCADE, blank=True, null=True)
+    trainer=models.ForeignKey(Trainer, on_delete=models.CASCADE, blank=True, null=True)
+    is_paid = models.BooleanField(default=False)
+    razor_pay_order_id=models.CharField(max_length=100, blank=True, null=True)
+    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Link the payment to a customer
+    amount = models.DecimalField(max_digits=10, decimal_places=2)  # Store the payment amount
+    payment_date = models.DateTimeField(auto_now_add=True)  # Date and time of the payment
+    # Add other fields as per your requirements, like payment status, transaction ID, etc.
+    
+    def _str_(self):
+        return f"Payment of {self.amount} by {self.customer.username} on {self.payment_date}"
     
 class Category1(models.Model):
     name = models.CharField(max_length=100)
@@ -299,6 +324,60 @@ class FitnessCenter(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class Order(models.Model):
+     
+     STATUS = (
+        ('Order Confirmed', 'Order Confirmed'),
+        ('Processing', 'Processing'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
+        ('Cancelled', 'Cancelled'),
+
+    )
+     
+     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    #  products = models.ManyToManyField(Product1, through='OrderItem')
+     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+     #payment = models.ForeignKey(Payment2, on_delete=models.SET_NULL, blank=True, null=True)
+     payment_id= models.CharField(blank=True, max_length=100, null=True)
+     payment_status= models.BooleanField(default=False)
+     status = models.CharField(max_length=20, choices=STATUS, default='Order Confirmed')
+     created_at = models.DateTimeField(auto_now_add=True)
+    
+     def _str_(self):
+        return f"Order {self.id} by {self.user.fullname}"
+    
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    #payment = models.ForeignKey(Payment2, on_delete=models.SET_NULL, blank=True, null=True)
+    product = models.ForeignKey(Product1, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    item_total = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def _str_(self):
+        return f"{self.quantity} x {self.product.product_name} in Order {self.order.id}"
+
+
+class WorkoutSchedule(models.Model):
+    DAYS_OF_WEEK = [
+        ('Monday', 'Monday'),
+        ('Tuesday', 'Tuesday'),
+        ('Wednesday', 'Wednesday'),
+        ('Thursday', 'Thursday'),
+        ('Friday', 'Friday'),
+        ('Saturday', 'Saturday'),
+        ('Sunday', 'Sunday'),
+    ]
+
+    day = models.CharField(max_length=10, choices=DAYS_OF_WEEK)
+    workout_details = models.TextField()
+    video = models.FileField(upload_to='workout_videos/', blank=True, null=True)
+    additional_notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.day} - Workout Schedule"
 
 
 

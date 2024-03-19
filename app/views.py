@@ -1,5 +1,6 @@
 import json
 from django.shortcuts import render,redirect,HttpResponse
+import razorpay
 
 from .models import *
 from django.contrib.auth import authenticate ,login as auth_login
@@ -23,13 +24,29 @@ def admin_dashboard(request):
 def home(request):
     return render(request, "home.html")
 
+# def userhome(request):
+#      if 'username' in request.session:
+#         response = render(request, 'userhome.html')
+#         response['Cache-Control'] = 'no-store, must-revalidate'
+#         return response
+#      else:
+#          return redirect('home') 
+
 def userhome(request):
-     if 'username' in request.session:
-        response = render(request, 'userhome.html')
+    if 'username' in request.session:
+        # Get session message if exists
+        session_message = None
+        if messages.get_messages(request):
+            session_message = messages.get_messages(request)[0]
+        
+        context = {
+            'session_message': session_message
+        }
+        response = render(request, 'userhome.html', context)
         response['Cache-Control'] = 'no-store, must-revalidate'
         return response
-     else:
-         return redirect('home') 
+    else:
+        return redirect('home')
 
 def register(request):
     
@@ -96,7 +113,7 @@ def trainerhome(request):
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import UserProfile1  # Adjust the import based on your models
+
 from django.http import HttpResponse
 
 class TrainerProfileView(LoginRequiredMixin, View):
@@ -426,7 +443,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .models import UserProfile1  # Import your model
+
 
 class UserProfileCreateView(LoginRequiredMixin, View):
     template_name = 'userprofile.html'
@@ -657,34 +674,34 @@ def usertrainer(request):
    
     return render(request, 'usertrainer.html', {'trainers': trainers})
 
-from .models import Payment
+
 
 def payment(request):
-    if request.method == 'POST':
-        # Assuming you have a form that captures customer details
-        customer_name = request.POST.get('customer_name')
-        customer_email = request.POST.get('customer_email')
-        customer_contact = request.POST.get('customer_contact')
-        amount = 100  # You may adjust this based on your logic
+    # if request.method == 'POST':
+    #     # Assuming you have a form that captures customer details
+    #     customer_name = request.POST.get('customer_name')
+    #     customer_email = request.POST.get('customer_email')
+    #     customer_contact = request.POST.get('customer_contact')
+    #     amount = 100  # You may adjust this based on your logic
 
-        try:
-            payment = Payment.objects.create(
-                amount=amount,
-                customer_name=customer_name,
-                customer_email=customer_email,
-                customer_contact=customer_contact
-            )
-            print(f"Payment successful: {payment}")
-        except Exception as e:
-            print(f"Error saving payment: {e}")
-            return HttpResponse("Error saving payment. Please try again.")
+    #     try:
+    #         payment = Payment.objects.create(
+    #             amount=amount,
+    #             customer_name=customer_name,
+    #             customer_email=customer_email,
+    #             customer_contact=customer_contact
+    #         )
+    #         print(f"Payment successful: {payment}")
+    #     except Exception as e:
+    #         print(f"Error saving payment: {e}")
+    #         return HttpResponse("Error saving payment. Please try again.")
 
-        # Pass the payment ID to the Razorpay checkout.js script
-        context = {
-            'payment_id': payment.id,
-            'razorpay_key': 'rzp_test_v4Tz9K1hhXrTYr',  # Your Razorpay API key
-        }
-        return redirect('usertrainer')
+    #     # Pass the payment ID to the Razorpay checkout.js script
+    #     context = {
+    #         'payment_id': payment.id,
+    #         'razorpay_key': 'rzp_test_v4Tz9K1hhXrTYr',  # Your Razorpay API key
+    #     }
+    #     return redirect('usertrainer')
 
     return HttpResponse("Method not allowed")
 
@@ -704,45 +721,30 @@ def usernutrition(request):
     return render(request, 'usernutrition.html', {'nutritionists': nutritionists})
 
 
+def schedule_page(request):
+    return render(request, 'schedule.html')
 
-def weekly_class_schedule(request):
-    # Define your schedule data here or fetch it from a database.
-    # For simplicity, we'll use static data in this example.
-    schedule_data = [
-        {
-            'day': 'Sunday',
-            'event': 'Yoga Class',
-            'time': '10:00 AM - 11:30 AM',
-          
-        },
-        {
-            'day': 'Sunday',
-            'event': 'Zumba Class',
-            'time': '3:00 PM - 4:30 PM',
-       
-        },
-        {
-            'day': 'Monday',
-            'event': 'Pilates Class',
-            'time': '9:30 AM - 11:00 AM',
-         
-        },
-        {
-            'day': 'Monday',
-            'event': 'Spinning Class',
-            'time': '1:00 PM - 2:30 PM',
-        
-        },
-        {
-            'day': 'Monday',
-            'event': 'Aerobics Class',
-            'time': '6:00 PM - 7:30 PM',
-         
-        },
-        # Add more schedule data for other days and events as needed.
-    ]
+def schedule_class(request):
+    if request.method == 'POST':
+        day = request.POST.get('workout-day')
+        workout_details = request.POST.get('workout-details')
+        video = request.FILES.get('video-upload')
+        additional_notes = request.POST.get('additional-notes')
 
-    return render(request, 'schedule.html', {'schedule_data': schedule_data})
+        # Save the form data to the database
+        schedule_instance = WorkoutSchedule.objects.create(
+            day=day,
+            workout_details=workout_details,
+            video=video,
+            additional_notes=additional_notes
+        )
+        schedule_instance.save()
+
+        messages.success(request, 'Today\'s class has been scheduled successfully.')
+        return redirect('schedule')
+    else:
+        return redirect('schedule')
+
 
 def rate_trainer(request, trainer_id):
     if request.user.is_authenticated:
@@ -818,10 +820,13 @@ def trainer_list(request):
 
     return render(request, 'userhome.html', context)
 
+def bookingtrainer(request):
+    # Filter bookings for the current authenticated user
+    user_bookings = Booking.objects.filter(user=request.user)
+    return render(request, 'bookingtrainer.html', {'bookings': user_bookings})
 
-def questions_view(request):
-  
-    return render(request, 'questions.html') 
+
+
 
 
 def add_product(request):
@@ -1411,6 +1416,9 @@ def checkout(request):
     }
     return render(request, 'checkout.html', context)
 
+
+
+
 def edit_address(request):
     if request.method == 'POST':
         # Assuming you have a UserProfile1 model with fields 'address' and 'pincode'
@@ -1432,21 +1440,368 @@ def edit_address(request):
     # If the request method is not POST, simply redirect to the checkout page
     return redirect('checkout')
 
+# def handle_payment(request):
+#     if request.method == 'POST':
+#         # Retrieve the payment details from the POST request
+#         razorpay_payment_id = request.POST.get('razorpay_payment_id')
+#         razorpay_order_id = request.POST.get('razorpay_order_id')
+#         razorpay_signature = request.POST.get('razorpay_signature')
+
+#         # Perform signature verification
+#         # Your code for verifying the signature goes here
+
+#         # If signature is verified, mark the payment as successful
+#         # Your code for updating the order status and processing the payment goes here
+
+#         return JsonResponse({'status': 'success'})
+#     else:
+#         return JsonResponse({'status': 'failure'})
+    
+
+@login_required
+def myorders(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    context = {
+        'orders': orders,
+        
+    }
+    return render(request, 'myorders.html', context)
+
+def order_status(request, id):
+    # Retrieve the order object based on the provided ID
+    order = get_object_or_404(Order, id=id)
+    address = UserProfile1.objects.filter(user=request.user).first()
+    
+    # Extract relevant information from the order object
+    order_id = order.id
+    status = order.status
+    products = order.products.all()  # Retrieve associated products
+    
+    # Pass the data to the template
+    context = {
+        'order_id': order_id,
+        'status': status,
+        'products': products,
+        'address':address,
+        'total_amount': order.total_amount,
+    }
+
+    return render(request, 'orderstatus.html', context)
+
+def order_cancellation(request, id):
+    if request.method == 'POST':
+        # Get the order object
+        order = Order.objects.get(id=id)
+        
+        # Update order status to 'Cancelled'
+        order.status = 'Cancelled'
+        order.save()
+        
+        # Optionally, you can handle additional logic here, such as sending confirmation emails, etc.
+        
+        return JsonResponse({'message': 'Order successfully cancelled'}, status=200)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def create_order(request):
+    if request.method == 'POST':
+        user = request.user
+        cart = user.cart
+
+        cart_items = CartItem.objects.filter(cart=cart)
+        total_amount = sum(item.product.price * item.quantity for item in cart_items)
+
+        try:
+            order = Order.objects.create(user=user, total_amount=total_amount)
+            for cart_item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=cart_item.product,
+                    quantity=cart_item.quantity,
+                    item_total=cart_item.product.price * cart_item.quantity
+                )
+
+            client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+            payment_data = {
+                'amount': int(total_amount * 100),
+                'currency': 'INR',
+                'receipt': f'order_{order.id}',
+                'payment_capture': '1'
+            }
+            orderData = client.order.create(data=payment_data)
+            order.payment_id = orderData['id']
+            order.save()
+
+            return JsonResponse({'order_id': orderData['id']})
+        
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({'error': 'An error occurred. Please try again.'}, status=500)
+
+
+@csrf_exempt
 def handle_payment(request):
     if request.method == 'POST':
-        # Retrieve the payment details from the POST request
-        razorpay_payment_id = request.POST.get('razorpay_payment_id')
-        razorpay_order_id = request.POST.get('razorpay_order_id')
-        razorpay_signature = request.POST.get('razorpay_signature')
+        data = json.loads(request.body)
+        razorpay_order_id = data.get('order_id')
+        payment_id = data.get('payment_id')
 
-        # Perform signature verification
-        # Your code for verifying the signature goes here
+        try:
+            order = Order.objects.get(payment_id=razorpay_order_id)
 
-        # If signature is verified, mark the payment as successful
-        # Your code for updating the order status and processing the payment goes here
+            client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+            payment = client.payment.fetch(payment_id)
 
-        return JsonResponse({'status': 'success'})
+            if payment['status'] == 'captured':
+                order.payment_status = True
+                order.save()
+
+                for order_item in order.orderitem_set.all():
+                        product = order_item.product
+                        product.stock -= order_item.quantity
+                        product.save()
+
+
+                data = {
+                  'order_id': order.id,
+                   'transID': order.payment_id,
+            }
+                return JsonResponse({'message': 'Payment successful', 'order_id': order.id, 'transID': order.payment_id})
+            #     return JsonResponse({'message': 'Payment successful'})
+            # else:
+            #     return JsonResponse({'message': 'Payment failed'})
+
+        except Order.DoesNotExist:
+            return JsonResponse({'message': 'Invalid Order ID'})
+        except Exception as e:
+
+            print(str(e))
+            return JsonResponse({'message': 'Server error, please try again later.'})
+
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Image
+from django.contrib.staticfiles import finders
+from reportlab.lib.units import inch  # Import inch
+from io import BytesIO
+
+def generate_pdf_receipt(request, booking_id):
+    # Retrieve the booking object
+    booking = get_object_or_404(Booking, pk=booking_id)
+
+    # Create a buffer to store the PDF
+    buffer = BytesIO()
+
+    # Create a PDF document
+    pdf = SimpleDocTemplate(buffer, pagesize=letter)
+
+    # Define data for the receipt
+    data = [
+        ['Username:', booking.user.username],
+        ['Package Name:', booking.package_name],
+        ['Package Amount:', str(booking.package_amount)],
+        ['Discount:', str(booking.discount)],
+        ['Renewal Discount:', str(booking.renewal_discount)],
+        ['Selected Time Slots:', booking.selected_time_slots],
+      
+    ]
+
+    # Load the logo image
+    logo_path = finders.find('images/logo.png')
+    logo = Image(logo_path, width=40, height=40)
+
+    # Convert data to table format
+    table_data = []
+    for label, value in data:
+        table_data.append([Paragraph(label, getSampleStyleSheet()["BodyText"]), Paragraph(str(value), getSampleStyleSheet()["BodyText"])])
+
+    # Create a Spacer for layout
+    spacer = Spacer(1, 0.2 * inch)
+
+    # Build content
+    content = [
+        [logo, Paragraph('<b>FitUp</b>', getSampleStyleSheet()["Title"])],
+        [Spacer(1, 0.5 * inch)],  # Add some space between logo and title
+        [Paragraph('<b>Payment Receipt</b>', getSampleStyleSheet()["Title"])],
+        [spacer],  # Add space after title
+        [Table(table_data)],
+    ]
+
+    # Create a table from the content
+    table = Table(content)
+
+    # Apply styles to the table
+    style = TableStyle([
+        # Add your table styles here
+    ])
+    table.setStyle(style)
+
+    # Add the table to the PDF
+    elements = [table]  # Wrap the table in a list to make it a flowable
+    pdf.build(elements)
+
+    # Get the PDF content from the buffer
+    pdf_content = buffer.getvalue()
+    buffer.close()
+
+    # Create an HTTP response with PDF content
+    response = HttpResponse(pdf_content, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="receipt_{booking_id}.pdf"'
+
+    return response
+
+
+
+
+
+import razorpay
+
+from razorpay.errors import BadRequestError
+
+def success_view(request, booking_id):
+    try:
+        # Retrieve the booking object
+        booking = get_object_or_404(Booking, pk=booking_id)
+        
+        # Initialize Razorpay client
+        client = razorpay.Client(auth=("rzp_test_z8K4I90GdqQLdV", "eXLlGvh3xWgHBaPIX2uIlveV"))
+        
+        # Prepare data for payment creation
+        book_amount = int(booking.package_amount * 100)  # Convert to paise
+        payment_data = {
+            'amount': book_amount,
+            'currency': 'INR',
+            'receipt': f'payment_receipt_{booking_id}',
+            # Add other required parameters as needed
+        }
+        
+        # Create a payment in Razorpay
+        payment_response = client.order.create(data=payment_data)  # Use order.create instead of payment.create
+        
+        # Create a new Payment instance
+        new_payment = Payment.objects.create(
+            booking=booking,
+            razor_pay_order_id=payment_response['id'],
+            amount=booking.package_amount,
+            is_paid=True,
+            trainer=booking.trainer,
+            customer=request.user  # Assuming the user is authenticated and initiating the payment
+        )
+        
+        # Save the new Payment instance
+        new_payment.save()
+        
+        # Display success message
+        messages.success(request, 'Payment successfully done.')
+        
+        # Redirect to a relevant URL (change 'usertrainer' to your desired URL)
+        return redirect('usertrainer')
+    except BadRequestError as e:
+        # Handle authentication errors
+        error_message = "Authentication failed. Please check your Razorpay API credentials."
+        # Log the error for further investigation if needed
+        print(f"Razorpay Authentication Error: {e}")
+        # Optionally, you can redirect the user to an error page or display a message
+        return HttpResponse(error_message, status=500)
+
+        
+
+from django.contrib.auth import get_user_model
+from django.http import JsonResponse
+import json
+
+User = get_user_model()
+
+# @require_POST
+# def handle_booking(request):
+#     if request.method == 'POST':
+#         try:
+#             if not isinstance(request.user, User):
+#                 return JsonResponse({'error': 'User is not authenticated'}, status=401)
+
+#             booking_data = json.loads(request.body)
+#             # Assuming the request body contains JSON data with booking details
+
+#             # Extract package name from booking data
+#             package_name = booking_data['packageName']
+
+#             # Create a Booking instance and save it to the database
+#             booking = Booking.objects.create(
+#                 user=request.user,  # Assuming the authenticated user is making the booking
+#                 trainer_id=booking_data['trainerId'],
+#                 package_name=package_name,
+#                 package_amount=booking_data['packageAmount'],
+#                 discount=booking_data.get('discount', 0),  # Default to 0 if not provided
+#                 renewal_discount=booking_data.get('renewalDiscount', 0),  # Default to 0 if not provided
+#                 selected_time_slots=booking_data['selectedTimeSlots']
+#             )
+
+#             # Return a success response
+#             return JsonResponse({'message': 'Booking successful'}, status=200)
+        
+#         except Exception as e:
+#             # Handle any errors during booking processing
+#             return JsonResponse({'error': str(e)}, status=400)
+#     else:
+#         # Handle requests other than POST (e.g., GET requests)
+#         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+@require_POST
+def handle_booking(request):
+    if request.method == 'POST':
+        try:
+            if not isinstance(request.user, User):
+                return JsonResponse({'error': 'User is not authenticated'}, status=401)
+
+            booking_data = json.loads(request.body)
+            # Assuming the request body contains JSON data with booking details
+
+            # Create a Booking instance and save it to the database
+            booking = Booking.objects.create(
+                user=request.user,  # Assuming the authenticated user is making the booking
+                trainer_id=booking_data['trainerId'],
+                package_name=booking_data['packageName'],
+                package_amount=booking_data['packageAmount'],
+                discount=booking_data.get('discount', 0),  # Default to 0 if not provided
+                renewal_discount=booking_data.get('renewalDiscount', 0),  # Default to 0 if not provided
+                selected_time_slots=booking_data['selectedTimeSlots']
+            )
+
+            # Set a success message
+            messages.success(request, 'Trainer has approved your booking. You can now proceed to make payment.')
+
+            # Return a success response
+            return JsonResponse({'message': 'Booking successful'}, status=200)
+        
+        except Exception as e:
+            # Handle any errors during booking processing
+            return JsonResponse({'error': str(e)}, status=400)
     else:
-        return JsonResponse({'status': 'failure'})
+        # Handle requests other than POST (e.g., GET requests)
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+
+def my_clients(request):
+    # Retrieve booking details from the database
+    bookings = Booking.objects.all()
+    return render(request, 'myclients.html', {'bookings': bookings})
 
 
+def RejectBookingView(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    booking.is_accepted = False
+    booking.is_rejected = True
+    booking.save()
+    return redirect('myclients')
+    
+       
+
+def ApproveBookingView(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    booking.is_accepted = True
+    booking.is_rejected = False
+    booking.save()
+    return redirect('myclients')

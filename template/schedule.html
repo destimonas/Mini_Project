@@ -1,136 +1,109 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weekly Class Schedule</title>
+    <title>Workout Schedule</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #d92cf9;
         }
 
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
+        /* Add custom CSS styling for FitUp logo */
+        .fitup-logo {
+            font-size: 24px;
         }
 
-        th {
-            background-color: #f2f2f2;
+        /* Add custom CSS styling for back button */
+        .back-button {
+            font-size: 16px;
         }
 
-        .event-details {
-            text-align: left;
-        }
-
-        .join-button {
-            text-align: center;
-        }
     </style>
 </head>
 <body>
-    <h1>Weekly Class Schedule</h1>
-    <table>
-        <tr>
-            <th>Day</th>
-            <th>Event</th>
-            <th>Time</th>
-            <th>Action</th>
-        </tr>
-        <tr>
-            <td rowspan="2">Sunday</td>
-            <td class="event-details">Yoga Class</td>
-            <td>10:00 AM - 11:30 AM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td class="event-details">Zumba Class</td>
-            <td>3:00 PM - 4:30 PM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td rowspan="3">Monday</td>
-            <td class="event-details">Pilates Class</td>
-            <td>9:30 AM - 11:00 AM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td class="event-details">Spinning Class</td>
-            <td>1:00 PM - 2:30 PM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td class="event-details">Aerobics Class</td>
-            <td>6:00 PM - 7:30 PM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td rowspan="2">Tuesday</td>
-            <td class="event-details">Zumba Class</td>
-            <td>10:00 AM - 11:30 AM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td class="event-details">Yoga Class</td>
-            <td>4:00 PM - 5:30 PM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td rowspan="3">Wednesday</td>
-            <td class="event-details">Pilates Class</td>
-            <td>9:30 AM - 11:00 AM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td class="event-details">Spinning Class</td>
-            <td>1:00 PM - 2:30 PM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td class="event-details">Aerobics Class</td>
-            <td>6:00 PM - 7:30 PM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td rowspan="2">Thursday</td>
-            <td class="event-details">Zumba Class</td>
-            <td>10:00 AM - 11:30 AM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td class="event-details">Yoga Class</td>
-            <td>4:00 PM - 5:30 PM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td rowspan="3">Friday</td>
-            <td class="event-details">Pilates Class</td>
-            <td>9:30 AM - 11:00 AM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td class="event-details">Spinning Class</td>
-            <td>1:00 PM - 2:30 PM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td class="event-details">Aerobics Class</td>
-            <td>6:00 PM - 7:30 PM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td rowspan="2">Saturday</td>
-            <td class="event-details">Yoga Class</td>
-            <td>10:00 AM - 11:30 AM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-        <tr>
-            <td class="event-details">Zumba Class</td>
-            <td>3:00 PM - 4:30 PM</td>
-            <td class="join-button"><a href="#">Join Now</a></td>
-        </tr>
-    </table>
+    <div class="header">
+        <!-- FitUp Logo -->
+        <div class="fitup-logo">
+            FITUP
+        </div>
+        {% if trainer.is_authenticated %} 
+       
+                <a class="header">Welcome {{ trainer.username }}</a>
+      
+        {% endif %}
+        <!-- Back Button -->
+        <div class="back-button">
+            <a href="{% url 'trainerhome' %}" class="btn btn-light">Back</a>
+        </div>
+    </div>
+    
+
+<div class="container">
+    <h2 class="mt-4 mb-4">Workout Schedule</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+
+    <form action="{% url 'schedule_class' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}        
+        <div class="mb-4">
+            <label for="workout-day" class="form-label">Select Workout Day:</label>
+            <select class="form-select" id="workout-day" name="workout-day">
+                <option value="select">select</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+            </select>
+        </div>
+        
+        <!-- Workout Details -->
+        <div class="mb-4">
+            <label for="workout-details" class="form-label">Workout Details:</label>
+            <textarea class="form-control" id="workout-details" name="workout-details" rows="8">
+                
+            </textarea>
+        </div>
+        
+        <!-- Video Upload -->
+        <div class="mb-4">
+            <label for="video-upload" class="form-label">Upload Workout Video:</label>
+            <input class="form-control" type="file" id="video-upload" name="video-upload">
+        </div>
+        
+        
+        <!-- Additional Notes -->
+        <div class="mb-4">
+            <label for="additional-notes" class="form-label">Additional Notes:</label>
+            <textarea class="form-control" id="additional-notes" name="additional-notes" rows="4"></textarea>
+        </div>
+        
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Schedule Class</button>
+    </form>
+</div>
+
+<!-- Bootstrap and jQuery Scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Add your custom JavaScript code to populate workout details based on selected day -->
+
 </body>
 </html>

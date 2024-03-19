@@ -70,6 +70,8 @@
     </style>
 </head>
 <body>
+
+    
     <!-- Header Section -->
     <header style="background-color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
         <h1 style="color: #d92cf9; margin-left: 10px;">FitUp</h1>
@@ -160,43 +162,28 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="billingModalLabel">Billing Details</h5>
+                                                    <h5 class="modal-title" id="billingModalLabel">Booking Details</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <h4>Package Information</h4>
                                                     <div id="selectedPackage{{ trainer.id }}"></div>
                                                     <hr>
-                                                    <h4>Billing</h4>
+                                                    <h4>Payment Details</h4>
                                                     <p><strong>Package Amount:</strong> <span id="packageAmount{{ trainer.id }}"></span></p>
-                                                    <p><strong>Discount:</strong> 0</p>
-                                                    <p><strong>Renewal Discount:</strong> 0</p>
+                                                    <p><strong>Discount:</strong> <span id="discount{{ trainer.id }}">0</span></p>
+                                                    <p><strong>Renewal Discount:</strong> <span id="renewalDiscount{{ trainer.id }}">0</span></p>
                                                     
-                                                    
-                                                    <button type="button" class="btn btn-primary" data-trainer-id="{{ trainer.id }}" onclick="openPaymentOptionModal(this)">Make Payment</button>
-
+                                                    <!-- Booking button -->
+                                                    <button class="booking-button" data-trainer-id="{{ trainer.id }}">Booking</button>
                                                 </div>
+                                                
+                                                
                                             </div>
                                         </div>
                                     </div>
 
-                                <!-- Payment Option Modal -->
-                                <div class="modal fade" id="paymentOptionModal{{ trainer.id }}" tabindex="-1" aria-labelledby="paymentOptionModalLabel" aria-hidden="true">
-                                    
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="paymentOptionModalLabel">Select Payment Option</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <button type="button" class="btn btn-primary" onclick="selectPaymentOption('netbanking', {{ trainer.id }})">Netbanking, Credit Card, Debit Card, UPI, EMI</button>
-                                                <button type="button" class="btn btn-primary" onclick="selectPaymentOption('wallet', {{ trainer.id }})">Payment Wallet</button>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
+                               
 
                                 </div>
                                 <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
@@ -241,7 +228,10 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script>
+<script>
+
+
+
             // Function to enable or disable the "Enroll" button based on checkbox selection
         function updateEnrollButton() {
             var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
@@ -271,12 +261,15 @@
                 var packageDetails = document.getElementById("packageDetails" + trainerId);
                 var selectedPackage = document.getElementById("selectedPackage" + trainerId);
                 var packageAmount = document.getElementById("packageAmount" + trainerId);
-                selectedPackage.innerHTML = "<p><strong>Package Name:</strong> 12 Week Starter Package</p><p><strong>Duration:</strong> 12 weeks</p><p><strong>Price:</strong> $4500</p>";
-                packageAmount.innerText = "$4500";
+               // Collect selected time slots
+                var selectedTimeSlots = collectSelectedTimeSlots(trainerId);
+                
+                // Display package details
+                selectedPackage.innerHTML = "<p><strong>Package Name:</strong> 12 Week Starter Package</p><p><strong>Duration:</strong> 12 weeks</p><p><strong>Price:</strong> 4500</p><p><strong>Selected Time Slots:</strong> " + selectedTimeSlots.join(', ') + "</p>";
+                packageAmount.innerText = "4500";
                 $('#consultModal' + trainerId).modal('hide');
-                $('#billingModal' + trainerId).modal('show');
-            }
-        }
+                $('#billingModal' + trainerId).modal('show');        }
+                }
     
         function displayAdvancedPackage(trainerId) {
             var isValid = validateEnrollment(trainerId);
@@ -285,93 +278,32 @@
                 var packageDetails = document.getElementById("packageDetails" + trainerId);
                 var selectedPackage = document.getElementById("selectedPackage" + trainerId);
                 var packageAmount = document.getElementById("packageAmount" + trainerId);
-                selectedPackage.innerHTML = "<p><strong>Package Name:</strong> 24 Week Advanced Package</p><p><strong>Duration:</strong> 24 weeks</p><p><strong>Price:</strong> $8500</p>";
-                packageAmount.innerText = "$8500";
+                // Collect selected time slots
+                var selectedTimeSlots = collectSelectedTimeSlots(trainerId);
+                
+                // Display package details
+                selectedPackage.innerHTML = "<p><strong>Package Name:</strong> 24 Week Advanced Package</p><p><strong>Duration:</strong> 24 weeks</p><p><strong>Price:</strong> 8500</p><p><strong>Selected Time Slots:</strong> " + selectedTimeSlots.join(', ') + "</p>";
+                packageAmount.innerText = "8500";
                 $('#consultModal' + trainerId).modal('hide');
                 $('#billingModal' + trainerId).modal('show');
-            }
+                    }
+        }
+        function collectSelectedTimeSlots(trainerId) {
+            var selectedTimeSlots = [];
+            var checkboxes = document.querySelectorAll('#timeSlots' + trainerId + ' input[type="checkbox"]:checked');
+            checkboxes.forEach(function(checkbox) {
+                selectedTimeSlots.push(checkbox.value);
+            });
+            return selectedTimeSlots;
         }
         function showBillingDetails(trainerId) {
             $('#billingModal' + trainerId).modal('show');
         }
     
-        function selectPaymentOption(option, trainerId) {
-            if (option === 'netbanking' || option === 'wallet') {
-                $('#paymentOptionModal' + trainerId).modal('hide'); // Hide the payment option modal
-                updateRazorpayAmount(trainerId); // Update Razorpay amount
-                rzp.open(); // Open the Razorpay payment modal
-            }
-        }
-    // Function to update Razorpay amount based on the selected package
-    function updateRazorpayAmount(trainerId) {
-        var packageAmountElement = document.getElementById("packageAmount" + trainerId);
-        var amountMatch = packageAmountElement.innerText.match(/\$([0-9,]+)/);
-
-        if (amountMatch && amountMatch.length > 1) {
-            return parseFloat(amountMatch[1].replace(',', ''));
-        }
-
-        return 0;
-    }
-
-    // Update Razorpay amount when the payment option modal is opened
-    function openPaymentOptionModal(button) {
-        var trainerId = $(button).data('trainer-id');
-        $('#billingModal' + trainerId).modal('hide'); // Close the billing modal
-        $('#paymentOptionModal' + trainerId).modal('show'); // Show the payment option modal
-        updateRazorpayAmount(trainerId); // Update Razorpay amount
-    }
-        function selectPaymentOption(option, trainerId) {
-            if (option === 'netbanking' || option === 'wallet') {
-                $('#paymentOptionModal' + trainerId).modal('hide'); // Hide the payment option modal
-                openRazorpayPaymentModal(trainerId);
-            }
-        }
-         // Function to open Razorpay payment modal
-    function openRazorpayPaymentModal(trainerId) {
-        var amount = updateRazorpayAmount(trainerId);
-         // Set the amount dynamically in the Razorpay form
-         $('#razorpayPaymentModal' + trainerId + ' #razorpay-form').attr('data-amount', amount * 100);
-
-         // Open the Razorpay payment modal
-         $('#razorpayPaymentModal' + trainerId).modal('show');
-        var options = {
-            key: 'rzp_test_v4Tz9K1hhXrTYr',
-            amount: updateRazorpayAmount(trainerId) * 100,
-            name: 'Fitness Tracker',
-            description: 'Payment for Trainer Services',
-            image: 'https://your-logo-url.com/your-logo.png',
-            prefill: {
-                name: 'Customer Name',
-                email: 'customer@example.com',
-                contact: '1234567890',
-            },
-            theme: {
-                color: '#6a0dad',
-            },
-        };
-
-        var rzp = new Razorpay(options);
-            // Add this script at the end of your existing script
-            $(document).ready(function () {
-                // Event delegation for dynamically added elements
-                $(document).on('input', '#searchTrainers', function () {
-                    var searchValue = $(this).val().toLowerCase();
-                    $('#trainerCardsContainer .card').each(function () {
-                        var trainerName = $(this).find('.lead').text().toLowerCase();
-                        $(this).toggle(trainerName.includes(searchValue));
-                    });
-                });
-            });
-            
        
-        rzp.open();
-
-        rzp.on('payment.failed', function (response) {
-            alert('Payment failed: ' + response.error.description);
-        });
-    }
-
+   
+         // Function to open Razorpay payment modal
+   
     var trainerResponses = [
         "Feel free to ask any fitness-related questions.",
         "Hello! How can I help you today?",
@@ -409,37 +341,92 @@
        
     </script>
     
-    <!-- Razorpay Payment Modal (with dummy content) -->
-
-<div class="modal fade" id="razorpayPaymentModal{{ trainer.id }}" tabindex="-1" aria-labelledby="razorpayPaymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="razorpayPaymentModalLabel">Payment Gateway</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h4>Payment Details</h4>
-                <p><strong>Package Amount:</strong> <span id="packageAmount{{ trainer.id }}"></span></p>
-                <p><strong>Payment Method:</strong> <span id="paymentMethod{{ trainer.id }}"></span></p>
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".booking-button").click(function() {
+                // Retrieve trainer ID
+                var trainerId = $(this).data("trainer-id");
                 
-                <!-- Razorpay payment form -->
-                <form id="razorpay-form">
-                    <script src="https://checkout.razorpay.com/v1/checkout.js"
-                        data-key="{{ razorpay_key }}"
-                        data-amount=""  
-                        data-name="Fitness Tracker"
-                        data-description="Payment for Trainer Services"
-                        data-image="https://your-logo-url.com/your-logo.png"
-                        data-prefill.name="{{ payment_id.customer_name }}"
-                        data-prefill.email="{{ payment_id.customer_email }}"
-                        data-prefill.contact="{{ payment_id.customer_contact }}"
-                        data-theme.color="#6a0dad"></script>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+                // Retrieve package information
+                var selectedPackage = $("#selectedPackage" + trainerId).text();
+        
+                // Extract package duration (assuming it's between "Duration: " and " weeks")
+                var durationIndex = selectedPackage.indexOf("Duration: ");
+                var weeksIndex = selectedPackage.indexOf(" weeks");
+                var duration = selectedPackage.substring(durationIndex + 10, weeksIndex);
+        
+                // Check if duration is either "12" or "24"
+                if (duration !== "12" && duration !== "24") {
+                    console.error("Invalid package duration:", duration);
+                    return; // Exit the function if duration is not valid
+                }
+        
+                // Construct package name
+                var packageName = duration + " Week Package";
+        
+                // Retrieve other package details
+                var packageAmount = $("#packageAmount" + trainerId).text();
+                var discount = $("#discount" + trainerId).text();
+                var renewalDiscount = $("#renewalDiscount" + trainerId).text();
+                
+                // Collect selected time slots
+                var selectedTimeSlots = collectSelectedTimeSlots(trainerId);
+                
+                // Construct data object
+                var bookingData = {
+                    trainerId: trainerId,
+                    packageName: packageName,
+                    packageAmount: packageAmount,
+                    discount: discount,
+                    renewalDiscount: renewalDiscount,
+                    selectedTimeSlots: selectedTimeSlots
+                };
+        
+                console.log("Booking Data:", bookingData); // Log booking data
+                
+                // Make a POST request to the bookings endpoint
+                $.ajax({
+                    type: 'POST',
+                    url: '/bookings/',  // Update the URL to match your endpoint
+                    data: JSON.stringify(bookingData),
+                    contentType: 'application/json',
+                    headers: { "X-CSRFToken": getCookie("csrftoken") }, // Add CSRF token
+                    success: function(response) {
+                        console.log(response); // Log success response
+                        // Handle success response here (if needed)
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText); // Log error response
+                        // Handle error response here (if needed)
+                    }
+                });
+            });
+        });
+        
+            // Function to get CSRF token from cookies
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Check if the cookie name matches the provided name
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    // Get the cookie value
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
+        
+        
+    </script>
+    
+    
 </body>
 </html>

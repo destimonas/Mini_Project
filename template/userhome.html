@@ -69,9 +69,21 @@
 }
 
     </style>
+
+
 </head>
 
+
+
 <body>
+    <script>
+        // Check if session message exists
+        {% if session_message %}
+            // Display session message as an alert
+            alert("{{ session_message }}");
+        {% endif %}
+    </script>
+    
     <header class="top-area">
         <div class="header-area">
             <nav class="navbar navbar-default bootsnav navbar-fixed dark no-background">
@@ -94,7 +106,7 @@
                             <li class="smooth-menu"><a href='usernutrition'>Nutritionist</a></li>
                             <li class="smooth-menu"><a href='community'>Community</a></li>
                             
-                            <li class="smooth-menu"><a href='questions'>Questionnaire</a></li>
+                            <li class="smooth-menu"><a href='bookingtrainer'>Booking</a></li>
                             <li class="dropdown">
                                 <a class="dropbtn">Me</a>
                                 <div class="dropdown-content">
