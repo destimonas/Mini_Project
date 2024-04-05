@@ -91,6 +91,11 @@
             <p class="accepted-message">This booking has been accepted.</p>
             {% if booking.payment_set.all %}
                 <p>Payment done </p>
+                <!-- HTML code for the button -->
+
+
+                <a href="{% url 'schedule_class' customer_id=booking.user.id %}" class="btn btn-primary schedule-class-button">Schedule Class</a>
+
             {% endif %}
         {% elif booking.is_rejected %}
             <p class="rejected-message">This booking has been rejected.</p>

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,9 +35,7 @@
             FITUP
         </div>
         {% if trainer.is_authenticated %} 
-       
-                <a class="header">Welcome {{ trainer.username }}</a>
-      
+            <a class="header">Welcome {{ trainer.username }}</a>
         {% endif %}
         <!-- Back Button -->
         <div class="back-button">
@@ -56,38 +55,24 @@
         {% endfor %}
     {% endif %}
 
-
-
-    <form action="{% url 'schedule_class' %}" method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
         {% csrf_token %}        
         <div class="mb-4">
-            <label for="workout-day" class="form-label">Select Workout Day:</label>
-            <select class="form-select" id="workout-day" name="workout-day">
-                <option value="select">select</option>
-                <option value="Monday">Monday</option>
-                <option value="Tuesday">Tuesday</option>
-                <option value="Wednesday">Wednesday</option>
-                <option value="Thursday">Thursday</option>
-                <option value="Friday">Friday</option>
-                <option value="Saturday">Saturday</option>
-                <option value="Sunday">Sunday</option>
-            </select>
+            <label for="workout-date-time" class="form-label">Select Workout Date and Time:</label>
+            <input class="form-control" type="datetime-local" id="workout-date-time" name="workout-date-time">
         </div>
         
         <!-- Workout Details -->
         <div class="mb-4">
             <label for="workout-details" class="form-label">Workout Details:</label>
-            <textarea class="form-control" id="workout-details" name="workout-details" rows="8">
-                
-            </textarea>
+            <textarea class="form-control" id="workout-details" name="workout-details" rows="8"></textarea>
         </div>
         
-        <!-- Video Upload -->
+        <!-- Meet Link -->
         <div class="mb-4">
-            <label for="video-upload" class="form-label">Upload Workout Video:</label>
-            <input class="form-control" type="file" id="video-upload" name="video-upload">
+            <label for="meet-link" class="form-label">Meet Link:</label>
+            <input class="form-control" type="text" id="meet-link" name="meet-link">
         </div>
-        
         
         <!-- Additional Notes -->
         <div class="mb-4">
@@ -103,7 +88,46 @@
 <!-- Bootstrap and jQuery Scripts -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Add your custom JavaScript code to populate workout details based on selected day -->
+<script>
+    function validateForm() {
+        // Validate workout date and time
+        var workoutDateTime = document.getElementById("workout-date-time").value;
+        if (workoutDateTime.trim() == "") {
+            alert("Please select Workout Date and Time");
+            return false;
+        }
+
+        // Validate textarea is not empty and does not contain special characters
+        var workoutDetails = document.getElementById("workout-details").value;
+        var workoutDetailsRegex = /^[a-zA-Z0-9\s]*$/; // Regex to allow only letters, numbers, and spaces
+        if (workoutDetails.trim() == "" || !workoutDetailsRegex.test(workoutDetails)) {
+            alert("Workout Details cannot be empty and should not contain special characters");
+            return false;
+        }
+
+        // Validate additional notes (optional)
+        var additionalNotes = document.getElementById("additional-notes").value;
+        var additionalNotesRegex = /^[a-zA-Z0-9\s]*$/; // Regex to allow only letters, numbers, and spaces
+        if (additionalNotes.trim() !== "" && !additionalNotesRegex.test(additionalNotes)) {
+            alert("Additional Notes should not contain special characters");
+            return false;
+        }
+
+        // Validate meet link format (optional)
+        var meetLink = document.getElementById("meet-link").value;
+        var meetLinkRegex = /^(https?:\/\/)?(www\.)?(meet\.google\.com\/[\w-]+)$/;
+        if (meetLink.trim() !== "" && !meetLinkRegex.test(meetLink)) {
+            alert("Invalid Meet Link format");
+            return false;
+        }
+
+        // Additional custom validation if needed
+
+        return true;
+    }
+</script>
+
+<!-- Add your custom JavaScript code to populate workout details based on selected date and time -->
 
 </body>
 </html>

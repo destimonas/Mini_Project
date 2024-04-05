@@ -32,12 +32,31 @@ def home(request):
 #      else:
 #          return redirect('home') 
 
+# def userhome(request):
+#     if 'username' in request.session:
+#         # Get session message if exists
+#         session_message = None
+#         if messages.get_messages(request):
+#             session_message = messages.get_messages(request)[0]
+        
+#         context = {
+#             'session_message': session_message
+#         }
+#         response = render(request, 'userhome.html', context)
+#         response['Cache-Control'] = 'no-store, must-revalidate'
+#         return response
+#     else:
+#         return redirect('home')
+
 def userhome(request):
     if 'username' in request.session:
         # Get session message if exists
         session_message = None
-        if messages.get_messages(request):
-            session_message = messages.get_messages(request)[0]
+        message_qs = messages.get_messages(request)
+        if message_qs:
+            for message in message_qs:
+                session_message = message
+                break  # Exit the loop after retrieving the first message
         
         context = {
             'session_message': session_message
@@ -724,26 +743,34 @@ def usernutrition(request):
 def schedule_page(request):
     return render(request, 'schedule.html')
 
-def schedule_class(request):
+
+def schedule_class(request, customer_id):
     if request.method == 'POST':
-        day = request.POST.get('workout-day')
+        workout_date_time = request.POST.get('workout-date-time')
         workout_details = request.POST.get('workout-details')
-        video = request.FILES.get('video-upload')
+        meet_link = request.POST.get('meet-link')
         additional_notes = request.POST.get('additional-notes')
 
-        # Save the form data to the database
-        schedule_instance = WorkoutSchedule.objects.create(
-            day=day,
+        # Get the CustomUser object using customer_id
+        user = get_object_or_404(CustomUser, id=customer_id)
+        trainer=get_object_or_404(Trainer, user=request.user.id)
+
+        # Create a new WorkoutClass instance
+        workout_class = WorkoutClass.objects.create(
+            user=user,
+            trainer=trainer,
+            workout_date_time=workout_date_time,
             workout_details=workout_details,
-            video=video,
+            meet_link=meet_link,
             additional_notes=additional_notes
         )
-        schedule_instance.save()
 
-        messages.success(request, 'Today\'s class has been scheduled successfully.')
-        return redirect('schedule')
-    else:
-        return redirect('schedule')
+        # Redirect to the trainerhome page
+        return redirect('trainerhome')
+
+    # Render the schedule class template if the request method is not POST
+    return render(request, 'schedule.html')
+
 
 
 def rate_trainer(request, trainer_id):
@@ -1394,7 +1421,7 @@ def rate_product(request, product_id):
         ratings = Productrating.objects.filter(product=product)
 
         # Render the template with the updated ratings
-        return render(request, 'productdetails', {'ratings': ratings})
+        return render(request, 'products/productdetails.html', {'ratings': ratings})
     else:
         # Handle GET requests if needed
         pass
@@ -1543,11 +1570,14 @@ def create_order(request):
 @csrf_exempt
 def handle_payment(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        razorpay_order_id = data.get('order_id')
-        payment_id = data.get('payment_id')
-
         try:
+            data = json.loads(request.body)
+            razorpay_order_id = data.get('order_id')
+            payment_id = data.get('payment_id')
+
+            if not (razorpay_order_id and payment_id):
+                return JsonResponse({'message': 'Invalid data. Missing order_id or payment_id.'}, status=400)
+
             order = Order.objects.get(payment_id=razorpay_order_id)
 
             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
@@ -1558,26 +1588,25 @@ def handle_payment(request):
                 order.save()
 
                 for order_item in order.orderitem_set.all():
-                        product = order_item.product
-                        product.stock -= order_item.quantity
-                        product.save()
+                    product = order_item.product
+                    product.stock -= order_item.quantity
+                    product.save()
 
+                # Redirect to myorders page after successful payment
+                return HttpResponseRedirect(reverse('myorders'))
 
-                data = {
-                  'order_id': order.id,
-                   'transID': order.payment_id,
-            }
-                return JsonResponse({'message': 'Payment successful', 'order_id': order.id, 'transID': order.payment_id})
-            #     return JsonResponse({'message': 'Payment successful'})
-            # else:
-            #     return JsonResponse({'message': 'Payment failed'})
+            else:
+                return JsonResponse({'message': 'Payment not captured'}, status=400)
 
         except Order.DoesNotExist:
-            return JsonResponse({'message': 'Invalid Order ID'})
+            return JsonResponse({'message': 'Invalid Order ID'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data in request body'}, status=400)
         except Exception as e:
-
-            print(str(e))
-            return JsonResponse({'message': 'Server error, please try again later.'})
+            print(str(e))  # Log the error for debugging
+            return JsonResponse({'message': 'Server error, please try again later.'}, status=500)
+    else:
+        return JsonResponse({'message': 'Only POST requests are allowed'}, status=405)
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -1772,7 +1801,7 @@ def handle_booking(request):
             )
 
             # Set a success message
-            messages.success(request, 'Trainer has approved your booking. You can now proceed to make payment.')
+            messages.success(request, 'Request for booking has been send to trainer..')
 
             # Return a success response
             return JsonResponse({'message': 'Booking successful'}, status=200)
@@ -1805,3 +1834,22 @@ def ApproveBookingView(request, booking_id):
     booking.is_rejected = False
     booking.save()
     return redirect('myclients')
+
+def class_details(request):
+    # Retrieve all WorkoutClass objects from the database
+    workout_classes = WorkoutClass.objects.all()
+    # Pass the workout_classes queryset to the template
+    return render(request, 'class.html', {'workout_classes': workout_classes})
+
+def addworkout(request):
+    if request.method == 'POST':
+        week = request.POST.get('week')
+        workout_text = request.POST.get('workout')
+        
+        # Create a new Workout object and save it to the database
+        workout = Workout.objects.create(week=week, workout_text=workout_text)
+        workout.save()
+        
+        return HttpResponse("Workout added successfully!")
+    else:
+        return render(request, 'addworkout.html')

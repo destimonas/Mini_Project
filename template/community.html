@@ -1264,7 +1264,106 @@
                     console.error('Error fetching transformation comments:', error);
                 }
             });
-        }      
+        } 
+
+        function validateDiscussionForm() {
+    var title = document.getElementById("discussionTitle").value;
+    var content = document.getElementById("discussionContent").value;
+    var image = document.getElementById("fileInput").files.length;
+
+    if (!/^[a-zA-Z\s]*$/.test(title)) {
+        alert("Title should contain only characters.");
+        return false;
+    }
+
+    if (image === 0) {
+        alert("Please select an image.");
+        return false;
+    }
+
+    if (content.trim() === "") {
+        alert("Content should not be empty.");
+        return false;
+    }
+
+    return true;
+}
+
+function validateFitnessUpdateForm() {
+    var image = document.getElementById("fileInputFitnessUpdate").files.length;
+    var content = document.getElementById("fitnessUpdateContent").value;
+
+    if (image === 0) {
+        alert("Please select an image.");
+        return false;
+    }
+
+    if (content.trim() === "") {
+        alert("Content should not be empty.");
+        return false;
+    }
+
+    return true;
+}
+
+function validateTransformationForm() {
+    var image = document.getElementById("fileInputTransformation").files.length;
+    var content = document.getElementById("transformationContent").value;
+
+    if (image === 0) {
+        alert("Please select an image.");
+        return false;
+    }
+
+    if (content.trim() === "") {
+        alert("Transformation Description should not be empty.");
+        return false;
+    }
+
+    return true;
+}
+
+function validateRecipeForm() {
+    var image = document.getElementById("fileInputRecipe").files.length;
+    var name = document.getElementById("recipeName").value;
+    var story = document.getElementById("recipeStory").value;
+    var time = document.getElementById("cookingTime").value;
+    var ingredients = document.getElementById("ingredients").value;
+    var directions = document.getElementById("directions").value;
+
+    if (image === 0) {
+        alert("Please select an image.");
+        return false;
+    }
+
+    if (name.trim() === "") {
+        alert("Please enter the name of your recipe.");
+        return false;
+    }
+
+    if (story.trim() === "") {
+        alert("Please share the story behind your recipe.");
+        return false;
+    }
+
+    if (time.trim() === "") {
+        alert("Please provide cooking time.");
+        return false;
+    }
+
+    if (ingredients.trim() === "") {
+        alert("Please list the ingredients.");
+        return false;
+    }
+
+    if (directions.trim() === "") {
+        alert("Please provide cooking directions.");
+        return false;
+    }
+
+    return true;
+}
+     
 </script>
 </body>
 </html>

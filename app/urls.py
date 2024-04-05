@@ -79,7 +79,7 @@ urlpatterns = [
     path('trainerhome/trainerprofile/',TrainerProfileView.as_view(), name='trainerprofile'),
 
     path('trainerhome/schedule/', views.schedule_page, name='schedule'),
-    path('schedule/class/', views.schedule_class, name='schedule_class'),
+    path('schedule/class/<int:customer_id>/', views.schedule_class, name='schedule_class'),
     
 
     path('save_user_profile/', views.save_user_profile, name='save_user_profile'),
@@ -169,6 +169,12 @@ urlpatterns = [
     path('booking/<int:booking_id>/reject/', views.RejectBookingView, name='reject_booking'),
     path('booking/<int:booking_id>/approve/', views.ApproveBookingView, name='approve_booking'),
     # Add other URL patterns as needed
+
+    path('class/', views.class_details, name='class'),
+    path('addworkout/', views.addworkout, name='addworkout'),
+
+
+
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

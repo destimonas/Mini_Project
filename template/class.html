@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Details</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include custom CSS file if needed -->
+    <style>
+               /* Custom Styling */
+               .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                background-color: #f8f9fa; /* Adjust as needed */
+            }
+    
+            .header h1 {
+                margin: 0;
+                color: #d92cf9;
+            }
+    
+            .back-button {
+                margin-right: 10px;
+            }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <h1>FitUp</h1>
+    <a href="{% url 'userhome' %}" class="btn btn-secondary back-button">Back</a>
+</div>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Class Details</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Workout Date and Time</th>
+                    <th>Workout Details</th>
+                    <th>Meet Link</th>
+                    <th>Additional Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for workout_class in workout_classes %}
+                    <tr>
+                        <td>{{ workout_class.workout_date_time }}</td>
+                        <td>{{ workout_class.workout_details }}</td>
+                        <td><a href="{{ workout_class.meet_link }}" target="_blank">Join Google Meet</a></td>
+                        <td>{{ workout_class.additional_notes }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

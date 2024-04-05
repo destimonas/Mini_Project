@@ -82,6 +82,7 @@ class Specialization(models.Model):
         return self.name
     
 class Trainer(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,default=64) 
     full_name = models.CharField(max_length=100)
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
@@ -360,24 +361,38 @@ class OrderItem(models.Model):
         return f"{self.quantity} x {self.product.product_name} in Order {self.order.id}"
 
 
-class WorkoutSchedule(models.Model):
-    DAYS_OF_WEEK = [
-        ('Monday', 'Monday'),
-        ('Tuesday', 'Tuesday'),
-        ('Wednesday', 'Wednesday'),
-        ('Thursday', 'Thursday'),
-        ('Friday', 'Friday'),
-        ('Saturday', 'Saturday'),
-        ('Sunday', 'Sunday'),
-    ]
-
-    day = models.CharField(max_length=10, choices=DAYS_OF_WEEK)
+class WorkoutClass(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE)
+    workout_date_time = models.DateTimeField()
     workout_details = models.TextField()
-    video = models.FileField(upload_to='workout_videos/', blank=True, null=True)
-    additional_notes = models.TextField(blank=True)
+    meet_link = models.URLField()
+    additional_notes = models.TextField()
 
     def __str__(self):
-        return f"{self.day} - Workout Schedule"
+        return f"Workout Class on {self.workout_date_time}"
+    
+class Workout(models.Model):
+    WEEK_CHOICES = [
+        ('week1', 'Week 1'),
+        ('week2', 'Week 2'),
+        ('week3', 'Week 3'),
+        ('week4', 'Week 4'),
+        ('week5', 'Week 5'),
+        ('week6', 'Week 6'),
+        ('week7', 'Week 7'),
+        ('week8', 'Week 8'),
+        ('week9', 'Week 9'),
+        ('week10', 'Week 10'),
+        ('week11', 'Week 11'),
+        ('week12', 'Week 12'),
+    ]
+
+    week = models.CharField(max_length=10, choices=WEEK_CHOICES)
+    workout_text = models.TextField()
+
+    def __str__(self):
+        return f"{self.get_week_display()} - {self.workout_text}"
 
 
 
