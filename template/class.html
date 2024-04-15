@@ -25,6 +25,12 @@
             .back-button {
                 margin-right: 10px;
             }
+			 /* Style for the button in the right corner */
+        .chat-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -42,6 +48,8 @@
             <thead>
                 <tr>
                     <th>Workout Date and Time</th>
+                    <th>Week</th>
+                    <th>Workout Name</th>
                     <th>Workout Details</th>
                     <th>Meet Link</th>
                     <th>Additional Notes</th>
@@ -51,15 +59,23 @@
                 {% for workout_class in workout_classes %}
                     <tr>
                         <td>{{ workout_class.workout_date_time }}</td>
-                        <td>{{ workout_class.workout_details }}</td>
+                        <td>{{ workout_class.workout.week }}</td>
+						<td>{{ workout_class.workout.workout_name }}</td>
+						<td>{{ workout_class.workout.workout_details }}</td>
                         <td><a href="{{ workout_class.meet_link }}" target="_blank">Join Google Meet</a></td>
                         <td>{{ workout_class.additional_notes }}</td>
+
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- Button to start chat -->
+<form action="{% url 'chatroom' workout_classes.0.trainer.id %}" method="get" class="chat-button">
+    <button type="submit" class="btn btn-primary">Start Chat</button>
+</form>
 
 <!-- Include Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

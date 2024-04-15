@@ -185,5 +185,5 @@ JAZZMIN_SETTINGS = {"show_ui_builder": True}
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_NAME = "sessionid"
-SESSION_COOKIE_AGE = 600
+SESSION_COOKIE_AGE = 2000
 LOGIN_URL='signin'

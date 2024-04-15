@@ -173,6 +173,9 @@ urlpatterns = [
     path('class/', views.class_details, name='class'),
     path('addworkout/', views.addworkout, name='addworkout'),
 
+    path('chat/<int:trainer_id>/', views.chatroom, name='chatroom'),
+    path('send/', views.send_message, name='send_message'),
+
 
 
 ] 

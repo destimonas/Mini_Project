@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatroom</title>
+    <!-- Include necessary CSS and JS libraries -->
+</head>
+<body>
+    <h1>Chat with {{ trainer.full_name }}</h1>
+    <div id="chat-messages">
+        {% for message in messages %}
+            <p>{{ message.content }}</p>
+        {% endfor %}
+    </div>
+    <form id="message-form">
+        <input type="hidden" id="receiver-id" value="{{ trainer.id }}">
+        <textarea id="message-content" placeholder="Type your message"></textarea>
+        <button type="submit">Send</button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#message-form').submit(function(e){
+                e.preventDefault();
+                var receiverId = $('#receiver-id').val();
+                var content = $('#message-content').val();
+                
+                $.ajax({
+                    url: '/send/',
+                    method: 'POST',
+                    data: {
+                        receiver_id: receiverId,
+                        content: content,
+                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    success: function(response){
+                        if (response.success) {
+                            var message = response.message;
+                            $('#chat-messages').append('<p>' + message + '</p>');
+                            $('#message-content').val('');
+                        } else {
+                            alert('Failed to send message.');
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        alert('Failed to send message: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
+    
+</body>
+</html>

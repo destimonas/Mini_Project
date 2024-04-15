@@ -81,6 +81,8 @@
     {% for booking in bookings %}
     <div class="booking-details">
         <p><strong>User:</strong> {{ booking.user.username }}</p>
+		<p><strong>User:</strong> {{ booking.user.id }}</p>
+
         <p><strong>Package Name:</strong> {{ booking.package_name }}</p>
         <p><strong>Package Amount:</strong> {{ booking.package_amount }}</p>
         <p><strong>Discount:</strong> {{ booking.discount }}</p>

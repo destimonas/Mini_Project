@@ -743,34 +743,35 @@ def usernutrition(request):
 def schedule_page(request):
     return render(request, 'schedule.html')
 
-
 def schedule_class(request, customer_id):
+    workouts = Workout.objects.all()
+    
     if request.method == 'POST':
+        # Retrieve data from the POST request
         workout_date_time = request.POST.get('workout-date-time')
-        workout_details = request.POST.get('workout-details')
+        workout_id = request.POST.get('workout-name')
         meet_link = request.POST.get('meet-link')
         additional_notes = request.POST.get('additional-notes')
 
-        # Get the CustomUser object using customer_id
+        # Retrieve user and trainer objects
         user = get_object_or_404(CustomUser, id=customer_id)
-        trainer=get_object_or_404(Trainer, user=request.user.id)
+        trainer = get_object_or_404(Trainer, user=request.user.id)
 
         # Create a new WorkoutClass instance
         workout_class = WorkoutClass.objects.create(
             user=user,
             trainer=trainer,
+            workout=Workout.objects.get(id=workout_id),
             workout_date_time=workout_date_time,
-            workout_details=workout_details,
             meet_link=meet_link,
             additional_notes=additional_notes
         )
-
+        workout_class.save()
         # Redirect to the trainerhome page
         return redirect('trainerhome')
 
     # Render the schedule class template if the request method is not POST
-    return render(request, 'schedule.html')
-
+    return render(request, 'schedule.html', {'workouts': workouts})
 
 
 def rate_trainer(request, trainer_id):
@@ -1816,6 +1817,7 @@ def handle_booking(request):
 def my_clients(request):
     # Retrieve booking details from the database
     bookings = Booking.objects.all()
+
     return render(request, 'myclients.html', {'bookings': bookings})
 
 
@@ -1836,20 +1838,67 @@ def ApproveBookingView(request, booking_id):
     return redirect('myclients')
 
 def class_details(request):
+    logged_in_user = request.user
+
     # Retrieve all WorkoutClass objects from the database
-    workout_classes = WorkoutClass.objects.all()
+    workout_classes = WorkoutClass.objects.filter(user=logged_in_user)
     # Pass the workout_classes queryset to the template
     return render(request, 'class.html', {'workout_classes': workout_classes})
-
+    
 def addworkout(request):
     if request.method == 'POST':
         week = request.POST.get('week')
-        workout_text = request.POST.get('workout')
+        workout_name = request.POST.get('workoutName')
+        workout_details = request.POST.get('workoutDetails')
+        
+        # Server-side validation
+        if not (week and workout_name and workout_details):
+            return HttpResponse("All fields are required.", status=400)
+        
+        # Check for special characters
+        special_characters = '!@#$%^&*(),.?":{}|<>'
+        if any(char in special_characters for char in workout_name) or any(char in special_characters for char in workout_details):
+            return HttpResponse("Workout name and details should not contain special characters.", status=400)
         
         # Create a new Workout object and save it to the database
-        workout = Workout.objects.create(week=week, workout_text=workout_text)
-        workout.save()
+        workout = Workout.objects.create(week=week, workout_name=workout_name, workout_details=workout_details)
         
-        return HttpResponse("Workout added successfully!")
+        # Fetch all workouts for the selected week and pass them to the template
+        workouts = Workout.objects.filter(week=week)
+        
+        # Include the submitted form data in the context
+        return render(request, 'addworkout.html', {'workouts': workouts, 'submitted_week': week, 'submitted_workout_name': workout_name, 'submitted_workout_details': workout_details})
     else:
         return render(request, 'addworkout.html')
+        
+        
+    
+from django.db.models import Q
+
+
+@login_required
+def chatroom(request, trainer_id):
+    print(trainer_id)
+    trainer = get_object_or_404(Trainer, id=trainer_id)
+    if trainer:
+       print(trainer.username,request.user)
+    messages = Message.objects.filter(
+                     Q(sender=request.user, receiver=trainer) | Q(sender=trainer, receiver=request.user)
+                      ).order_by('timestamp')
+
+
+    return render(request, 'chatroom.html', {'trainer': trainer, 'messages': messages})
+
+
+@login_required
+def send_message(request):
+    if request.method == 'POST':
+        receiver_id = request.POST.get('receiver_id')
+        content = request.POST.get('content')
+        
+        if receiver_id and content:
+            receiver = get_object_or_404(Trainer, id=receiver_id)
+            message = Message.objects.create(sender=request.user, receiver=receiver, content=content)
+            return JsonResponse({'success': True, 'message': str(message)})
+    
+    return JsonResponse({'success': False})

@@ -361,17 +361,7 @@ class OrderItem(models.Model):
         return f"{self.quantity} x {self.product.product_name} in Order {self.order.id}"
 
 
-class WorkoutClass(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE)
-    workout_date_time = models.DateTimeField()
-    workout_details = models.TextField()
-    meet_link = models.URLField()
-    additional_notes = models.TextField()
 
-    def __str__(self):
-        return f"Workout Class on {self.workout_date_time}"
-    
 class Workout(models.Model):
     WEEK_CHOICES = [
         ('week1', 'Week 1'),
@@ -389,12 +379,32 @@ class Workout(models.Model):
     ]
 
     week = models.CharField(max_length=10, choices=WEEK_CHOICES)
-    workout_text = models.TextField()
+    workout_name = models.CharField(max_length=100,default='')
+    workout_details = models.TextField()
 
     def __str__(self):
-        return f"{self.get_week_display()} - {self.workout_text}"
+        return f"{self.get_week_display()} - {self.workout_name}"
 
+class WorkoutClass(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE)
+    workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
+    workout_date_time = models.DateTimeField()
+    meet_link = models.URLField()
+    additional_notes = models.TextField()
 
+    def __str__(self):
+        return f"Workout Class on {self.workout_date_time}"
+        
+
+class Message(models.Model):
+    sender = models.ForeignKey(CustomUser, related_name='sent_messages', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(Trainer, related_name='received_messages', on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    content = models.TextField()
+
+    def __str__(self):
+        return f"From {self.sender} to {self.receiver}: {self.content}"
 
 
 
